@@ -17,4 +17,4 @@ La repository de la Casa Dojo Mojo squad
 - Barbie Licorne+
 
 ### Idée de timeline 
-- Au milieu du film: Elle est restée trop longtemps dans le monde des humains, elle revient après que Ken ai pris le dessus sur la Barbie Dreamhouse.
+- Au milieu du film: Elle est restée trop longtemps dans le monde des humains, elle revient après que Ken ait pris le dessus sur la Barbie Dreamhouse.
