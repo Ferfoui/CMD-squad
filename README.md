@@ -1,5 +1,12 @@
 # CMD-squad
-La repository de la Casa Dojo Mojo squad
+```python
+Casa_Mojo_Dojo_squad = ["Kenzo Zouine", "Joël Kalonji-Tubajika", "Basile Precioso", "Kenji Oku"]
+print(Casa_Mojo_Dojo_squad)
+```
+
+```
+["Kenzo Zouine", "Joël Kalonji-Tubajika", "Basile Precioso", "Kenji Oku"]
+```
 
 ## Images
 - [image1](https://assets.nintendo.com/image/upload/ar_16:9,b_auto:border,c_lpad/b_white/f_auto/q_auto/dpr_2.0/c_scale,w_400/ncom/software/switch/70010000007706/e1715071794add48c2fe32400feb710c083df9985e049f936fcb7ed6be899202)
