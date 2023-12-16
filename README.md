@@ -12,7 +12,8 @@ La repository de la Casa Dojo Mojo squad
 - [ ] Faire un platformer 2D de tir avec Barbie 
 - [ ] Différentes armes
 - [ ] Différents power-up
-- [ ] Différents Gameplay 
+- [ ] Différentes phases de Gameplay
+- [ ] Graphismes rétro
 
 ## Idées
 
