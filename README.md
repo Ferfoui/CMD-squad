@@ -24,6 +24,8 @@ print(Casa_Mojo_Dojo_squad)
 
 ## Idées
 
+### Capacités débloquables au cours de l'histoire
+
 ### Idée de power-ups
 - Barbie Quarterback
 - Barbie Ninja
