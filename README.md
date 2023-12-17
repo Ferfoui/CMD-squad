@@ -30,6 +30,7 @@ print(Casa_Mojo_Dojo_squad)
 ### Idées de Gameplay
 - Armes de mélée
 - Armes à feu utilisant la souris pour viser (ou le joystick droit si il y a implémentation de la manette)
+- Le joueur pourra faire des roulades
 
 ### Idées de power-ups
 - Barbie Quarterback
