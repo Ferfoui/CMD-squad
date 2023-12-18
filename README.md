@@ -30,14 +30,25 @@ print(Casa_Mojo_Dojo_squad)
 ### Idées de Gameplay
 - Armes de mélée
 - Armes à feu utilisant la souris pour viser (ou le joystick droit si il y a implémentation de la manette)
-- Le joueur pourra faire des roulades
+- Le joueur pourra faire des roulades (esquives)
+- système d'arbre de compétences
+- minimap
 
 ### Idées de power-ups
 - Barbie Quarterback
 - Barbie Ninja
 - Barbie Rappeur
 - Barbie Idol
-- Barbie Licorne+
+- Barbie Licorne+🦄
 
 ### Idées de timeline 
 - Au milieu du film: Elle est restée trop longtemps dans le monde des humains, elle revient après que Ken ait pris le dessus sur la Barbie Dreamhouse.
+
+### Armes
+- mains nues
+- couteau
+- batte de baseball
+- revolver
+- ak-47
+- lance-roquettes
+- lance-flammes
