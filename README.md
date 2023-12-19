@@ -18,10 +18,16 @@ print(Casa_Mojo_Dojo_squad)
 
 ## Cahier des charges du Jeu BarbieRampage
 - [ ] Bibliothèque utilisée : pygame
-- [ ] 
-- [ ] 
-- [ ] 
-- [ ] 
+- [ ] Utilisation du clavier et de la souris + manette type xbox
+- [ ] 1 Utilisateur
+- [ ] Musique 128 bits
+- [ ] IA complexe pour les énemis + PNJ
+- [ ] Menu pause / start menu , textuels et graphique
+- [ ] Dialogues avec certains PNJ
+- [ ] Paramètres réglable : difficulté, niveau du son, taille de la police, luminosité, résolution, fps max, sauvegarde, checkpoint activable, changement des keybinds
+- [ ] Arbre de compétence, débloquage d'armes, plusieurs niveaux (biomes)
+- [ ] Objets collectables
+- [ ] Du rose
 
 ## Idées
 - Faire un platformer 2D de tir avec Barbie 
