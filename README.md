@@ -28,7 +28,7 @@ print(Casa_Mojo_Dojo_squad)
 - Différentes armes
 - Différents power-up
 - Différentes phases de Gameplay
-- raphismes rétro
+- Graphismes rétro
 
 ### Capacités débloquables au cours de l'histoire
 
