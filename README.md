@@ -18,8 +18,9 @@ print(Casa_Mojo_Dojo_squad)
 
 ## Cahier des charges du Jeu BarbieRampage
 - [ ] Bibliothèque utilisée : pygame
-- [ ] Utilisation du clavier et de la souris + manette type xbox
+- [ ] Utilisation du clavier et de la souris
 - [ ] 1 Utilisateur
+- [ ] Défilement de l'écran
 - [ ] Musique 128 bits
 - [ ] IA complexe pour les énemis + PNJ
 - [ ] Menu pause / start menu , textuels et graphique
