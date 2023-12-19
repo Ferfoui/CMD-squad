@@ -17,13 +17,18 @@ print(Casa_Mojo_Dojo_squad)
 - [vidéo3](https://youtu.be/gRU5u-j8vCI)
 
 ## Cahier des charges du Jeu BarbieRampage
-- [ ] Faire un platformer 2D de tir avec Barbie 
-- [ ] Différentes armes
-- [ ] Différents power-up
-- [ ] Différentes phases de Gameplay
-- [ ] Graphismes rétro
+- [ ] Bibliothèque utilisée : pygame
+- [ ] 
+- [ ] 
+- [ ] 
+- [ ] 
 
 ## Idées
+- Faire un platformer 2D de tir avec Barbie 
+- Différentes armes
+- Différents power-up
+- Différentes phases de Gameplay
+- raphismes rétro
 
 ### Capacités débloquables au cours de l'histoire
 
