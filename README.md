@@ -22,7 +22,7 @@ print(Casa_Mojo_Dojo_squad)
 - [ ] 1 Utilisateur
 - [ ] Défilement de l'écran
 - [ ] Musique 128 bits
-- [ ] IA complexe pour les énemis + PNJ
+- [ ] IA complexe pour les ennemis + PNJ
 - [ ] Menu pause / start menu , textuels et graphique
 - [ ] Dialogues avec certains PNJ
 - [ ] Paramètres réglable : difficulté, niveau du son, taille de la police, luminosité, résolution, fps max, sauvegarde, checkpoint activable, changement des keybinds
