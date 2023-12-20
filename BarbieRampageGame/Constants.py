@@ -4,7 +4,7 @@
 GAME_NAME = "Barbie Rampage"
 
 # La taille de l'écran
-SCREEN_WIDTH = 1500
+SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 800
 
 # Les images et les sons utilisés

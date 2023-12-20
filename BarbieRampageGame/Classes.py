@@ -7,7 +7,7 @@ from Constants import *
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, speed, scale):
         pygame.sprite.Sprite.__init__(self)
-        self.alive = True
+        self.is_alive = True
         self.speed = speed
         self.flip = False
         self.move_left = False
@@ -36,10 +36,20 @@ class Player(pygame.sprite.Sprite):
         self.rect.center = (x, y)
 
     def move(self):
-        return
+        dx = 0
+        dy = 0
+        
+        if self.is_alive:
+            if self.move_right:
+                dx += self.speed
+            if self.move_left:
+                dx -= self.speed
+        
+        self.rect.x += dx
+        self.rect.y += dy
 
     def update(self):
-        return
+        self.move()
 
     def draw(self, screen):
         screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)

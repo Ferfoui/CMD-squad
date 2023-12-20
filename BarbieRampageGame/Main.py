@@ -14,12 +14,13 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption(GAME_NAME)
 
 # Appel de la classe 'Player' pour créer le Joueur
-player = Player(200, 300, 3, 2)
+player = Player(200, 300, 5, 2)
 
 run = True
 # Boucle qui va permettre de faire tourner le jeu
 while run:
 
+    player.update()
     player.draw(screen)
     
     for event in pygame.event.get():
