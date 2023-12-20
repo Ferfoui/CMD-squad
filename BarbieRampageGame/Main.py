@@ -13,6 +13,9 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 # Changement du nom de l'écran vers le nom du jeu
 pygame.display.set_caption(GAME_NAME)
 
+# Met en place l'horloge
+clock = pygame.time.Clock()
+
 # Appel de la classe 'Player' pour créer le Joueur
 player = Player(200, 300, 5, 2)
 
@@ -20,9 +23,12 @@ run = True
 # Boucle qui va permettre de faire tourner le jeu
 while run:
 
+    # Fait en sorte que le jeu tourne à un nombre limité de FPS
+    clock.tick(FPS)
+
     player.update()
     player.draw(screen)
-    
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             # Faire quitter la boucle si l'utilisateur quitte le jeu
@@ -31,16 +37,16 @@ while run:
         # Quand on appuie sur une touche
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_q:
-                player.moving_left = True
+                player.set_movement_left(True)
             if event.key == pygame.K_d:
-                player.moving_right = True
-        
+                player.set_movement_right(True)
+
         # Quand on arrête d'appuyer sur une touche
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_q:
-                player.moving_left = False
+                player.set_movement_left(False)
             if event.key == pygame.K_d:
-                player.moving_right = False
+                player.set_movement_right(False)
 
     # Mise à jour de l'écran à chaque tours de boucle
     pygame.display.update()

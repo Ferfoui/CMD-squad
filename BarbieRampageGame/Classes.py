@@ -5,7 +5,15 @@ from Constants import *
 
 # Création de la classe du Joueur
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x, y, speed, scale):
+    def __init__(self, x: int, y: int, speed, scale):
+        """Initialise la classe Player
+
+        Args:
+            x (int): position en abscisses où le joueur va être créé
+            y (int): position en ordonnées où le joueur va être créé
+            speed (int or float): vitesse à laquelle se déplace le joueur (en pixel par frame)
+            scale (int or float): nombre par lequel on multiplie la taille du Sprite pour obtenir la taille du joueur
+        """
         pygame.sprite.Sprite.__init__(self)
         self.is_alive = True
         self.speed = speed
@@ -35,7 +43,25 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
 
+    def set_movement_right(self, doMove: bool):
+        """Méthode qui définie si le joueur va aller à droite
+
+        Args:
+            doMove (bool): si le joueur va aller à droite
+        """
+        self.move_right = doMove
+
+    def set_movement_left(self, doMove: bool):
+        """Méthode qui définie si le joueur va aller à gauche
+
+        Args:
+            doMove (bool): si le joueur va aller à gauche
+        """
+        self.move_left = doMove
+
     def move(self):
+        """Méthode qui permet de mettre à jour la position du joueur
+        """
         dx = 0
         dy = 0
         
@@ -49,7 +75,14 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += dy
 
     def update(self):
+        """Méthode qui doit être appelée à chaque frame pour mettre à jour les caractéristiques du joueur
+        """
         self.move()
 
-    def draw(self, screen):
+    def draw(self, screen: pygame.Surface):
+        """Méthode qui permet d'afficher le joueur sur la fenêtre voulue
+
+        Args:
+            screen (pygame.Surface): fenêtre sur laquelle le joueur doit être afficher
+        """
         screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)

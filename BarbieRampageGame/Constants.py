@@ -7,6 +7,9 @@ GAME_NAME = "Barbie Rampage"
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 800
 
+# Le nombre d'images par seconde
+FPS = 60
+
 # Les images et les sons utilisés
 ASSETS_ROOT = "BarbieRampageGame/ressources/assets/"
 TEXTURES_ROOT = ASSETS_ROOT + "textures/" # Le chemin des textures
