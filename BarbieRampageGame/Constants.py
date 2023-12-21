@@ -10,9 +10,18 @@ SCREEN_HEIGHT = 800
 # Le nombre d'images par seconde
 FPS = 60
 
-# Les images et les sons utilisés
+
+### Les images et les sons utilisés (les assets)
 ASSETS_ROOT = "BarbieRampageGame/ressources/assets/"
 TEXTURES_ROOT = ASSETS_ROOT + "textures/" # Le chemin des textures
 SOUNDS_ROOT = ASSETS_ROOT + "sounds/" # Le chemin des effets sonores
 
 PLAYER_TEXTURES_LOCATION = TEXTURES_ROOT + "player/"
+
+TILES_TEXTURES_LOCATION = TEXTURES_ROOT + "tiles/"
+
+
+### Les données utilisées (les data)
+DATA_ROOT = "BarbieRampageGame/ressources/data/"
+
+WORLDS_DATA_LOCATION = DATA_ROOT + "worlds/"
