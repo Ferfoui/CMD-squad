@@ -5,7 +5,7 @@ from Constants import *
 from Classes import *
 
 # Initialisation du moteur graphique
-pygame.init
+pygame.init()
 
 # Définition de la taille de l'écran
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
