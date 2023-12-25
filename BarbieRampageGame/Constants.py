@@ -5,7 +5,7 @@ GAME_NAME = "Barbie Rampage"
 
 # La taille de l'écran
 SCREEN_WIDTH = 1000 # La largeur
-SCREEN_HEIGHT = 800 # La hauteur
+SCREEN_HEIGHT = int(SCREEN_WIDTH * 0.8) # La hauteur
 
 # Le nombre d'images par seconde
 FPS = 60
@@ -19,8 +19,16 @@ COLOR_RED = (200, 25, 25)
 COLOR_ORANGE = (255, 69, 0)
 
 # Les noms des tuiles
-TILE_TYPES = ['dirt_default', 'grass_default', 'player_spawn']
+OBSTACLES_TILE_TYPES = ['dirt_default', 'grass_default']
+ENTITY_TILE_TYPES = []
+PLAYER_AND_ENEMIES_TILE_TYPES = ['player_spawn']
 
+TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES = OBSTACLES_TILE_TYPES + ENTITY_TILE_TYPES
+
+TILE_TYPES = TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES + PLAYER_AND_ENEMIES_TILE_TYPES
+
+# Les constantes ingame
+GRAVITY = 0.75
 
 ### Les images et les sons utilisés (les assets)
 ASSETS_ROOT = "BarbieRampageGame/ressources/assets/"
