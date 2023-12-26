@@ -301,7 +301,7 @@ class World():
         self.img_dict = {}
         for tile_name in TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES:
             img = pygame.image.load(f'{TILES_TEXTURES_LOCATION}{tile_name}.png').convert_alpha()
-            img = pygame.transform.scale(img, (tile_size, tile_size))
+            img = pygame.transform.scale(img, (tile_size, tile_size * img.get_height() // img.get_width()))
             self.img_dict[tile_name] = img
 
     def process_data(self, data, scroll: Scroll) -> Player:

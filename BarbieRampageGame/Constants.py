@@ -19,7 +19,7 @@ COLOR_RED = (200, 25, 25)
 COLOR_ORANGE = (255, 69, 0)
 
 # Les noms des tuiles
-OBSTACLES_TILE_TYPES = ['dirt_default', 'grass_default']
+OBSTACLES_TILE_TYPES = ['dirt_default', 'dirt_default_right_border', 'dirt_default_left_border', 'dirt_default_down_border', 'dirt_default_left_down_border', 'dirt_default_right_down_border', 'grass_default', 'grass_default_right_border', 'grass_default_left_border', 'grass_default_left_side', 'grass_default_right_side']
 ENTITY_TILE_TYPES = []
 PLAYER_AND_ENEMIES_TILE_TYPES = ['player_spawn']
 

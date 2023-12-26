@@ -50,7 +50,7 @@ default_font = pygame.font.Font(consts.PS2P_FONT_LOCATION, 30)
 img_dict = {}
 for tile_name in consts.TILE_TYPES:
     img = pygame.image.load(f'{consts.TILES_TEXTURES_LOCATION}{tile_name}.png').convert_alpha()
-    img = pygame.transform.scale(img, (TILE_SIZE, TILE_SIZE))
+    img = pygame.transform.scale(img, (TILE_SIZE, TILE_SIZE * img.get_height() // img.get_width()))
     img_dict[tile_name] = img
 
 # Changement de l'icone
