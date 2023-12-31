@@ -48,7 +48,7 @@ with open(f"{WORLDS_DATA_LOCATION}level0_data.csv") as world_file:
 
 world = World(TILE_SIZE)
 
-scroll = Scroll()
+scroll = Scroll(TILE_SIZE)
 
 player = world.process_data(world_data, scroll)
 
@@ -72,22 +72,6 @@ while run:
         if event.type == pygame.QUIT:
             # Faire quitter la boucle si l'utilisateur quitte le jeu
             run = False
-
-        # Quand on appuie sur une touche
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_q:
-                player.set_movement_left(True)
-            if event.key == pygame.K_d:
-                player.set_movement_right(True)
-            if event.key == pygame.K_SPACE:
-                player.jump()
-
-        # Quand on arrête d'appuyer sur une touche
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_q:
-                player.set_movement_left(False)
-            if event.key == pygame.K_d:
-                player.set_movement_right(False)
 
     # Mise à jour de l'écran à chaque tours de boucle
     pygame.display.update()

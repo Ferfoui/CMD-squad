@@ -6,21 +6,26 @@ from Constants import *
 
 # Classe qui permet de gérer les boutons
 class Button():
-    def __init__(self, x: int, y: int, image: pygame.Surface, scale:int | float):
+    def __init__(self, x: int, y: int, image: pygame.Surface, clicked_image: pygame.Surface, scale:int | float):
         """Initialise la classe Button
 
         Args:
             x (int): position en abscisses où le bouton va être créé
             y (int): position en ordonnées où le bouton va être créé
             image (pygame.Surface): image qui correspond au bouton
+            clicked_image (pygame.Surface): image qui va s'afficher quand on clicke sur le bouton
             scale (int or float): nombre par lequel on multiplie la taille de l'image pour obtenir la taille du bouton
         """
         width = image.get_width()
         height = image.get_height()
         self.image = pygame.transform.scale(image, (int(width * scale), int(height * scale)))
+        self.clicked_image = pygame.transform.scale(clicked_image, (int(width * scale), int(height * scale)))
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.clicked = False
+        self.do_draw_clicked_img = False
+        # Le temps pour pouvoir changer l'image pendant un certain temps
+        self.update_time = pygame.time.get_ticks()
 
     def draw(self, screen: pygame.Surface) -> bool:
         """Affiche le bouton
@@ -31,31 +36,50 @@ class Button():
         Returns:
             bool: si l'utilisateur a clické dessus
         """
+        RESET_CLICKED_IMG_TIME = 200
         action = False
 
-		# position de la souris
+		# Position de la souris
         pos = pygame.mouse.get_pos()
 
-		# vérifie si la souris a clické sur le bouton
+		# Vérifie si la souris a clické sur le bouton
         if self.rect.collidepoint(pos):
             if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
                 action = True
                 self.clicked = True
+                self.set_clicked_img()
 
-        if pygame.mouse.get_pressed()[0] == 0:
-            self.clicked = False
+            if pygame.mouse.get_pressed()[0] == 0:
+                self.clicked = False
+                
+        # Vérifie si le bouton a été clické depuis assez longtemps pour remettre l'image par defaut
+        if pygame.time.get_ticks() - self.update_time > RESET_CLICKED_IMG_TIME:
+            self.do_draw_clicked_img = False
 
-		# affiche le bouton sur l'écran
-        screen.blit(self.image, (self.rect.x, self.rect.y))
+        # Affiche le bouton à l'écran en fonction de s'il a été clické ou non
+        if self.do_draw_clicked_img:
+            screen.blit(self.clicked_image, (self.rect.x, self.rect.y))
+        else:
+            screen.blit(self.image, (self.rect.x, self.rect.y))
 
         return action
+    
+    def set_clicked_img(self):
+        self.do_draw_clicked_img = True
+        self.update_time = pygame.time.get_ticks()
 
 # Classe qui permet de gérer le scrolling de l'écran
 class Scroll():
-    def __init__(self):
+    def __init__(self, tile_size: int):
+        """Initialise la class Scroll
+
+        Args:
+            tile_size (int): taille des tuiles
+        """
         self.THRESH = 200
         self.screen_scroll = 0
         self.bg_scroll = 0
+        self.tile_size = tile_size
 
     def set_screen_scroll(self, screen_scroll: int):
         self.screen_scroll = screen_scroll
@@ -65,7 +89,7 @@ class Scroll():
 
 # Classe qui permet de créer le joueur
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x: int, y: int, scroll: Scroll, speed:int | float, scale:int | float):
+    def __init__(self, x: int, y: int, scroll: Scroll, speed: int | float, scale: int | float):
         """Initialise la classe Player
 
         Args:
@@ -92,36 +116,21 @@ class Player(pygame.sprite.Sprite):
         # Vitesse du joueur sur l'axe vertical
         self.vel_y = 0
         # Si le joueur saute
-        self.is_jumping = False
-        # Si le joueur veut sauter
-        self.do_jump = False
+        self.jump = False
         # Si le joueur est dans les airs
         self.in_air = True
 
         # Valeur absolue du temps pour l'animation du joueur
         self.update_time = pygame.time.get_ticks()
         
-        # Dictionnaire dans lequel il y a les frames que va utiliser le joueur
-        self.animation_dict = {}
+        #self.ANIMATION_TYPES = ['Idle', 'Run', 'Jump', 'Death']
+        self.ANIMATION_TYPES = ['Idle']
+        
+        # Dictionnaire dans lequel il y a les frames des différentes animations du joueur
+        self.animation_dict = self.load_animation(self.ANIMATION_TYPES, f"{PLAYER_TEXTURES_LOCATION}default", scale)
         # Index de la frame actuelle du joueur
         self.frame_index = 0
         
-        # Charge toutes les images du joueur
-        #self.ANIMATION_TYPES = ['Idle', 'Run', 'Jump', 'Death']
-        self.ANIMATION_TYPES = ['Idle']
-        for animation in self.ANIMATION_TYPES:
-
-            self.animation_dict[animation] = []
-
-			# Compte le nombre d'image qu'il y a dans le dossier
-            number_of_frames = len(os.listdir(f"{PLAYER_TEXTURES_LOCATION}default/{animation}"))
-            for i in range(number_of_frames):
-                # Charge l'image dans la mémoire
-                img = pygame.image.load(f"{PLAYER_TEXTURES_LOCATION}default/{animation}/{i}.png").convert_alpha()
-                # Converti l'image pour qu'elle soit de la taille voulue
-                img = pygame.transform.scale(img, (int(img.get_width() * scale), int(img.get_height() * scale)))
-                self.animation_dict[animation].append(img)
-
         # Met le joueur en position Idle
         self.action = self.ANIMATION_TYPES[0]
         # Met l'image correspondant à son action
@@ -132,28 +141,33 @@ class Player(pygame.sprite.Sprite):
         
         self.width = self.image.get_width()
         self.height = self.image.get_height()
-
-    def set_movement_right(self, do_move: bool):
-        """Méthode qui définie si le joueur va aller à droite
-
-        Args:
-            do_move (bool): si le joueur va aller à droite
-        """
-        self.move_right = do_move
-
-    def set_movement_left(self, do_move: bool):
-        """Méthode qui définie si le joueur va aller à gauche
-
-        Args:
-            do_move (bool): si le joueur va aller à gauche
-        """
-        self.move_left = do_move
     
-    def jump(self):
-        """Fais sauter le joueur"""
-        if not self.in_air:
-            self.do_jump = True
-            #self.update_action(self.ANIMATION_TYPES[2]) # "Jump"
+    
+    def load_animation(self, animation_types: list, texture_location: str, scale: int | float) -> dict:
+        """Méthode qui permet de charger les animations du joueur
+
+        Args:
+            animation_types (list): liste qui contient les noms des animations
+            texture_location (str): chemin vers les textures
+            scale (int | float): nombre par lequel on multiplie la taille du Sprite pour obtenir la taille du joueur
+
+        Returns:
+            dict: dictionnaire qui contient les listes d'images à afficher pour animer le joueur
+        """
+        animation_dict = {}
+        
+        for animation in animation_types:
+            animation_dict[animation] = []
+			# Compte le nombre d'image qu'il y a dans le dossier
+            number_of_frames = len(os.listdir(f"{texture_location}/{animation}"))
+            for i in range(number_of_frames):
+                # Charge l'image dans la mémoire
+                img = pygame.image.load(f"{texture_location}/{animation}/{i}.png").convert_alpha()
+                # Converti l'image pour qu'elle soit de la taille voulue
+                img = pygame.transform.scale(img, (int(img.get_width() * scale), int(img.get_height() * scale)))
+                animation_dict[animation].append(img)
+        
+        return animation_dict
 
     def move(self, world):
         """Méthode qui permet de mettre à jour la position du joueur
@@ -163,26 +177,30 @@ class Player(pygame.sprite.Sprite):
         """
         dx = 0
         dy = 0
+        self.is_running = False
+        
+        # Les touches entrées par l'utilisateur
+        input_key = pygame.key.get_pressed()
         
         if self.is_alive:
-            # Mouvements à droite et à gauche
-            if self.move_right:
-                dx += self.speed
-                self.flip = False
-                self.direction = 1
-            if self.move_left:
-                dx -= self.speed
+            # Mouvement à gauche
+            if input_key[pygame.K_q]:
+                dx = -self.speed
+                self.is_running = True
                 self.flip = True
                 self.direction = -1
-            
+            # Mouvement à droite
+            if input_key[pygame.K_d]:
+                dx = self.speed
+                self.is_running = True
+                self.flip = False
+                self.direction = 1
+
             # Sauts
-            if self.do_jump == True and self.in_air == False:
-                self.vel_y = -11
-                self.do_jump = False
-                self.is_jumping = True
+            if input_key[pygame.K_SPACE] and self.jump == False and self.in_air == False:
+                self.vel_y = -12
+                self.jump = True
                 self.in_air = True
-            elif self.in_air == False:
-                self.is_jumping = False
             
             # Application de la gravité
             self.vel_y += GRAVITY
@@ -205,24 +223,27 @@ class Player(pygame.sprite.Sprite):
                     elif self.vel_y >= 0:
                         self.vel_y = 0
                         self.in_air = False
+                        self.jump = False
                         dy = tile[1].top - self.rect.bottom
         
-            if self.is_jumping:
-                #self.update_action(self.ANIMATION_TYPES[2]) # "Jump"
-                pass
-            elif dx != 0:
-                #self.update_action(self.ANIMATION_TYPES[1]) # "Run"
-                pass
-            else:
-                self.update_action(self.ANIMATION_TYPES[0]) # "Idle"
-            
-        
+            if abs(dy) > 0:
+                self.in_air = True
+
         # Met à jour la position du joueur
         self.rect.x += dx
         self.rect.y += dy
         
-        # Met à jour le scrolling de l'écran en fonction de la position du joueur
-        if self.rect.right > SCREEN_WIDTH - self.scroll.THRESH or self.rect.left < self.scroll.THRESH:
+        self.update_scrolling(world, dx)
+    
+    def update_scrolling(self, world, dx: int):
+        """Met à jour le scrolling en fonction de la position du joueur par rapport à l'écran
+
+        Args:
+            world (World): monde dans lequel le joueur se déplace
+            dx (int): distance de laquelle le joueur s'est déplacé
+        """
+        if (self.rect.right > SCREEN_WIDTH - self.scroll.THRESH and self.scroll.bg_scroll < (world.level_length * self.scroll.tile_size) - SCREEN_WIDTH)\
+				or (self.rect.left < self.scroll.THRESH and self.scroll.bg_scroll > abs(dx)):
             self.rect.x -= dx
             self.scroll.set_screen_scroll(-dx)
         else:
@@ -230,6 +251,17 @@ class Player(pygame.sprite.Sprite):
     
     def update_animation(self):
         """Met à jour l'animation du joueur"""
+        
+        # Met l'animation qui correspond à ce que le joueur fait
+        if not self.alive:
+            self.update_action(self.ANIMATION_TYPES[3]) # "Death"
+        elif self.jump == True:
+            self.update_action(self.ANIMATION_TYPES[2]) # "Jump"
+        elif self.is_running == True:
+            self.update_action(self.ANIMATION_TYPES[1]) # "Run"
+        else:
+            self.update_action(self.ANIMATION_TYPES[0]) # "Idle"
+            
         ANIMATION_COOLDOWN = 100
         # Met à jour l'image en fonction de la frame actuelle
         self.image = self.animation_dict[self.action][self.frame_index]
@@ -267,7 +299,6 @@ class Player(pygame.sprite.Sprite):
             self.health = 0
             self.speed = 0
             self.is_alive = False
-            self.update_action(self.ANIMATION_TYPES[3]) # "Death"
 
     def update(self):
         """Méthode qui doit être appelée à chaque frame pour mettre à jour les caractéristiques du joueur"""
@@ -280,7 +311,7 @@ class Player(pygame.sprite.Sprite):
         """Méthode qui permet d'afficher le joueur
 
         Args:
-            screen (pygame.Surface): fenêtre sur laquelle le joueur doit être afficher
+            screen (pygame.Surface): fenêtre sur laquelle le joueur doit être affiché
         """
         screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
 
@@ -315,6 +346,7 @@ class World():
             Player: joueur créé dans le monde
         """
         self.scroll = scroll
+        self.level_length = len(data[0])
         
         for y, row in enumerate(data):
             for x, tile in enumerate(row):
@@ -339,7 +371,7 @@ class World():
         """Méthode qui permet d'afficher le monde
 
         Args:
-            screen (pygame.Surface): fenêtre sur laquelle le monde doit être afficher
+            screen (pygame.Surface): fenêtre sur laquelle le monde doit être affiché
         """
         for tile in self.obstacle_list:
             tile[1][0] += self.scroll.screen_scroll

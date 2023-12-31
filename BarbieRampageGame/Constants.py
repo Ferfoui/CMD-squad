@@ -16,7 +16,8 @@ COLOR_WHITE_AZURE = (240, 255, 255)
 COLOR_GRAY = (60, 64, 64)
 COLOR_DARK = (20, 21, 25)
 COLOR_RED = (200, 25, 25)
-COLOR_ORANGE = (255, 69, 0)
+COLOR_ORANGE = (189, 68, 23)
+COLOR_DARK_ORANGE = (107, 28, 6)
 
 # Les noms des tuiles
 OBSTACLES_TILE_TYPES = ['dirt_default', 'dirt_default_right_border', 'dirt_default_left_border', 'dirt_default_down_border', 'dirt_default_left_down_border', 'dirt_default_right_down_border', 'grass_default', 'grass_default_right_border', 'grass_default_left_border', 'grass_default_left_side', 'grass_default_right_side']
@@ -27,7 +28,7 @@ TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES = OBSTACLES_TILE_TYPES + ENTITY_TILE_TYPES
 
 TILE_TYPES = TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES + PLAYER_AND_ENEMIES_TILE_TYPES
 
-# Les constantes ingame
+# Les constantes in-game
 GRAVITY = 0.75
 
 ### Les images et les sons utilisés (les assets)

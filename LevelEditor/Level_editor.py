@@ -70,15 +70,18 @@ for tile in range(0, MAX_COLS):
 
 # Création des boutons de sauvegarde et de chargement de niveau
 save_img = default_font.render('SAVE', True, consts.COLOR_ORANGE)
+save_clicked_img = default_font.render('SAVE', True, consts.COLOR_DARK_ORANGE)
 load_img = default_font.render('LOAD', True, consts.COLOR_ORANGE)
-save_button = classes.Button(SCREEN_WIDTH // 2, SCREEN_HEIGHT + LOWER_MARGIN - 50, save_img, 1)
-load_button = classes.Button(SCREEN_WIDTH // 2 + 200, SCREEN_HEIGHT + LOWER_MARGIN - 50, load_img, 1)
+load_clicked_img = default_font.render('LOAD', True, consts.COLOR_DARK_ORANGE)
+
+save_button = classes.Button(SCREEN_WIDTH // 2, SCREEN_HEIGHT + LOWER_MARGIN - 50, save_img, save_clicked_img, 1)
+load_button = classes.Button(SCREEN_WIDTH // 2 + 200, SCREEN_HEIGHT + LOWER_MARGIN - 50, load_img, load_clicked_img, 1)
 # Crée la liste des boutons à afficher pour selectionner les tuiles
 button_dict = {}
 button_col = 0
 button_row = 0
 for tile_name in consts.TILE_TYPES:
-	tile_button = classes.Button(SCREEN_WIDTH + (75 * button_col) + 50, 75 * button_row + 50, img_dict[tile_name], 1)
+	tile_button = classes.Button(SCREEN_WIDTH + (75 * button_col) + 50, 75 * button_row + 50, img_dict[tile_name], img_dict[tile_name], 1)
 	button_dict[tile_name] = tile_button
 	button_col += 1
 	if button_col == 3:
