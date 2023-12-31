@@ -76,5 +76,5 @@ while run:
     # Mise à jour de l'écran à chaque tours de boucle
     pygame.display.update()
 
-# Fermeture le programme
+# Fermeture du programme
 pygame.quit()
