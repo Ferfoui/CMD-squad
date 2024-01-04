@@ -64,3 +64,9 @@ print(Casa_Mojo_Dojo_squad)
 - ak-47
 - lance-roquettes
 - lance-flammes
+
+--------------------------------------------------------------------
+## Commentaires sur le cahier des charges
+Vous êtes très ambitieux en voulant implémenter beaucoup de choses. C'est bien mais dangereux. Il va falloir bien prioriser tout ça en se demandant ce qui est rééllement important et ce qui l'est moins.
+
+Par exemple, vous pouvez déjà oublier l'implémentation de la manette car ça le rendra intestable pour qui n'a pas la manette adéquate, à commencer par moi. Il y a sans doute trop de paramètres réglables aussi.
