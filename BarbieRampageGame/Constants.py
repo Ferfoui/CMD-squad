@@ -13,6 +13,7 @@ FPS = 60
 
 # Les couleurs du jeu
 COLOR_WHITE_AZURE = (240, 255, 255)
+COLOR_SKY_BLUE = (52, 117, 183)
 COLOR_GRAY = (60, 64, 64)
 COLOR_DARK = (20, 21, 25)
 COLOR_RED = (200, 25, 25)
@@ -20,7 +21,7 @@ COLOR_ORANGE = (189, 68, 23)
 COLOR_DARK_ORANGE = (107, 28, 6)
 
 # Les noms des tuiles
-OBSTACLES_TILE_TYPES = ['dirt_default', 'dirt_default_right_border', 'dirt_default_left_border', 'dirt_default_down_border', 'dirt_default_left_down_border', 'dirt_default_right_down_border', 'grass_default', 'grass_default_right_border', 'grass_default_left_border', 'grass_default_left_side', 'grass_default_right_side']
+OBSTACLES_TILE_TYPES = ['dirt_default', 'dirt_default_right_border', 'dirt_default_left_border', 'dirt_default_down_border', 'dirt_default_down_left_corner', 'dirt_default_down_right_corner', 'grass_default', 'grass_default_right_border', 'grass_default_left_border', 'grass_default_left_side', 'grass_default_right_side']
 ENTITY_TILE_TYPES = []
 PLAYER_AND_ENEMIES_TILE_TYPES = ['player_spawn']
 
@@ -40,6 +41,8 @@ FONTS_ROOT = ASSETS_ROOT + "fonts/" # Le chemin vers les polices d'écriture
 PLAYER_TEXTURES_LOCATION = TEXTURES_ROOT + "player/"
 
 TILES_TEXTURES_LOCATION = TEXTURES_ROOT + "tiles/"
+
+BACKGROUND_TEXTURES_LOCATION = TEXTURES_ROOT + "background/"
 
 PS2P_FONT_LOCATION = FONTS_ROOT + "Press_Start_2P/PressStart2P-REGULAR.ttf"
 

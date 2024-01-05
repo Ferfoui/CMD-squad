@@ -23,6 +23,10 @@ ROWS = 16
 COLS = 150
 TILE_SIZE = SCREEN_HEIGHT // ROWS
 
+# Images
+sky_img = pygame.image.load(f"{BACKGROUND_TEXTURES_LOCATION}sky.png").convert_alpha()
+sky_img = pygame.transform.scale(sky_img, (SCREEN_WIDTH, SCREEN_WIDTH * sky_img.get_height() // sky_img.get_width()))
+
 ### Fonctions ###
 # Function qui affiche le background
 def draw_background(screen: pygame.Surface, scroll: Scroll):
@@ -31,7 +35,10 @@ def draw_background(screen: pygame.Surface, scroll: Scroll):
     Args:
         screen (pygame.Surface): écran sur lequel le background doit être affiché
     """
-    screen.fill(COLOR_GRAY)
+    screen.fill(COLOR_SKY_BLUE)
+    width = sky_img.get_width()
+    for x in range(5):
+        screen.blit(sky_img, ((x * width) - scroll.bg_scroll * 0.2, 0))
     
 ### Initialisation du monde ###
 world_data = []
