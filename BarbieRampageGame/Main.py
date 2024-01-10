@@ -75,7 +75,7 @@ player = world.process_data(world_data, scroll)
 
 run = True
 game_loading = True
-game_loading_timer = 5000 #ms
+game_loading_timer = 3000 #ms
 loading_start_time = pygame.time.get_ticks()
 current_time = loading_start_time
 # Boucle qui va permettre de faire tourner le jeu
