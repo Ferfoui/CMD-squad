@@ -23,6 +23,9 @@ ROWS = 16
 COLS = 150
 TILE_SIZE = SCREEN_HEIGHT // ROWS
 
+# Police d'écriture
+default_font = pygame.font.Font(PS2P_FONT_LOCATION, 15)
+
 # Images
 sky_img = pygame.image.load(f"{BACKGROUND_TEXTURES_LOCATION}sky.png").convert_alpha()
 sky_img = pygame.transform.scale(sky_img, (SCREEN_WIDTH, SCREEN_WIDTH * sky_img.get_height() // sky_img.get_width()))
@@ -56,6 +59,10 @@ def draw_loading_screen(screen: pygame.Surface):
     img_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
     screen.fill(COLOR_WHITE_AZURE)
     screen.blit(cmd_img, img_rect)
+
+def draw_text(screen: pygame.Surface, text, font, text_col, x, y):
+	img = font.render(text, True, text_col)
+	screen.blit(img, (x, y))
 
 ### Initialisation du monde ###
 world_data = []
@@ -107,6 +114,8 @@ while run:
         
     
     current_time = pygame.time.get_ticks()
+
+    draw_text(screen, "time: " + str(current_time), default_font, COLOR_DARK, 5, 5)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
