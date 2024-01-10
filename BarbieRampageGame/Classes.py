@@ -228,6 +228,11 @@ class Player(pygame.sprite.Sprite):
         
             if abs(dy) > 0:
                 self.in_air = True
+        
+            # Tuer le joueur s'il sort de l'écran par le bas
+            if self.rect.top + dy > SCREEN_HEIGHT:
+                self.is_alive = False
+                self.vel_y = 0
 
         # Met à jour la position du joueur
         self.rect.x += dx
@@ -253,7 +258,7 @@ class Player(pygame.sprite.Sprite):
         """Met à jour l'animation du joueur"""
         
         # Met l'animation qui correspond à ce que le joueur fait
-        if not self.alive:
+        if not self.is_alive:
             self.update_action(self.ANIMATION_TYPES[3]) # "Death"
         elif self.jump == True:
             self.update_action(self.ANIMATION_TYPES[2]) # "Jump"
