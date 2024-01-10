@@ -27,6 +27,9 @@ TILE_SIZE = SCREEN_HEIGHT // ROWS
 sky_img = pygame.image.load(f"{BACKGROUND_TEXTURES_LOCATION}sky.png").convert_alpha()
 sky_img = pygame.transform.scale(sky_img, (SCREEN_WIDTH, SCREEN_WIDTH * sky_img.get_height() // sky_img.get_width()))
 
+cmd_img = pygame.image.load(f"{ASSETS_ROOT}casadojomojo.png").convert()
+cmd_img = pygame.transform.scale(cmd_img, (SCREEN_WIDTH // 2, (SCREEN_WIDTH // 2) * cmd_img.get_height() // cmd_img.get_width()))
+
 ### Fonctions ###
 # Function qui affiche le background
 def draw_background(screen: pygame.Surface, scroll: Scroll):
@@ -40,6 +43,17 @@ def draw_background(screen: pygame.Surface, scroll: Scroll):
     for x in range(5):
         screen.blit(sky_img, ((x * width) - scroll.bg_scroll * 0.2, 0))
     
+def draw_loading_screen(screen: pygame.Surface):
+    """Fonction qui affiche l'image incroyable
+
+    Args:
+        screen (pygame.Surface): écran sur lequel l'image doit être affichée
+    """
+    img_rect = cmd_img.get_rect()
+    img_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+    screen.fill(COLOR_WHITE_AZURE)
+    screen.blit(cmd_img, img_rect)
+
 ### Initialisation du monde ###
 world_data = []
 for row in range(ROWS):
@@ -60,20 +74,33 @@ scroll = Scroll(TILE_SIZE)
 player = world.process_data(world_data, scroll)
 
 run = True
+game_loading = True
+game_loading_timer = 5000 #ms
+loading_start_time = pygame.time.get_ticks()
+current_time = loading_start_time
 # Boucle qui va permettre de faire tourner le jeu
 while run:
 
     # Fait en sorte que le jeu tourne à un nombre limité de FPS
     clock.tick(FPS)
-
-    draw_background(screen, scroll)
     
-    world.draw(screen)
+    if game_loading:
+        draw_loading_screen(screen)
+        if current_time - loading_start_time >= game_loading_timer:
+            game_loading = False
+    else:
 
-    player.update()
-    player.draw(screen)
+        draw_background(screen, scroll)
+        
+        world.draw(screen)
+
+        player.update()
+        player.draw(screen)
+        
+        player.move(world)
+        
     
-    player.move(world)
+    current_time = pygame.time.get_ticks()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
