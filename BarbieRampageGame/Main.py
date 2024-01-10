@@ -109,8 +109,14 @@ while run:
         
         player.move(world)
         
+        input_key = pygame.key.get_pressed()
+        
         if not player.is_alive:
             screen.blit(debug_img, (0, 0))
+            #pour afficher l'écran ptés(nan l'écran de mort bouffon)
+            if input_key[pygame.K_r]:
+                player.is_alive = True
+                #début de piste pour le problème respawn...
         
     
     current_time = pygame.time.get_ticks()
