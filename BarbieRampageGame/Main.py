@@ -30,10 +30,13 @@ sky_img = pygame.transform.scale(sky_img, (SCREEN_WIDTH, SCREEN_WIDTH * sky_img.
 cmd_img = pygame.image.load(f"{ASSETS_ROOT}casadojomojo.png").convert()
 cmd_img = pygame.transform.scale(cmd_img, (SCREEN_WIDTH // 2, (SCREEN_WIDTH // 2) * cmd_img.get_height() // cmd_img.get_width()))
 
+debug_img = pygame.image.load(f"{TEXTURES_ROOT}debug.png").convert_alpha()
+debug_img = pygame.transform.scale(debug_img, (SCREEN_WIDTH // 2, (SCREEN_HEIGHT // 2)))
+
 ### Fonctions ###
-# Function qui affiche le background
+# Fonction qui affiche le background
 def draw_background(screen: pygame.Surface, scroll: Scroll):
-    """Function qui affiche l'arrière plan
+    """Fonction qui affiche l'arrière plan
 
     Args:
         screen (pygame.Surface): écran sur lequel le background doit être affiché
@@ -98,6 +101,9 @@ while run:
         player.draw(screen)
         
         player.move(world)
+        
+        if not player.is_alive:
+            screen.blit(debug_img, (0, 0))
         
     
     current_time = pygame.time.get_ticks()

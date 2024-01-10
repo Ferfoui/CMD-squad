@@ -231,7 +231,7 @@ class Player(pygame.sprite.Sprite):
         
             # Tuer le joueur s'il sort de l'écran par le bas
             if self.rect.top + dy > SCREEN_HEIGHT:
-                self.is_alive = False
+                self.health = 0
                 self.vel_y = 0
 
         # Met à jour la position du joueur
@@ -320,7 +320,7 @@ class Player(pygame.sprite.Sprite):
         """
         screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
 
-
+    
 ### Monde ###
 
 class World():
