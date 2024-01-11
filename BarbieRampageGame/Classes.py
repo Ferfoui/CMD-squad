@@ -144,16 +144,16 @@ class Player(pygame.sprite.Sprite):
         self.height = self.image.get_height()
     
     
-    def load_animation(self, animation_types: list, texture_location: str, scale: int | float) -> dict:
+    def load_animation(self, animation_types: list[str], texture_location: str, scale: int | float) -> dict[str, list[pygame.Surface]]:
         """Méthode qui permet de charger les animations du joueur
 
         Args:
-            animation_types (list): liste qui contient les noms des animations
+            animation_types (list[str]): liste qui contient les noms des animations
             texture_location (str): chemin vers les textures
             scale (int | float): nombre par lequel on multiplie la taille du Sprite pour obtenir la taille du joueur
 
         Returns:
-            dict: dictionnaire qui contient les listes d'images à afficher pour animer le joueur
+            dict[str, list[pygame.Surface]]: dictionnaire qui contient les listes d'images à afficher pour animer le joueur
         """
         animation_dict = {}
         
@@ -355,6 +355,7 @@ class World():
         # Reset les data du monde
         self.world_data = []
         self.scroll.bg_scroll = 0
+        self.obstacle_list = []
         
         for row in range(rows):
             r = ['air'] * cols

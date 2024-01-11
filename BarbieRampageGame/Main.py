@@ -59,10 +59,20 @@ def draw_loading_screen(screen: pygame.Surface):
     screen.fill(COLOR_WHITE_AZURE)
     screen.blit(cmd_img, img_rect)
 
-def draw_text(screen: pygame.Surface, text, font, text_col, x, y):
-	img = font.render(text, True, text_col)
-	screen.blit(img, (x, y))
- 
+def draw_text(screen: pygame.Surface, text: str, font: pygame.font.Font, text_col: tuple[int, int, int], x: int, y: int):
+    """Fonction qui affiche du texte
+
+    Args:
+        screen (pygame.Surface): écran sur lequel le texte doit être affiché
+        text (str): texte qui doit être affiché
+        font (pygame.font.Font): police à utiliser
+        text_col (tuple[int, int, int]): couleur du texte
+        x (int): position en abscisses où le texte va être affiché
+        y (int): position en ordonnées où le texte va être affiché
+    """
+    img = font.render(text, True, text_col)
+    screen.blit(img, (x, y))
+
 def timer_minute(milisec):
     sec = milisec//1000
     min = 0
