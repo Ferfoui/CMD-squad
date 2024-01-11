@@ -1,5 +1,6 @@
 import pygame
 import os
+import csv
 from Constants import *
 
 ### Interface ###
@@ -324,14 +325,17 @@ class Player(pygame.sprite.Sprite):
 ### Monde ###
 
 class World():
-    def __init__(self, tile_size: int):
+    def __init__(self, tile_size: int, scroll: Scroll):
         """Initialise la classe World
 
         Args:
             tile_size (int): longueur des côtés des tuiles
+            scroll (Scroll): valeurs de scrolling utilisés par les objets dans le monde
         """
+        self.world_data = []
         self.tile_size = tile_size
         self.obstacle_list = []
+        self.scroll = scroll
 
         # Charge toutes les images
         self.img_dict = {}
@@ -339,21 +343,40 @@ class World():
             img = pygame.image.load(f'{TILES_TEXTURES_LOCATION}{tile_name}.png').convert_alpha()
             img = pygame.transform.scale(img, (tile_size, tile_size * img.get_height() // img.get_width()))
             self.img_dict[tile_name] = img
-
-    def process_data(self, data, scroll: Scroll) -> Player:
-        """Méthode qui génére le monde en fonction des données données
+    
+    def init_data(self, level_name: str, rows: int, cols: int):
+        """Initialise les données du niveau
 
         Args:
-            data (list): données du monde
-            scroll (Scroll): valeurs de scrolling utilisés par les objets dans le monde
+            level_name (str): nom du niveau dans les fichiers
+            rows (int): nombre de lignes dans le niveau
+            cols (int): nombre de colonnes dans le niveau
+        """
+        # Reset les data du monde
+        self.world_data = []
+        self.scroll.bg_scroll = 0
+        
+        for row in range(rows):
+            r = ['air'] * cols
+            self.world_data.append(r)
+
+        # Chargement du monde
+        with open(WORLDS_DATA_LOCATION + level_name) as world_file:
+            reader = csv.reader(world_file, delimiter=',')
+            for x, row in enumerate(reader):
+                for y, tile in enumerate(row):
+                    self.world_data[x][y] = tile
+
+
+    def process_data(self) -> Player:
+        """Méthode qui génére le monde en fonction des données données
 
         Returns:
             Player: joueur créé dans le monde
         """
-        self.scroll = scroll
-        self.level_length = len(data[0])
+        self.level_length = len(self.world_data[0])
         
-        for y, row in enumerate(data):
+        for y, row in enumerate(self.world_data):
             for x, tile in enumerate(row):
                 # Si c'est un objet comme un bloc ou une entité
                 if tile in TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES:

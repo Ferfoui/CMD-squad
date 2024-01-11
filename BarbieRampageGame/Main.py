@@ -1,7 +1,6 @@
 # Codé par la CMD-squad
 
 import pygame
-import csv
 from Constants import *
 from Classes import *
 
@@ -63,25 +62,28 @@ def draw_loading_screen(screen: pygame.Surface):
 def draw_text(screen: pygame.Surface, text, font, text_col, x, y):
 	img = font.render(text, True, text_col)
 	screen.blit(img, (x, y))
+ 
+def timer_minute(milisec):
+    sec = milisec//1000
+    min = 0
+    hour = 0
+    if sec > 59:
+        min += 1
+        sec = sec - 60
+        return hour,min,sec
+        if min > 59:
+            hour += 1
+            min = min - 60
+            return hour,min,sec
 
-### Initialisation du monde ###
-world_data = []
-for row in range(ROWS):
-    r = ['air'] * COLS
-    world_data.append(r)
-
-# Chargement du monde
-with open(f"{WORLDS_DATA_LOCATION}level0_data.csv") as world_file:
-    reader = csv.reader(world_file, delimiter=',')
-    for x, row in enumerate(reader):
-        for y, tile in enumerate(row):
-            world_data[x][y] = tile
-
-world = World(TILE_SIZE)
 
 scroll = Scroll(TILE_SIZE)
 
-player = world.process_data(world_data, scroll)
+world = World(TILE_SIZE, scroll)
+
+world.init_data("level0_data.csv", ROWS, COLS)
+
+player = world.process_data()
 
 run = True
 game_loading = True
@@ -121,7 +123,8 @@ while run:
     
     current_time = pygame.time.get_ticks()
 
-    draw_text(screen, "time: " + str(current_time), default_font, COLOR_DARK, 5, 5)
+    # Afficher le temps actuel à l'écran
+    draw_text(screen, "time: " + str(timer_minute(current_time)), default_font, COLOR_DARK, 5, 5)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
