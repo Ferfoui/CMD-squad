@@ -74,13 +74,13 @@ def draw_text(screen: pygame.Surface, text: str, font: pygame.font.Font, text_co
     screen.blit(img, (x, y))
 
 def timer_minute(milisec:int) -> tuple[int, int, int]:
-    """Transforme des milisecondes dans le format heures, minutes et secondes
+    """Transforme des milisecondes dans le format heures, minutes puis secondes
 
     Args:
         milisec (int): nombre de milisecondes
 
     Returns:
-        tuple[int, int, int]: temps converti
+        tuple[int, int, int]: temps converti (et pas au christiannisme hein ^^)
     """
     sec = milisec // 1000
     min = sec // 60
