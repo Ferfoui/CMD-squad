@@ -120,12 +120,14 @@ class Player(pygame.sprite.Sprite):
         self.jump = False
         # Si le joueur est dans les airs
         self.in_air = True
+        # Si le joueur est en train de courir
+        self.is_running = False
 
         # Valeur absolue du temps pour l'animation du joueur
         self.update_time = pygame.time.get_ticks()
         
         #self.ANIMATION_TYPES = ['Idle', 'Run', 'Jump', 'Death']
-        self.ANIMATION_TYPES = ['Idle']
+        self.ANIMATION_TYPES = ['Idle', 'Run']
         
         # Dictionnaire dans lequel il y a les frames des différentes animations du joueur
         self.animation_dict = self.load_animation(self.ANIMATION_TYPES, f"{PLAYER_TEXTURES_LOCATION}default", scale)
@@ -261,8 +263,8 @@ class Player(pygame.sprite.Sprite):
         # Met l'animation qui correspond à ce que le joueur fait
         if not self.is_alive:
             self.update_action(self.ANIMATION_TYPES[3]) # "Death"
-        elif self.jump == True:
-            self.update_action(self.ANIMATION_TYPES[2]) # "Jump"
+        #elif self.jump == True:
+        #    self.update_action(self.ANIMATION_TYPES[2]) # "Jump"
         elif self.is_running == True:
             self.update_action(self.ANIMATION_TYPES[1]) # "Run"
         else:
@@ -279,9 +281,9 @@ class Player(pygame.sprite.Sprite):
 
 	    # Si l'animation est terminée, remise de la première image
         if self.frame_index >= len(self.animation_dict[self.action]):
-            if self.action == self.ANIMATION_TYPES[3]:
-                self.frame_index = len(self.animation_dict[self.action]) - 1
-            else:
+            #if self.action == self.ANIMATION_TYPES[3]:
+            #    self.frame_index = len(self.animation_dict[self.action]) - 1
+            #else:
                 self.frame_index = 0
 
 
@@ -311,7 +313,7 @@ class Player(pygame.sprite.Sprite):
         
         self.check_if_alive()
 
-        #self.update_animation()
+        self.update_animation()
 
     def draw(self, screen: pygame.Surface):
         """Méthode qui permet d'afficher le joueur

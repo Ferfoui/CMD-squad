@@ -4,7 +4,7 @@
 GAME_NAME = "Barbie Rampage"
 
 # La taille de l'écran
-SCREEN_WIDTH = 1000 # La largeur
+SCREEN_WIDTH = 700 # La largeur
 SCREEN_HEIGHT = int(SCREEN_WIDTH * 0.8) # La hauteur
 
 # Le nombre d'images par seconde

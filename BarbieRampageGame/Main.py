@@ -73,18 +73,19 @@ def draw_text(screen: pygame.Surface, text: str, font: pygame.font.Font, text_co
     img = font.render(text, True, text_col)
     screen.blit(img, (x, y))
 
-def timer_minute(milisec):
-    sec = milisec//1000
-    min = 0
-    hour = 0
-    if sec > 59:
-        min += 1
-        sec = sec - 60
-        return hour,min,sec
-        if min > 59:
-            hour += 1
-            min = min - 60
-            return hour,min,sec
+def timer_minute(milisec:int) -> tuple[int, int, int]:
+    """Transforme des milisecondes dans le format heures, minutes et secondes
+
+    Args:
+        milisec (int): nombre de milisecondes
+
+    Returns:
+        tuple[int, int, int]: temps converti
+    """
+    sec = milisec // 1000
+    min = sec // 60
+    hour = min // 60
+    return hour, min - hour * 60, sec - min * 60
 
 
 scroll = Scroll(TILE_SIZE)
