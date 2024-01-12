@@ -22,18 +22,8 @@ ROWS = 16
 COLS = 150
 TILE_SIZE = SCREEN_HEIGHT // ROWS
 
-# Police d'écriture
-default_font = pygame.font.Font(PS2P_FONT_LOCATION, 15)
-
-# Images
-sky_img = pygame.image.load(f"{BACKGROUND_TEXTURES_LOCATION}sky.png").convert_alpha()
-sky_img = pygame.transform.scale(sky_img, (SCREEN_WIDTH, SCREEN_WIDTH * sky_img.get_height() // sky_img.get_width()))
-
-cmd_img = pygame.image.load(f"{ASSETS_ROOT}casadojomojo.png").convert()
-cmd_img = pygame.transform.scale(cmd_img, (SCREEN_WIDTH // 2, (SCREEN_WIDTH // 2) * cmd_img.get_height() // cmd_img.get_width()))
-
-debug_img = pygame.image.load(f"{TEXTURES_ROOT}debug.png").convert_alpha()
-debug_img = pygame.transform.scale(debug_img, (SCREEN_WIDTH // 2, (SCREEN_HEIGHT // 2)))
+# Tous les assets du jeu, c'est à dire les images, les sons, les polices, etc...
+assets = Assets()
 
 ### Fonctions ###
 # Fonction qui affiche le background
@@ -44,9 +34,9 @@ def draw_background(screen: pygame.Surface, scroll: Scroll):
         screen (pygame.Surface): écran sur lequel le background doit être affiché
     """
     screen.fill(COLOR_SKY_BLUE)
-    width = sky_img.get_width()
+    width = assets.sky_img.get_width()
     for x in range(5):
-        screen.blit(sky_img, ((x * width) - scroll.bg_scroll * 0.2, 0))
+        screen.blit(assets.sky_img, ((x * width) - scroll.bg_scroll * 0.2, 0))
     
 def draw_loading_screen(screen: pygame.Surface):
     """Fonction qui affiche l'image incroyable
@@ -54,10 +44,10 @@ def draw_loading_screen(screen: pygame.Surface):
     Args:
         screen (pygame.Surface): écran sur lequel l'image doit être affichée
     """
-    img_rect = cmd_img.get_rect()
+    img_rect = assets.cmd_img.get_rect()
     img_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
     screen.fill(COLOR_WHITE_AZURE)
-    screen.blit(cmd_img, img_rect)
+    screen.blit(assets.cmd_img, img_rect)
 
 def draw_text(screen: pygame.Surface, text: str, font: pygame.font.Font, text_col: tuple[int, int, int], x: int, y: int):
     """Fonction qui affiche du texte
@@ -117,7 +107,10 @@ while run:
         
         world.draw(screen)
 
+        # Met à jour le joueur
         player.update()
+        
+        # Affiche le joueur
         player.draw(screen)
         
         player.move(world)
@@ -125,7 +118,7 @@ while run:
         input_key = pygame.key.get_pressed()
         
         if not player.is_alive:
-            screen.blit(debug_img, (0, 0))
+            screen.blit(assets.debug_img, (0, 0))
             #pour afficher l'écran ptés(nan l'écran de mort bouffon)
             if input_key[pygame.K_r]:
                 player.is_alive = True
@@ -135,7 +128,7 @@ while run:
     current_time = pygame.time.get_ticks()
 
     # Afficher le temps actuel à l'écran
-    draw_text(screen, "time: " + str(timer_minute(current_time)), default_font, COLOR_DARK, 5, 5)
+    draw_text(screen, "time: " + str(timer_minute(current_time)), assets.default_font, COLOR_DARK, 5, 5)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

@@ -69,6 +69,51 @@ class Button():
         self.do_draw_clicked_img = True
         self.update_time = pygame.time.get_ticks()
 
+# Classe qui gère les assets du jeu
+class Assets():
+    def __init__(self):
+        """Initialise la classe assets dans laquelle se trouve toutes les images, les sons, les polices, etc...
+        """
+        ### Images ###
+        # L'image du chargement du début
+        self.cmd_img = self.load_image_keep_proportion(f"{ASSETS_ROOT}casadojomojo.png", SCREEN_WIDTH // 2)
+        # L'image du ciel dans le background
+        self.sky_img = self.load_image_keep_proportion(f"{BACKGROUND_TEXTURES_LOCATION}sky.png", SCREEN_WIDTH)
+        # L'image de débuggage
+        self.debug_img = self.load_image(f"{TEXTURES_ROOT}debug.png", SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+        
+        ### Polices d'écriture ###
+        self.default_font = pygame.font.Font(PS2P_FONT_LOCATION, 15)
+
+    def load_image(self, texture_location: str, width: int, height: int) -> pygame.Surface:
+        """Charge une image
+
+        Args:
+            texture_location (str): position de la texture
+            width (int): largeur de l'image
+            height (int): hauteur de l'image
+
+        Returns:
+            pygame.Surface: image chargé
+        """
+        image = pygame.image.load(texture_location).convert_alpha()
+        image = pygame.transform.scale(image, (width, height))
+        return image
+
+    def load_image_keep_proportion(self, texture_location: str, width: int) -> pygame.Surface:
+        """Charge une image en gardant les proportions
+
+        Args:
+            texture_location (str): position de la texture
+            width (int): largeur de l'image
+
+        Returns:
+            pygame.Surface: image chargé
+        """
+        image = pygame.image.load(texture_location).convert_alpha()
+        image = pygame.transform.scale(image, (width, width * image.get_height() // image.get_width()))
+        return image
+
 # Classe qui permet de gérer le scrolling de l'écran
 class Scroll():
     def __init__(self, tile_size: int):
