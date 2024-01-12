@@ -5,7 +5,7 @@ print(Casa_Mojo_Dojo_squad)
 ```
 
 ```
-["Kenzo Zouine", "Joël Kalonji-Tubajika", "Basile Precioso", "Kenji Oku"]
+["Kenzo Zouine", "Joël Kalonji Tubajika", "Basile Precioso", "Kenji Oku"]
 ```
 
 ## Images
