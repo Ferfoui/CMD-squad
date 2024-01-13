@@ -33,7 +33,7 @@ TILE_TYPES = TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES + PLAYER_AND_ENEMIES_TILE_TYP
 GRAVITY = 0.75
 
 ### Les images et les sons utilisés (les assets)
-ASSETS_ROOT = "BarbieRampageGame/ressources/assets/"
+ASSETS_ROOT = "BarbieRampageGame/resources/assets/"
 TEXTURES_ROOT = ASSETS_ROOT + "textures/" # Le chemin des textures
 SOUNDS_ROOT = ASSETS_ROOT + "sounds/" # Le chemin des effets sonores
 FONTS_ROOT = ASSETS_ROOT + "fonts/" # Le chemin vers les polices d'écriture
