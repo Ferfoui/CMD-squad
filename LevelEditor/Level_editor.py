@@ -3,6 +3,7 @@
 import pygame
 import sys
 import csv
+import json
 
 # Pour pouvoir importer les fichier se trouvant dans le jeu
 sys.path.append("./BarbieRampageGame/")
@@ -115,6 +116,25 @@ def draw_world(screen: pygame.Surface):
             if tile_name in consts.TILE_TYPES:
                 screen.blit(img_dict[tile_name], (x * TILE_SIZE - scroll, y * TILE_SIZE))
 
+# Fonction qui sauvegarde le monde dans un fichier json
+def save_world():
+    # Création d'un dictionnaire contenant des listes associées à chaque types de tuile
+    world_dict = {'tiles': {}}
+    for tile_type in consts.TILE_TYPES:
+        world_dict['tiles'][tile_type] = []
+
+    # Ajout des coordonnées des tuiles dans le dictionnaire
+    for y, row in enumerate(world_data):
+        for x, tile in enumerate(row):
+            if tile in consts.TILE_TYPES:
+                tile_coordinates = {'x': x, 'y': y}
+                world_dict['tiles'][tile].append(tile_coordinates)
+    
+    # Transformation du dictionnaire en json
+    world_json = json.dumps(world_dict, indent=4)
+    # Création du fichier json
+    with open(f'{consts.WORLDS_DATA_LOCATION}level{level}_data.json', 'w') as outfile:
+        outfile.write(world_json)
 
 run = True
 # Boucle qui va permettre de faire tourner l'éditeur
@@ -138,11 +158,8 @@ while run:
     
     # Sauvegarde le monde si l'utilisateur appuie sur le boutons "save"
     if save_button.draw(screen):
-		#save level data
-        with open(f'{consts.WORLDS_DATA_LOCATION}level{level}_data.csv', 'w', newline='') as csvfile:
-            writer = csv.writer(csvfile, delimiter = ',')
-            for row in world_data:
-                writer.writerow(row)
+        save_world()
+
     # Charge le monde si l'utilisateur appuie sur le boutons "load"
     if load_button.draw(screen):
         scroll = 0

@@ -21,7 +21,7 @@ COLOR_ORANGE = (189, 68, 23)
 COLOR_DARK_ORANGE = (107, 28, 6)
 
 # Les noms des tuiles
-OBSTACLES_TILE_TYPES = ['dirt_default', 'dirt_default_right_border', 'dirt_default_left_border', 'dirt_default_down_border', 'dirt_default_down_left_corner', 'dirt_default_down_right_corner', 'grass_default', 'grass_default_right_border', 'grass_default_left_border', 'grass_default_left_side', 'grass_default_right_side']
+OBSTACLES_TILE_TYPES = ['dirt_default', 'dirt_default_right_border', 'dirt_default_left_border', 'dirt_default_down_border', 'dirt_default_down_left_corner', 'dirt_default_down_right_corner', 'grass_default', 'grass_default_right_border', 'grass_default_left_border']
 ENTITY_TILE_TYPES = []
 PLAYER_AND_ENEMIES_TILE_TYPES = ['player_spawn']
 
@@ -48,6 +48,6 @@ PS2P_FONT_LOCATION = FONTS_ROOT + "Press_Start_2P/PressStart2P-REGULAR.ttf"
 
 
 ### Les données utilisées (les data)
-DATA_ROOT = "BarbieRampageGame/ressources/data/"
+DATA_ROOT = "BarbieRampageGame/resources/data/"
 
 WORLDS_DATA_LOCATION = DATA_ROOT + "worlds/"
