@@ -118,8 +118,10 @@ def draw_world(screen: pygame.Surface):
 
 # Fonction qui sauvegarde le monde dans un fichier json
 def save_world():
+    world_dict = {}
+
     # Création d'un dictionnaire contenant des listes associées à chaque types de tuile
-    world_dict = {'tiles': {}}
+    world_dict['tiles'] = {}
     for tile_type in consts.TILE_TYPES:
         world_dict['tiles'][tile_type] = []
 
@@ -129,6 +131,9 @@ def save_world():
             if tile in consts.TILE_TYPES:
                 tile_coordinates = {'x': x, 'y': y}
                 world_dict['tiles'][tile].append(tile_coordinates)
+    
+    world_dict['data'] = {}
+    world_dict['data']['level_size'] = MAX_COLS
     
     # Transformation du dictionnaire en json
     world_json = json.dumps(world_dict, indent=4)
