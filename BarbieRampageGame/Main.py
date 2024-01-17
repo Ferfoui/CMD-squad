@@ -63,19 +63,19 @@ def draw_text(screen: pygame.Surface, text: str, font: pygame.font.Font, text_co
     img = font.render(text, True, text_col)
     screen.blit(img, (x, y))
 
-def timer_minute(milisec:int) -> tuple[int, int, int]:
+def timer_minute(milisec:int) -> str:
     """Transforme des milisecondes dans le format heures, minutes puis secondes
 
     Args:
         milisec (int): nombre de milisecondes
 
     Returns:
-        tuple[int, int, int]: temps converti (et pas au christiannisme hein ^^)
+        str: temps converti (et pas au christiannisme hein ^^)
     """
     sec = milisec // 1000
     min = sec // 60
     hour = min // 60
-    return hour, min - hour * 60, sec - min * 60
+    return f"{hour:02}:{min - hour * 60:02}:{sec - min * 60:02}"
 
 
 scroll = Scroll(TILE_SIZE)
@@ -128,7 +128,8 @@ while run:
     current_time = pygame.time.get_ticks()
 
     # Afficher le temps actuel à l'écran
-    draw_text(screen, "time: " + str(timer_minute(current_time)), assets.default_font, COLOR_DARK, 5, 5)
+    draw_text(screen, "game time: ", assets.default_font, COLOR_DARK, 5, 5)
+    draw_text(screen, timer_minute(current_time), assets.default_font, COLOR_DARK, 15, 25)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

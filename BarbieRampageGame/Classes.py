@@ -401,8 +401,6 @@ class World():
         """
         # Reset les data du monde
         self.world_data = []
-        self.scroll.bg_scroll = 0
-        self.obstacle_list = []
         
         for row in range(rows):
             r = ['air'] * cols
@@ -422,6 +420,9 @@ class World():
         Returns:
             Player: joueur créé dans le monde
         """
+        self.scroll.bg_scroll = 0
+        self.obstacle_list = []
+        
         self.level_length = len(self.world_data[0])
         
         for y, row in enumerate(self.world_data):
