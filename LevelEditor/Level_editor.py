@@ -2,7 +2,6 @@
 
 import pygame
 import sys
-import csv
 import json
 
 # Pour pouvoir importer les fichier se trouvant dans le jeu
@@ -58,17 +57,6 @@ for tile_name in consts.TILE_TYPES:
 pygame.display.set_icon(img_dict["grass_default"])
 
 
-# Crée une liste vide de tuiles
-world_data = []
-for row in range(ROWS):
-    r = ["air"] * MAX_COLS
-    world_data.append(r)
-
-# Crée le sol
-for tile in range(0, MAX_COLS):
-    # remplace toutes les tuiles les plus basses par de l'herbe
-    world_data[ROWS - 1][tile] = "grass_default"
-
 # Création des boutons de sauvegarde et de chargement de niveau
 save_img = default_font.render('SAVE', True, consts.COLOR_ORANGE)
 save_clicked_img = default_font.render('SAVE', True, consts.COLOR_DARK_ORANGE)
@@ -109,37 +97,76 @@ def draw_grid(screen: pygame.Surface):
 	for row in range(ROWS + 1):
 		pygame.draw.line(screen, consts.COLOR_WHITE_AZURE, (0, row * TILE_SIZE), (SCREEN_WIDTH, row * TILE_SIZE))
 
+# Fonction qui donne un monde vide
+def empty_world(world_size: int):
+    world = []
+    for row in range(world_size):
+        r = ["air"] * ROWS
+        world.append(r)
+    
+    return world
+
 # Fonction qui affiche le monde
 def draw_world(screen: pygame.Surface):
-    for y, row in enumerate(world_data):
-        for x, tile_name in enumerate(row):
+    for x, column in enumerate(world_data):
+        for y, tile_name in enumerate(column):
             if tile_name in consts.TILE_TYPES:
                 screen.blit(img_dict[tile_name], (x * TILE_SIZE - scroll, y * TILE_SIZE))
 
 # Fonction qui sauvegarde le monde dans un fichier json
 def save_world():
+    # Dictionnaire qui sera converti en json
     world_dict = {}
-
-    # Création d'un dictionnaire contenant des listes associées à chaque types de tuile
-    world_dict['tiles'] = {}
-    for tile_type in consts.TILE_TYPES:
-        world_dict['tiles'][tile_type] = []
-
-    # Ajout des coordonnées des tuiles dans le dictionnaire
-    for y, row in enumerate(world_data):
-        for x, tile in enumerate(row):
-            if tile in consts.TILE_TYPES:
-                tile_coordinates = {'x': x, 'y': y}
-                world_dict['tiles'][tile].append(tile_coordinates)
     
-    world_dict['data'] = {}
-    world_dict['data']['level_size'] = MAX_COLS
+    # Création d'un dictionnaire pour les attributs du niveau
+    world_dict['attributes'] = {}
+    # Ajout de la taille du niveau
+    world_dict['attributes']['level_size'] = MAX_COLS
+    
+    # Création d'une liste qui va contenir toutes les tuiles
+    world_dict['tiles'] = []
+
+    # Ajout des coordonnées des tuiles et leur type dans la liste
+    for x, column in enumerate(world_data):
+        for y, tile in enumerate(column):
+            if tile in consts.TILE_TYPES:
+                tile_dict = {
+                    'type': tile,
+                    'x': x,
+                    'y': y
+                    }
+                world_dict['tiles'].append(tile_dict)
     
     # Transformation du dictionnaire en json
     world_json = json.dumps(world_dict, indent=4)
     # Création du fichier json
     with open(f'{consts.WORLDS_DATA_LOCATION}level{level}_data.json', 'w') as outfile:
         outfile.write(world_json)
+
+# Fonction qui charge le monde à partir d'un fichier json
+def load_world():
+    # Ouverture du fichier json
+    with open(f'{consts.WORLDS_DATA_LOCATION}level{level}_data.json', 'r') as worldfile:
+        world_dict = json.load(worldfile)
+    
+    # Création d'un monde vide de la longueur du niveau à charger
+    world = empty_world(world_dict['attributes']['level_size'])
+    
+    # Ajout de toutes les tuiles dans le monde
+    for tile in world_dict['tiles']:
+        if tile['type'] in consts.TILE_TYPES:
+            world[tile['x']][tile['y']] = tile['type']
+
+    return world
+
+# Crée une liste vide de tuiles
+world_data = empty_world(MAX_COLS)
+
+# Crée le sol
+for column in range(MAX_COLS):
+    # remplace toutes les tuiles les plus basses par de l'herbe
+    world_data[column][ROWS - 1] = "grass_default"
+
 
 run = True
 # Boucle qui va permettre de faire tourner l'éditeur
@@ -168,11 +195,7 @@ while run:
     # Charge le monde si l'utilisateur appuie sur le boutons "load"
     if load_button.draw(screen):
         scroll = 0
-        with open(f'{consts.WORLDS_DATA_LOCATION}level{level}_data.csv', newline='') as csvfile:
-            reader = csv.reader(csvfile, delimiter = ',')
-            for x, row in enumerate(reader):
-                for y, tile in enumerate(row):
-                    world_data[x][y] = tile
+        world_data = load_world()
     
     # Affiche les boutons et vérifie si l'utilisateur a cliqué dessus
     for tile_name, button in button_dict.items():
@@ -201,10 +224,10 @@ while run:
     if mouse_pos[0] < SCREEN_WIDTH and mouse_pos[1] < SCREEN_HEIGHT:
         # Met à jour la valeur de la tuile
         if pygame.mouse.get_pressed()[0] == 1:
-            if world_data[y][x] != current_tile:
-                world_data[y][x] = current_tile
+            if world_data[x][y] != current_tile:
+                world_data[x][y] = current_tile
         if pygame.mouse.get_pressed()[2] == 1:
-            world_data[y][x] = 'air'
+            world_data[x][y] = 'air'
 
 
     for event in pygame.event.get():

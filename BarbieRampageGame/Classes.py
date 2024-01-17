@@ -1,6 +1,6 @@
 import pygame
 import os
-import csv
+import json
 from Constants import *
 
 ### Interface ###
@@ -301,6 +301,7 @@ class Player(pygame.sprite.Sprite):
             self.scroll.set_screen_scroll(-dx)
         else:
             self.scroll.set_screen_scroll(0)
+        
     
     def update_animation(self):
         """Met à jour l'animation du joueur"""
@@ -391,27 +392,30 @@ class World():
             img = pygame.transform.scale(img, (tile_size, tile_size * img.get_height() // img.get_width()))
             self.img_dict[tile_name] = img
     
-    def init_data(self, level_name: str, rows: int, cols: int):
+    def init_data(self, level_name: str, rows: int):
         """Initialise les données du niveau
 
         Args:
             level_name (str): nom du niveau dans les fichiers
             rows (int): nombre de lignes dans le niveau
-            cols (int): nombre de colonnes dans le niveau
         """
         # Reset les data du monde
         self.world_data = []
         
-        for row in range(rows):
-            r = ['air'] * cols
-            self.world_data.append(r)
-
         # Chargement du monde
-        with open(WORLDS_DATA_LOCATION + level_name) as world_file:
-            reader = csv.reader(world_file, delimiter=',')
-            for x, row in enumerate(reader):
-                for y, tile in enumerate(row):
-                    self.world_data[x][y] = tile
+        
+        # Ouverture du fichier json
+        with open(WORLDS_DATA_LOCATION + level_name, 'r') as worldfile:
+            self.world_json = json.load(worldfile)
+        
+        for col in range(self.world_json['attributes']['level_size']):
+            r = ['air'] * rows
+            self.world_data.append(r)
+        
+        # Ajout de toutes les tuiles dans le monde
+        for tile in self.world_json['tiles']:
+            self.world_data[tile['x']][tile['y']] = tile['type']
+        
 
 
     def process_data(self) -> Player:
@@ -423,10 +427,10 @@ class World():
         self.scroll.bg_scroll = 0
         self.obstacle_list = []
         
-        self.level_length = len(self.world_data[0])
+        self.level_length = self.world_json['attributes']['level_size']
         
-        for y, row in enumerate(self.world_data):
-            for x, tile in enumerate(row):
+        for x, column in enumerate(self.world_data):
+            for y, tile in enumerate(column):
                 # Si c'est un objet comme un bloc ou une entité
                 if tile in TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES:
                     img = self.img_dict[tile]

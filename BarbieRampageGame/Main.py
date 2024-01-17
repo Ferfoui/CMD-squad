@@ -82,7 +82,7 @@ scroll = Scroll(TILE_SIZE)
 
 world = World(TILE_SIZE, scroll)
 
-world.init_data("level0_data.csv", ROWS, COLS)
+world.init_data("level0_data.json", ROWS)
 
 player = world.process_data()
 
