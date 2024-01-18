@@ -1,141 +1,11 @@
 import pygame
 import os
-import json
-from Constants import *
 
-### Interface ###
-
-# Classe qui permet de gérer les boutons
-class Button():
-    def __init__(self, x: int, y: int, image: pygame.Surface, clicked_image: pygame.Surface, scale:int | float):
-        """Initialise la classe Button
-
-        Args:
-            x (int): position en abscisses où le bouton va être créé
-            y (int): position en ordonnées où le bouton va être créé
-            image (pygame.Surface): image qui correspond au bouton
-            clicked_image (pygame.Surface): image qui va s'afficher quand on clicke sur le bouton
-            scale (int or float): nombre par lequel on multiplie la taille de l'image pour obtenir la taille du bouton
-        """
-        width = image.get_width()
-        height = image.get_height()
-        self.image = pygame.transform.scale(image, (int(width * scale), int(height * scale)))
-        self.clicked_image = pygame.transform.scale(clicked_image, (int(width * scale), int(height * scale)))
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (x, y)
-        self.clicked = False
-        self.do_draw_clicked_img = False
-        # Le temps pour pouvoir changer l'image pendant un certain temps
-        self.update_time = pygame.time.get_ticks()
-
-    def draw(self, screen: pygame.Surface) -> bool:
-        """Affiche le bouton
-
-        Args:
-            screen (pygame.Surface): écran sur lequel le bouton doit être affiché
-
-        Returns:
-            bool: si l'utilisateur a clické dessus
-        """
-        RESET_CLICKED_IMG_TIME = 200
-        action = False
-
-		# Position de la souris
-        pos = pygame.mouse.get_pos()
-
-		# Vérifie si la souris a clické sur le bouton
-        if self.rect.collidepoint(pos):
-            if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
-                action = True
-                self.clicked = True
-                self.set_clicked_img()
-
-            if pygame.mouse.get_pressed()[0] == 0:
-                self.clicked = False
-                
-        # Vérifie si le bouton a été clické depuis assez longtemps pour remettre l'image par defaut
-        if pygame.time.get_ticks() - self.update_time > RESET_CLICKED_IMG_TIME:
-            self.do_draw_clicked_img = False
-
-        # Affiche le bouton à l'écran en fonction de s'il a été clické ou non
-        if self.do_draw_clicked_img:
-            screen.blit(self.clicked_image, (self.rect.x, self.rect.y))
-        else:
-            screen.blit(self.image, (self.rect.x, self.rect.y))
-
-        return action
-    
-    def set_clicked_img(self):
-        self.do_draw_clicked_img = True
-        self.update_time = pygame.time.get_ticks()
-
-# Classe qui gère les assets du jeu
-class Assets():
-    def __init__(self):
-        """Initialise la classe assets dans laquelle se trouve toutes les images, les sons, les polices, etc...
-        """
-        ### Images ###
-        # L'image du chargement du début
-        self.cmd_img = self.load_image_keep_proportion(f"{ASSETS_ROOT}casadojomojo.png", SCREEN_WIDTH // 2)
-        # L'image du ciel dans le background
-        self.sky_img = self.load_image_keep_proportion(f"{BACKGROUND_TEXTURES_LOCATION}sky.png", SCREEN_WIDTH)
-        # L'image de débuggage
-        self.debug_img = self.load_image(f"{TEXTURES_ROOT}debug.png", SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
-        
-        ### Polices d'écriture ###
-        self.default_font = pygame.font.Font(PS2P_FONT_LOCATION, 15)
-
-    def load_image(self, texture_location: str, width: int, height: int) -> pygame.Surface:
-        """Charge une image
-
-        Args:
-            texture_location (str): position de la texture
-            width (int): largeur de l'image
-            height (int): hauteur de l'image
-
-        Returns:
-            pygame.Surface: image chargé
-        """
-        image = pygame.image.load(texture_location).convert_alpha()
-        image = pygame.transform.scale(image, (width, height))
-        return image
-
-    def load_image_keep_proportion(self, texture_location: str, width: int) -> pygame.Surface:
-        """Charge une image en gardant les proportions
-
-        Args:
-            texture_location (str): position de la texture
-            width (int): largeur de l'image
-
-        Returns:
-            pygame.Surface: image chargé
-        """
-        image = pygame.image.load(texture_location).convert_alpha()
-        image = pygame.transform.scale(image, (width, width * image.get_height() // image.get_width()))
-        return image
-
-# Classe qui permet de gérer le scrolling de l'écran
-class Scroll():
-    def __init__(self, tile_size: int):
-        """Initialise la class Scroll
-
-        Args:
-            tile_size (int): taille des tuiles
-        """
-        self.THRESH = 200
-        self.screen_scroll = 0
-        self.bg_scroll = 0
-        self.tile_size = tile_size
-
-    def set_screen_scroll(self, screen_scroll: int):
-        self.screen_scroll = screen_scroll
-        self.bg_scroll -= screen_scroll
-
-### Sprites ###
+from constants import *
 
 # Classe qui permet de créer le joueur
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x: int, y: int, scroll: Scroll, speed: int | float, scale: int | float):
+    def __init__(self, x: int, y: int, scroll, speed: int | float, scale: int | float):
         """Initialise la classe Player
 
         Args:
@@ -197,10 +67,10 @@ class Player(pygame.sprite.Sprite):
         Args:
             animation_types (list[str]): liste qui contient les noms des animations
             texture_location (str): chemin vers les textures
-            scale (int | float): nombre par lequel on multiplie la taille du Sprite pour obtenir la taille du joueur
+            scale (int or float): nombre par lequel on multiplie la taille du Sprite pour obtenir la taille du joueur
 
         Returns:
-            dict[str, list[pygame.Surface]]: dictionnaire qui contient les listes d'images à afficher pour animer le joueur
+            dict[str, list[Surface]]: dictionnaire qui contient les listes d'images à afficher pour animer le joueur
         """
         animation_dict = {}
         
@@ -365,97 +235,6 @@ class Player(pygame.sprite.Sprite):
         """Méthode qui permet d'afficher le joueur
 
         Args:
-            screen (pygame.Surface): fenêtre sur laquelle le joueur doit être affiché
+            screen (Surface): fenêtre sur laquelle le joueur doit être affiché
         """
         screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
-
-    
-### Monde ###
-
-class World():
-    def __init__(self, tile_size: int, scroll: Scroll):
-        """Initialise la classe World
-
-        Args:
-            tile_size (int): longueur des côtés des tuiles
-            scroll (Scroll): valeurs de scrolling utilisés par les objets dans le monde
-        """
-        self.world_data = []
-        self.tile_size = tile_size
-        self.obstacle_list = []
-        self.scroll = scroll
-
-        # Charge toutes les images
-        self.img_dict = {}
-        for tile_name in TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES:
-            img = pygame.image.load(f'{TILES_TEXTURES_LOCATION}{tile_name}.png').convert_alpha()
-            img = pygame.transform.scale(img, (tile_size, tile_size * img.get_height() // img.get_width()))
-            self.img_dict[tile_name] = img
-    
-    def init_data(self, level_name: str, rows: int):
-        """Initialise les données du niveau
-
-        Args:
-            level_name (str): nom du niveau dans les fichiers
-            rows (int): nombre de lignes dans le niveau
-        """
-        # Reset les data du monde
-        self.world_data = []
-        
-        # Chargement du monde
-        
-        # Ouverture du fichier json
-        with open(WORLDS_DATA_LOCATION + level_name, 'r') as worldfile:
-            self.world_json = json.load(worldfile)
-        
-        for col in range(self.world_json['attributes']['level_size']):
-            r = ['air'] * rows
-            self.world_data.append(r)
-        
-        # Ajout de toutes les tuiles dans le monde
-        for tile in self.world_json['tiles']:
-            self.world_data[tile['x']][tile['y']] = tile['type']
-        
-
-
-    def process_data(self) -> Player:
-        """Méthode qui génére le monde en fonction des données données
-
-        Returns:
-            Player: joueur créé dans le monde
-        """
-        self.scroll.bg_scroll = 0
-        self.obstacle_list = []
-        
-        self.level_length = self.world_json['attributes']['level_size']
-        
-        for x, column in enumerate(self.world_data):
-            for y, tile in enumerate(column):
-                # Si c'est un objet comme un bloc ou une entité
-                if tile in TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES:
-                    img = self.img_dict[tile]
-                    img_rect = img.get_rect()
-                    img_rect.x = x * self.tile_size
-                    img_rect.y = y * self.tile_size
-                    tile_data = (img, img_rect)
-                    if tile in OBSTACLES_TILE_TYPES:
-                        self.obstacle_list.append(tile_data)
-                # Si c'est un personnage comme le joueur ou un ennemi
-                elif tile in PLAYER_AND_ENEMIES_TILE_TYPES:
-                    # Si c'est le point de spawn du joueur
-                    if tile == PLAYER_AND_ENEMIES_TILE_TYPES[0]:
-                        player = Player(x * self.tile_size, y * self.tile_size, self.scroll, 5, 2)
-        
-        return player
-    
-    def draw(self, screen: pygame.Surface):
-        """Méthode qui permet d'afficher le monde
-
-        Args:
-            screen (pygame.Surface): fenêtre sur laquelle le monde doit être affiché
-        """
-        for tile in self.obstacle_list:
-            tile[1][0] += self.scroll.screen_scroll
-            screen.blit(tile[0], tile[1])
-
-

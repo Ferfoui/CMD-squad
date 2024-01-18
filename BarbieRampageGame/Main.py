@@ -1,8 +1,10 @@
 # Codé par la CMD-squad
 
 import pygame
-from Constants import *
-from Classes import *
+from constants import *
+
+from world import World
+from utils import Assets
 
 # Initialisation du moteur graphique
 pygame.init()
@@ -27,11 +29,12 @@ assets = Assets()
 
 ### Fonctions ###
 # Fonction qui affiche le background
-def draw_background(screen: pygame.Surface, scroll: Scroll):
+def draw_background(screen: pygame.Surface, scroll):
     """Fonction qui affiche l'arrière plan
 
     Args:
         screen (pygame.Surface): écran sur lequel le background doit être affiché
+        scroll (Scroll): scroll de l'écran
     """
     screen.fill(COLOR_SKY_BLUE)
     width = assets.sky_img.get_width()
@@ -77,12 +80,9 @@ def timer_minute(milisec:int) -> str:
     hour = min // 60
     return f"{hour:02}:{min - hour * 60:02}:{sec - min * 60:02}"
 
+world = World(TILE_SIZE)
 
-scroll = Scroll(TILE_SIZE)
-
-world = World(TILE_SIZE, scroll)
-
-world.init_data("level0_data.json", ROWS)
+world.init_data("level0_data.json", ROWS, assets)
 
 player = world.process_data()
 
@@ -102,9 +102,6 @@ while run:
         if current_time - loading_start_time >= game_loading_timer:
             game_loading = False
     else:
-
-        draw_background(screen, scroll)
-        
         world.draw(screen)
 
         # Met à jour le joueur

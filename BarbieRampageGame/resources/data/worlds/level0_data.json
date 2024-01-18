@@ -1,6 +1,9 @@
 {
     "attributes": {
-        "level_size": 150
+        "level_size": 150,
+        "background_images": [
+            "sky_default"
+        ]
     },
     "tiles": [
         {
