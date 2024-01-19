@@ -2,6 +2,7 @@
 
 # Le nom du jeu
 GAME_NAME = "Barbie Rampage"
+GAME_VERSION = "V0.1"
 
 # La taille de l'écran
 SCREEN_WIDTH = 700 # La largeur
@@ -33,8 +34,11 @@ TILE_TYPES = TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES + PLAYER_AND_ENEMIES_TILE_TYP
 # Les constantes in-game
 GRAVITY = 0.75
 
+# L'endroit ou se trouve tous les fichiers non python du jeu
+RESSOURCES_ROOT = "BarbieRampageGame/resources/"
+
 ### Les images et les sons utilisés (les assets)
-ASSETS_ROOT = "BarbieRampageGame/resources/assets/"
+ASSETS_ROOT = RESSOURCES_ROOT + "assets/"
 TEXTURES_ROOT = ASSETS_ROOT + "textures/" # Le chemin des textures
 SOUNDS_ROOT = ASSETS_ROOT + "sounds/" # Le chemin des effets sonores
 FONTS_ROOT = ASSETS_ROOT + "fonts/" # Le chemin vers les polices d'écriture
@@ -49,6 +53,6 @@ PS2P_FONT_LOCATION = FONTS_ROOT + "Press_Start_2P/PressStart2P-REGULAR.ttf"
 
 
 ### Les données utilisées (les data)
-DATA_ROOT = "BarbieRampageGame/resources/data/"
+DATA_ROOT = RESSOURCES_ROOT + "data/"
 
 WORLDS_DATA_LOCATION = DATA_ROOT + "worlds/"

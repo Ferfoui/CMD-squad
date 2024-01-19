@@ -1,10 +1,10 @@
 # Codé par la CMD-squad
 
 import pygame
-from constants import *
 
+from constants import *
 from world import World
-from utils import Assets
+import utils
 
 # Initialisation du moteur graphique
 pygame.init()
@@ -13,7 +13,7 @@ pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 # Changement du nom de l'écran vers le nom du jeu
-pygame.display.set_caption(GAME_NAME)
+pygame.display.set_caption(f"{GAME_NAME} {GAME_VERSION}")
 
 # Met en place l'horloge
 clock = pygame.time.Clock()
@@ -25,7 +25,10 @@ COLS = 150
 TILE_SIZE = SCREEN_HEIGHT // ROWS
 
 # Tous les assets du jeu, c'est à dire les images, les sons, les polices, etc...
-assets = Assets()
+assets = utils.Assets()
+
+# Tous les paramètres que le joueur peut modifier comme les touches, etc...
+game_settings = utils.Settings()
 
 ### Fonctions ###
 
@@ -48,11 +51,17 @@ def draw_loading_screen(screen: pygame.Surface):
     Args:
         screen (pygame.Surface): écran sur lequel l'image doit être affichée
     """
-    img_rect = assets.cmd_img.get_rect()
-    img_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+    # Récupération de la taille de l'écran
+    screen_width, screen_height = screen.get_size()
+    
     screen.fill(COLOR_WHITE_AZURE)
+    
+    # Positionnement de l'image au centre de l'écran
+    img_rect = assets.cmd_img.get_rect()
+    img_rect.center = (screen_width // 2, screen_height // 2)
     screen.blit(assets.cmd_img, img_rect)
-    draw_text(screen, "PRESS ENTER TO START :3", assets.default_font, COLOR_HOT_PINK, SCREEN_WIDTH // 2, SCREEN_HEIGHT * 0.96, True)
+    
+    draw_text(screen, "PRESS ENTER TO START :)", assets.default_font, COLOR_HOT_PINK, screen_width // 2, screen_height * 0.96, True)
 
 def draw_text(screen: pygame.Surface, text: str, font: pygame.font.Font, text_col: tuple[int, int, int], x: int, y: int, do_align_center: bool):
     """Fonction qui affiche du texte
@@ -116,26 +125,28 @@ while run:
         # Affiche le joueur
         player.draw(screen)
         
-        player.move(world)
-        
-        input_key = pygame.key.get_pressed()
+        player.move(world, game_settings.keybinds)
         
         if not player.is_alive:
             draw_death_screen(screen)
     
     current_time = pygame.time.get_ticks()
 
-    # Afficher le temps actuel à l'écran
-    draw_text(screen, "game time: ", assets.default_font, COLOR_DARK, 5, 5, False)
-    draw_text(screen, timer_minute(current_time), assets.default_font, COLOR_DARK, 15, 25, False)
+    if game_settings.do_draw_game_time:
+        # Afficher le temps actuel à l'écran
+        draw_text(screen, "game time: ", assets.default_font, COLOR_DARK, 5, 5, False)
+        draw_text(screen, timer_minute(current_time), assets.default_font, COLOR_DARK, 15, 25, False)
 
     for event in pygame.event.get():
+        # Faire quitter la boucle si l'utilisateur quitte le jeu
         if event.type == pygame.QUIT:
-            # Faire quitter la boucle si l'utilisateur quitte le jeu
             run = False
+        
+        # Quand des touches sont pressées
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RETURN:
                 if game_loading:
+                    # Lancer le jeu si la touche 'enter' est pressée
                     game_loading = False
 
     # Mise à jour de l'écran à chaque tours de boucle
