@@ -5,7 +5,7 @@ from constants import *
 
 # Classe qui permet de créer le joueur
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x: int, y: int, scroll, speed: int | float, scale: int | float):
+    def __init__(self, x: int, y: int, scroll, speed, scale):
         """Initialise la classe Player
 
         Args:
@@ -61,7 +61,7 @@ class Player(pygame.sprite.Sprite):
         self.height = self.image.get_height()
     
     
-    def load_animation(self, animation_types: list[str], texture_location: str, scale: int | float) -> dict[str, list[pygame.Surface]]:
+    def load_animation(self, animation_types: list[str], texture_location: str, scale) -> dict[str, list[pygame.Surface]]:
         """Méthode qui permet de charger les animations du joueur
 
         Args:

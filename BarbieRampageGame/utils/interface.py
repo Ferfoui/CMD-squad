@@ -4,7 +4,7 @@ from constants import *
 
 # Classe qui permet de gérer les boutons
 class Button():
-    def __init__(self, x: int, y: int, image: pygame.Surface, clicked_image: pygame.Surface, scale: int | float):
+    def __init__(self, x: int, y: int, image: pygame.Surface, clicked_image: pygame.Surface, scale):
         """Initialise la classe Button
 
         Args:
@@ -112,7 +112,7 @@ class Assets():
         image = pygame.transform.scale(image, (width, width * image.get_height() // image.get_width()))
         return image
     
-    def get_image(self, name: str, texture_location: str, width: int, height: int | None = 0) -> pygame.Surface:
+    def get_image(self, name: str, texture_location: str, width: int, height) -> pygame.Surface:
         """Renvoie l'image voulue et la sauvegarde pour ne pas avoir à la chargé plusieurs fois
 
         Args:
