@@ -177,11 +177,11 @@ class Player(pygame.sprite.Sprite):
         """Met à jour l'animation du joueur"""
         
         # Met l'animation qui correspond à ce que le joueur fait
-        if not self.is_alive:
-            self.update_action(self.ANIMATION_TYPES[3]) # "Death"
+        #if not self.is_alive:
+        #    self.update_action(self.ANIMATION_TYPES[3]) # "Death"
         #elif self.jump == True:
         #    self.update_action(self.ANIMATION_TYPES[2]) # "Jump"
-        elif self.is_running == True:
+        if self.is_running == True:
             self.update_action(self.ANIMATION_TYPES[1]) # "Run"
         else:
             self.update_action(self.ANIMATION_TYPES[0]) # "Idle"
