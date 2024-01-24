@@ -2,6 +2,7 @@
 
 import pygame
 
+from _common import ColorValue
 from constants import *
 from world import World
 import utils
@@ -63,7 +64,7 @@ def draw_loading_screen(screen: pygame.Surface):
     
     draw_text(screen, "PRESS ENTER TO START :)", assets.default_font, COLOR_HOT_PINK, screen_width // 2, screen_height * 0.96, True)
 
-def draw_text(screen: pygame.Surface, text: str, font: pygame.font.Font, text_col: tuple[int, int, int], x: int, y: int, do_place_center: bool):
+def draw_text(screen: pygame.Surface, text: str, font: pygame.font.Font, text_col: ColorValue, x: int, y: int, do_place_center: bool):
     """Fonction qui affiche du texte
 
     Args:
@@ -114,6 +115,8 @@ while run:
     # Fait en sorte que le jeu tourne à un nombre limité de FPS
     clock.tick(FPS)
     
+    current_time = pygame.time.get_ticks()
+    
     if game_loading:
         draw_loading_screen(screen)
     else:
@@ -129,8 +132,6 @@ while run:
         
         if not player.is_alive:
             draw_death_screen(screen)
-    
-    current_time = pygame.time.get_ticks()
 
     if game_settings.do_draw_game_time:
         # Afficher le temps actuel à l'écran
@@ -138,6 +139,7 @@ while run:
         draw_text(screen, timer_minute(current_time), assets.default_font, COLOR_DARK, 15, 25, False)
 
     for event in pygame.event.get():
+        
         # Faire quitter la boucle si l'utilisateur quitte le jeu
         if event.type == pygame.QUIT:
             run = False

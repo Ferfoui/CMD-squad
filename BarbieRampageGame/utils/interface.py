@@ -1,5 +1,6 @@
 import pygame
 
+from _common import ColorValue
 from constants import *
 
 # Classe qui permet de gérer les boutons
@@ -77,8 +78,22 @@ class Menu():
         """
         self.buttons_to_draw = {}
     
-    def add_text_button(self, button_name, text_to_draw, font, text_col: tuple[int, int, int], x: int, y: int, do_align_center: bool):
-        button = Button()
+    def add_text_button(self, button_name: str, text_to_draw: str, font: pygame.font.Font, text_col: ColorValue, x: int, y: int, scale, do_place_center: bool):
+        """Ajoute un bouton sous forme de texte au menu
+
+        Args:
+            button_name (str): nom du bouton
+            text_to_draw (str): texte à afficher
+            font (pygame.font.Font): police d'écriture
+            text_col (ColorValue): couleur
+            x (int): position en abscisses où le bouton va être créé
+            y (int): position en ordonnées où le bouton va être créé
+            scale (int or float): nombre par lequel le bouton va être redimensionné
+            do_place_center (bool): si les coordonnées données sont celles du centre du texte
+        """
+        text_img = font.render(text_to_draw, True, text_col)
+        button = Button(x, y, text_img, text_img, scale, do_place_center)
+        self.buttons_to_draw[button_name] = button
     
     def draw(self, screen: pygame.Surface) -> list[str]:
         """Affiche les boutons à l'écran et renvoie les noms des boutons qui ont été cliqués
