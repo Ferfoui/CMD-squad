@@ -100,7 +100,7 @@ def timer_minute(milisec: int) -> str:
 
 world = World(TILE_SIZE)
 
-world.init_data("level0_data.json", ROWS, assets)
+world.init_data("level0_data.json", assets)
 
 player = world.process_data()
 

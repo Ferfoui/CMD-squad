@@ -63,14 +63,14 @@ save_clicked_img = default_font.render('SAVE', True, consts.COLOR_DARK_ORANGE)
 load_img = default_font.render('LOAD', True, consts.COLOR_ORANGE)
 load_clicked_img = default_font.render('LOAD', True, consts.COLOR_DARK_ORANGE)
 
-save_button = utils.Button(SCREEN_WIDTH // 2, SCREEN_HEIGHT + LOWER_MARGIN - 50, save_img, save_clicked_img, 1)
-load_button = utils.Button(SCREEN_WIDTH // 2 + 200, SCREEN_HEIGHT + LOWER_MARGIN - 50, load_img, load_clicked_img, 1)
+save_button = utils.Button(SCREEN_WIDTH // 2, SCREEN_HEIGHT + LOWER_MARGIN - 50, save_img, save_clicked_img, 1, False)
+load_button = utils.Button(SCREEN_WIDTH // 2 + 200, SCREEN_HEIGHT + LOWER_MARGIN - 50, load_img, load_clicked_img, 1, False)
 # Crée la liste des boutons à afficher pour selectionner les tuiles
 button_dict = {}
 button_col = 0
 button_row = 0
 for tile_name in consts.TILE_TYPES:
-	tile_button = utils.Button(SCREEN_WIDTH + (75 * button_col) + 50, 75 * button_row + 50, img_dict[tile_name], img_dict[tile_name], 1)
+	tile_button = utils.Button(SCREEN_WIDTH + (75 * button_col) + 50, 75 * button_row + 50, img_dict[tile_name], img_dict[tile_name], 1, False)
 	button_dict[tile_name] = tile_button
 	button_col += 1
 	if button_col == 3:
@@ -122,6 +122,7 @@ def save_world():
     world_dict['attributes'] = {}
     
     world_dict['attributes']['level_size'] = MAX_COLS
+    world_dict['attributes']['level_height'] = ROWS
     world_dict['attributes']['background_images'] = ["sky_default"]
     
     # Création d'une liste qui va contenir toutes les tuiles

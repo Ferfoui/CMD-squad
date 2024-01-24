@@ -1,6 +1,7 @@
 {
     "attributes": {
         "level_size": 150,
+        "level_height": 16,
         "background_images": [
             "sky_default"
         ]
