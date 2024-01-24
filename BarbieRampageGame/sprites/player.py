@@ -117,7 +117,7 @@ class Player(pygame.sprite.Sprite):
 
             # Sauts
             if input_key[keybinds['move_jump']] and self.jump == False and self.in_air == False:
-                self.vel_y = -12
+                self.vel_y = -14
                 self.jump = True
                 self.in_air = True
             
@@ -188,7 +188,7 @@ class Player(pygame.sprite.Sprite):
         else:
             self.update_action(self.ANIMATION_TYPES[0]) # "Idle"
             
-        ANIMATION_COOLDOWN = 100
+        ANIMATION_COOLDOWN = 50
         # Met à jour l'image en fonction de la frame actuelle
         self.image = self.animation_dict[self.action][self.frame_index]
 

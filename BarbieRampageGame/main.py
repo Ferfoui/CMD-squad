@@ -63,7 +63,7 @@ def draw_loading_screen(screen: pygame.Surface):
     
     draw_text(screen, "PRESS ENTER TO START :)", assets.default_font, COLOR_HOT_PINK, screen_width // 2, screen_height * 0.96, True)
 
-def draw_text(screen: pygame.Surface, text: str, font: pygame.font.Font, text_col: tuple[int, int, int], x: int, y: int, do_align_center: bool):
+def draw_text(screen: pygame.Surface, text: str, font: pygame.font.Font, text_col: tuple[int, int, int], x: int, y: int, do_place_center: bool):
     """Fonction qui affiche du texte
 
     Args:
@@ -73,10 +73,10 @@ def draw_text(screen: pygame.Surface, text: str, font: pygame.font.Font, text_co
         text_col (tuple[int, int, int]): couleur du texte (racismo no)
         x (int): position en abscisses où le texte va être affiché
         y (int): position en ordonnées où le texte va être affiché
-        do_align_center (bool): si les coordonnées données sont celles du centre du texte
+        do_place_center (bool): si les coordonnées données sont celles du centre du texte
     """
     img = font.render(text, True, text_col)
-    if do_align_center:
+    if do_place_center:
         img_rect = img.get_rect()
         img_rect.center = (x, y)
         screen.blit(img, img_rect)
