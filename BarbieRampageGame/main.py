@@ -45,24 +45,6 @@ def draw_death_screen(screen: pygame.Surface):
     screen.blit(assets.slayed_img, img_rect)
     draw_text(screen, "PRESS ENTER TO RESPAWN T^T", assets.default_font, COLOR_HOT_PINK, SCREEN_WIDTH//2, SCREEN_HEIGHT*0.96, True)
 
-# Affiche l'écran de chargement
-def draw_loading_screen(screen: pygame.Surface):
-    """Fonction qui affiche l'image incroyable
-
-    Args:
-        screen (pygame.Surface): écran sur lequel l'image doit être affichée
-    """
-    # Récupération de la taille de l'écran
-    screen_width, screen_height = screen.get_size()
-    
-    screen.fill(COLOR_WHITE_AZURE)
-    
-    # Positionnement de l'image au centre de l'écran
-    img_rect = assets.cmd_img.get_rect()
-    img_rect.center = (screen_width // 2, screen_height // 2)
-    screen.blit(assets.cmd_img, img_rect)
-    
-    draw_text(screen, "PRESS ENTER TO START :)", assets.default_font, COLOR_HOT_PINK, screen_width // 2, screen_height * 0.96, True)
 
 def draw_text(screen: pygame.Surface, text: str, font: pygame.font.Font, text_col: ColorValue, x: int, y: int, do_place_center: bool):
     """Fonction qui affiche du texte
@@ -104,6 +86,10 @@ world.init_data("level0_data.json", assets)
 
 player = world.process_data()
 
+start_menu = utils.Menu(COLOR_WHITE_AZURE)
+start_menu.add_image(assets.cmd_img, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, True)
+start_menu.add_text_button("start", "PRESS ENTER TO START :)", assets.default_font, COLOR_HOT_PINK, SCREEN_WIDTH//2, SCREEN_HEIGHT*0.96, 1, True)
+
 # Variables pour la boucle
 run = True
 game_loading = True
@@ -118,7 +104,7 @@ while run:
     current_time = pygame.time.get_ticks()
     
     if game_loading:
-        draw_loading_screen(screen)
+        start_menu.draw(screen, True)
     else:
         world.draw(screen)
 

@@ -37,7 +37,7 @@ class Button():
             screen (pygame.Surface): écran sur lequel le bouton doit être affiché
 
         Returns:
-            bool: si l'utilisateur a clické dessus
+            bool: si l'utilisateur a clické sur le bouton
         """
         RESET_CLICKED_IMG_TIME = 200
         action = False
@@ -73,10 +73,24 @@ class Button():
         
 # Classe qui gère les menus
 class Menu():
-    def __init__(self):
+    def __init__(self, background_color: ColorValue):
         """Initialise un Menu
+        
+        Args:
+            background_color (ColorValue): couleur de l'arrière-plan
         """
+        self.background_color = background_color
+        self.images_to_draw = []
         self.buttons_to_draw = {}
+        
+    def add_image(self, image: pygame.Surface, x: int, y: int, do_place_center: bool):
+        img_rect = image.get_rect()
+        if do_place_center:
+            img_rect.center = (x, y)
+        else:
+            img_rect.topleft = (x, y)
+        
+        self.images_to_draw.append((image, img_rect))
     
     def add_text_button(self, button_name: str, text_to_draw: str, font: pygame.font.Font, text_col: ColorValue, x: int, y: int, scale, do_place_center: bool):
         """Ajoute un bouton sous forme de texte au menu
@@ -95,15 +109,22 @@ class Menu():
         button = Button(x, y, text_img, text_img, scale, do_place_center)
         self.buttons_to_draw[button_name] = button
     
-    def draw(self, screen: pygame.Surface) -> list[str]:
-        """Affiche les boutons à l'écran et renvoie les noms des boutons qui ont été cliqués
+    def draw(self, screen: pygame.Surface, do_draw_background: bool) -> list[str]:
+        """Affiche les images et les boutons à l'écran et renvoie les noms des boutons qui ont été cliqués
 
         Args:
             screen (pygame.Surface): écran sur lequel le menu doit s'afficher
+            do_draw_background (bool): si la couleur d'arrière-plan doit être affichée
 
         Returns:
             list[str]: noms des boutons qui ont été cliqués
         """
+        if do_draw_background:
+            screen.fill(self.background_color)
+        
+        for image, img_rect in self.images_to_draw:
+            screen.blit(image, img_rect)
+        
         clicked_buttons = []
         for button_name, button in self.buttons_to_draw.items():
             if button.draw(screen):
