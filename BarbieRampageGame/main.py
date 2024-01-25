@@ -6,6 +6,7 @@ from _common import ColorValue
 from constants import *
 from world import World
 import utils
+import menus
 
 # Initialisation du moteur graphique
 pygame.init()
@@ -86,9 +87,7 @@ world.init_data("level0_data.json", assets)
 
 player = world.process_data()
 
-start_menu = utils.Menu(COLOR_WHITE_AZURE)
-start_menu.add_image(assets.cmd_img, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, True)
-start_menu.add_text_button("start", "PRESS ENTER TO START :)", assets.default_font, COLOR_HOT_PINK, SCREEN_WIDTH//2, SCREEN_HEIGHT*0.96, 1, True)
+start_menu = menus.StartMenu(assets)
 
 # Variables pour la boucle
 run = True
@@ -104,7 +103,7 @@ while run:
     current_time = pygame.time.get_ticks()
     
     if game_loading:
-        start_menu.draw(screen, True)
+        game_loading = not start_menu.draw(screen, True)
     else:
         world.draw(screen)
 
