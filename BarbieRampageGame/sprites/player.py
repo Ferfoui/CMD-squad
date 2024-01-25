@@ -15,7 +15,7 @@ class Player(pygame.sprite.Sprite):
             speed (int or float): vitesse à laquelle se déplace le joueur (en pixel par frame)
             scale (int or float): nombre par lequel on multiplie la taille du Sprite pour obtenir la taille du joueur
         """
-        pygame.sprite.Sprite.__init__(self)
+        super().__init__()
         
         self.scroll = scroll
         
