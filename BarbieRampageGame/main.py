@@ -80,6 +80,7 @@ player = world.process_data()
 
 start_menu = menus.StartMenu(assets)
 death_menu = menus.DeathMenu(assets)
+death_menu.load_death_animation(f"{TEXTURES_ROOT}deathscreen/falling/", f"{TEXTURES_ROOT}deathscreen/landing/")
 
 # Variables pour la boucle
 run = True
