@@ -1,4 +1,4 @@
-# Codé par la CMD-squad
+ # Codé par la CMD-squad
 
 import pygame
 
@@ -32,20 +32,7 @@ assets = utils.Assets()
 # Tous les paramètres que le joueur peut modifier comme les touches, etc...
 game_settings = utils.Settings()
 
-### Fonctions ###
-
-def draw_death_screen(screen: pygame.Surface):
-    """Fonction qui affiche l'écran de mort
-
-    Args:
-        screen (pygame.Surface): écran sur lequel l'image doit être affichée
-    """
-    img_rect = assets.slayed_img.get_rect()
-    img_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
-    screen.fill(COLOR_DARK)
-    screen.blit(assets.slayed_img, img_rect)
-    draw_text(screen, "PRESS ENTER TO RESPAWN T^T", assets.default_font, COLOR_HOT_PINK, SCREEN_WIDTH//2, SCREEN_HEIGHT*0.96, True)
-
+### Fonctions ##d
 
 def draw_text(screen: pygame.Surface, text: str, font: pygame.font.Font, text_col: ColorValue, x: int, y: int, do_place_center: bool):
     """Fonction qui affiche du texte
@@ -81,6 +68,10 @@ def timer_minute(milisec: int) -> str:
     hour = min // 60
     return f"{hour:02}:{min - hour * 60:02}:{sec - min * 60:02}"
 
+def respawn_player():
+    world.init_data("level0_data.json", assets)
+    return world.process_data()
+
 world = World(TILE_SIZE)
 
 world.init_data("level0_data.json", assets)
@@ -88,6 +79,7 @@ world.init_data("level0_data.json", assets)
 player = world.process_data()
 
 start_menu = menus.StartMenu(assets)
+death_menu = menus.DeathMenu(assets)
 
 # Variables pour la boucle
 run = True
@@ -103,7 +95,7 @@ while run:
     current_time = pygame.time.get_ticks()
     
     if game_loading:
-        game_loading = not start_menu.draw(screen, True)
+        game_loading = not ("start" in start_menu.draw(screen, True))
     else:
         world.draw(screen)
 
@@ -116,7 +108,8 @@ while run:
         player.move(world, game_settings.keybinds)
         
         if not player.is_alive:
-            draw_death_screen(screen)
+            death_menu.draw(screen, True)
+            
 
     if game_settings.do_draw_game_time:
         # Afficher le temps actuel à l'écran
@@ -135,6 +128,8 @@ while run:
                 if game_loading:
                     # Lancer le jeu si la touche 'enter' est pressée
                     game_loading = False
+                elif not player.is_alive:
+                    player = respawn_player()
 
     # Mise à jour de l'écran à chaque tours de boucle
     pygame.display.update()
