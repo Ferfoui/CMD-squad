@@ -2,6 +2,7 @@
 
 # Le nom du jeu
 GAME_NAME = "Barbie Rampage"
+GAME_VERSION = "V0.1"
 
 # La taille de l'écran
 SCREEN_WIDTH = 700 # La largeur
@@ -19,6 +20,7 @@ COLOR_DARK = (20, 21, 25)
 COLOR_RED = (200, 25, 25)
 COLOR_ORANGE = (189, 68, 23)
 COLOR_DARK_ORANGE = (107, 28, 6)
+COLOR_HOT_PINK = (227, 28, 121)
 
 # Les noms des tuiles
 OBSTACLES_TILE_TYPES = ['dirt_default', 'dirt_default_right_border', 'dirt_default_left_border', 'dirt_default_down_border', 'dirt_default_down_left_corner', 'dirt_default_down_right_corner', 'grass_default', 'grass_default_right_border', 'grass_default_left_border']
@@ -32,8 +34,11 @@ TILE_TYPES = TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES + PLAYER_AND_ENEMIES_TILE_TYP
 # Les constantes in-game
 GRAVITY = 0.75
 
+# L'endroit ou se trouve tous les fichiers non python du jeu
+RESSOURCES_ROOT = "BarbieRampageGame/resources/"
+
 ### Les images et les sons utilisés (les assets)
-ASSETS_ROOT = "BarbieRampageGame/resources/assets/"
+ASSETS_ROOT = RESSOURCES_ROOT + "assets/"
 TEXTURES_ROOT = ASSETS_ROOT + "textures/" # Le chemin des textures
 SOUNDS_ROOT = ASSETS_ROOT + "sounds/" # Le chemin des effets sonores
 FONTS_ROOT = ASSETS_ROOT + "fonts/" # Le chemin vers les polices d'écriture
@@ -48,6 +53,6 @@ PS2P_FONT_LOCATION = FONTS_ROOT + "Press_Start_2P/PressStart2P-REGULAR.ttf"
 
 
 ### Les données utilisées (les data)
-DATA_ROOT = "BarbieRampageGame/resources/data/"
+DATA_ROOT = RESSOURCES_ROOT + "data/"
 
 WORLDS_DATA_LOCATION = DATA_ROOT + "worlds/"

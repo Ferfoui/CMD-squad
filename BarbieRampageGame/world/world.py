@@ -42,7 +42,7 @@ class World():
             img = pygame.transform.scale(img, (tile_size, tile_size * img.get_height() // img.get_width()))
             self.img_dict[tile_name] = img
     
-    def init_data(self, level_name: str, rows: int, assets: utils.Assets):
+    def init_data(self, level_name: str, assets: utils.Assets):
         """Initialise les données du niveau
 
         Args:
@@ -62,10 +62,10 @@ class World():
         background_image_names = self.world_json['attributes']['background_images']
         self.background_images = []
         for image_name in background_image_names:
-            self.background_images.append(assets.get_image(image_name, f"{BACKGROUND_TEXTURES_LOCATION}{image_name}.png", SCREEN_WIDTH))
+            self.background_images.append(assets.get_image(image_name, f"{BACKGROUND_TEXTURES_LOCATION}{image_name}.png", SCREEN_WIDTH, 0))
         
         for col in range(self.world_json['attributes']['level_size']):
-            r = ['air'] * rows
+            r = ['air'] * self.world_json['attributes']['level_height']
             self.world_data.append(r)
         
         # Ajout de toutes les tuiles dans le monde

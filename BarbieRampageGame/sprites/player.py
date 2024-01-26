@@ -15,7 +15,7 @@ class Player(pygame.sprite.Sprite):
             speed (int or float): vitesse à laquelle se déplace le joueur (en pixel par frame)
             scale (int or float): nombre par lequel on multiplie la taille du Sprite pour obtenir la taille du joueur
         """
-        pygame.sprite.Sprite.__init__(self)
+        super().__init__()
         
         self.scroll = scroll
         
@@ -87,11 +87,12 @@ class Player(pygame.sprite.Sprite):
         
         return animation_dict
 
-    def move(self, world):
+    def move(self, world, keybinds: dict[str, int]):
         """Méthode qui permet de mettre à jour la position du joueur
 
         Args:
             world (World): monde dans lequel le joueur se déplace
+            keybinds (dict[str, key]): touches choisi par l'utilisateur
         """
         dx = 0
         dy = 0
@@ -102,21 +103,21 @@ class Player(pygame.sprite.Sprite):
         
         if self.is_alive:
             # Mouvement à gauche
-            if input_key[pygame.K_q]:
+            if input_key[keybinds['move_left']]:
                 dx = -self.speed
                 self.is_running = True
                 self.flip = True
                 self.direction = -1
             # Mouvement à droite
-            if input_key[pygame.K_d]:
+            if input_key[keybinds['move_right']]:
                 dx = self.speed
                 self.is_running = True
                 self.flip = False
                 self.direction = 1
 
             # Sauts
-            if input_key[pygame.K_SPACE] and self.jump == False and self.in_air == False:
-                self.vel_y = -12
+            if input_key[keybinds['move_jump']] and self.jump == False and self.in_air == False:
+                self.vel_y = -14
                 self.jump = True
                 self.in_air = True
             
@@ -143,7 +144,8 @@ class Player(pygame.sprite.Sprite):
                         self.in_air = False
                         self.jump = False
                         dy = tile[1].top - self.rect.bottom
-        
+
+            # Si le joueur à un mouvement vertical alors il est dans les airs
             if abs(dy) > 0:
                 self.in_air = True
         
@@ -177,16 +179,16 @@ class Player(pygame.sprite.Sprite):
         """Met à jour l'animation du joueur"""
         
         # Met l'animation qui correspond à ce que le joueur fait
-        if not self.is_alive:
-            self.update_action(self.ANIMATION_TYPES[3]) # "Death"
+        #if not self.is_alive:
+        #    self.update_action(self.ANIMATION_TYPES[3]) # "Death"
         #elif self.jump == True:
         #    self.update_action(self.ANIMATION_TYPES[2]) # "Jump"
-        elif self.is_running == True:
+        if self.is_running == True:
             self.update_action(self.ANIMATION_TYPES[1]) # "Run"
         else:
             self.update_action(self.ANIMATION_TYPES[0]) # "Idle"
             
-        ANIMATION_COOLDOWN = 100
+        ANIMATION_COOLDOWN = 50
         # Met à jour l'image en fonction de la frame actuelle
         self.image = self.animation_dict[self.action][self.frame_index]
 

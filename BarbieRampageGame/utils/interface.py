@@ -1,10 +1,11 @@
 import pygame
 
+from _common import ColorValue
 from constants import *
 
 # Classe qui permet de gérer les boutons
 class Button():
-    def __init__(self, x: int, y: int, image: pygame.Surface, clicked_image: pygame.Surface, scale):
+    def __init__(self, x: int, y: int, image: pygame.Surface, clicked_image: pygame.Surface, scale, do_place_center: bool):
         """Initialise la classe Button
 
         Args:
@@ -13,13 +14,17 @@ class Button():
             image (Surface): image qui correspond au bouton
             clicked_image (Surface): image qui va s'afficher quand on clicke sur le bouton
             scale (int or float): nombre par lequel on multiplie la taille de l'image pour obtenir la taille du bouton
+            do_place_center (bool): si les coordonnées données sont celles du centre du bouton
         """
         width = image.get_width()
         height = image.get_height()
         self.image = pygame.transform.scale(image, (int(width * scale), int(height * scale)))
         self.clicked_image = pygame.transform.scale(clicked_image, (int(width * scale), int(height * scale)))
         self.rect = self.image.get_rect()
-        self.rect.topleft = (x, y)
+        if do_place_center:
+            self.rect.center = (x, y)
+        else:
+            self.rect.topleft = (x, y)
         self.clicked = False
         self.do_draw_clicked_img = False
         # Le temps pour pouvoir changer l'image pendant un certain temps
@@ -32,7 +37,7 @@ class Button():
             screen (pygame.Surface): écran sur lequel le bouton doit être affiché
 
         Returns:
-            bool: si l'utilisateur a clické dessus
+            bool: si l'utilisateur a clické sur le bouton
         """
         RESET_CLICKED_IMG_TIME = 200
         action = False
@@ -65,73 +70,64 @@ class Button():
     def set_clicked_img(self):
         self.do_draw_clicked_img = True
         self.update_time = pygame.time.get_ticks()
-
-# Classe qui gère les assets du jeu
-class Assets():
-    def __init__(self):
-        """Initialise la classe assets dans laquelle se trouve toutes les images, les sons, les polices, etc...
-        """
-        ### Images ###
-        # L'image du chargement du début
-        self.cmd_img = self.load_image_keep_proportion(f"{ASSETS_ROOT}casadojomojo.png", SCREEN_WIDTH // 2)
-        # L'image de débuggage
-        self.debug_img = self.load_image(f"{TEXTURES_ROOT}debug.png", SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
         
-        # Dictionnaire dans lequel se trouve les images qui se font charger de l'extérieur de la classe
-        self.saved_external_images = {}
-                
-        ### Polices d'écriture ###
-        self.default_font = pygame.font.Font(PS2P_FONT_LOCATION, 15)
-
-    def load_image(self, texture_location: str, width: int, height: int) -> pygame.Surface:
-        """Charge une image
-
-        Args:
-            texture_location (str): position de la texture
-            width (int): largeur de l'image
-            height (int): hauteur de l'image
-
-        Returns:
-            pygame.Surface: image chargé
-        """
-        image = pygame.image.load(texture_location).convert_alpha()
-        image = pygame.transform.scale(image, (width, height))
-        return image
-
-    def load_image_keep_proportion(self, texture_location: str, width: int) -> pygame.Surface:
-        """Charge une image en gardant les proportions
-
-        Args:
-            texture_location (str): position de la texture
-            width (int): largeur de l'image
-
-        Returns:
-            pygame.Surface: image chargé
-        """
-        image = pygame.image.load(texture_location).convert_alpha()
-        image = pygame.transform.scale(image, (width, width * image.get_height() // image.get_width()))
-        return image
-    
-    def get_image(self, name: str, texture_location: str, width: int, height) -> pygame.Surface:
-        """Renvoie l'image voulue et la sauvegarde pour ne pas avoir à la chargé plusieurs fois
-
-        Args:
-            name (str): nom de l'image
-            texture_location (str): position de la texture
-            width (int): largeur de l'image
-            height (int | None): hauteur de l'image, si la hauteur n'est pas donnée, les proportions de l'image seront automatiquement conservées
-
-        Returns:
-            pygame.Surface: image demandée
-        """
-        # Vérifie si l'image n'a pas déjà été sauvegardée
-        if name in self.saved_external_images.keys():
-            return self.saved_external_images[name]
+# Classe qui gère les menus
+class Menu():
+    def __init__(self, background_color: ColorValue):
+        """Initialise un Menu
         
-        # Charge l'image et la sauvegarde
-        if height > 0:
-            self.saved_external_images[name] = self.load_image(texture_location, width, height)
+        Args:
+            background_color (ColorValue): couleur de l'arrière-plan
+        """
+        self.background_color = background_color
+        self.images_to_draw = []
+        self.buttons_to_draw = {}
+        
+    def add_image(self, image: pygame.Surface, x: int, y: int, do_place_center: bool):
+        img_rect = image.get_rect()
+        if do_place_center:
+            img_rect.center = (x, y)
         else:
-            self.saved_external_images[name] = self.load_image_keep_proportion(texture_location, width)
+            img_rect.topleft = (x, y)
         
-        return self.saved_external_images[name]
+        self.images_to_draw.append((image, img_rect))
+    
+    def add_text_button(self, button_name: str, text_to_draw: str, font: pygame.font.Font, text_col: ColorValue, x: int, y: int, scale, do_place_center: bool):
+        """Ajoute un bouton sous forme de texte au menu
+
+        Args:
+            button_name (str): nom du bouton
+            text_to_draw (str): texte à afficher
+            font (pygame.font.Font): police d'écriture
+            text_col (ColorValue): couleur
+            x (int): position en abscisses où le bouton va être créé
+            y (int): position en ordonnées où le bouton va être créé
+            scale (int or float): nombre par lequel le bouton va être redimensionné
+            do_place_center (bool): si les coordonnées données sont celles du centre du texte
+        """
+        text_img = font.render(text_to_draw, True, text_col)
+        button = Button(x, y, text_img, text_img, scale, do_place_center)
+        self.buttons_to_draw[button_name] = button
+    
+    def draw(self, screen: pygame.Surface, do_draw_background: bool) -> list[str]:
+        """Affiche les images et les boutons à l'écran et renvoie les noms des boutons qui ont été cliqués
+
+        Args:
+            screen (pygame.Surface): écran sur lequel le menu doit s'afficher
+            do_draw_background (bool): si la couleur d'arrière-plan doit être affichée
+
+        Returns:
+            list[str]: noms des boutons qui ont été cliqués
+        """
+        if do_draw_background:
+            screen.fill(self.background_color)
+        
+        for image, img_rect in self.images_to_draw:
+            screen.blit(image, img_rect)
+        
+        clicked_buttons = []
+        for button_name, button in self.buttons_to_draw.items():
+            if button.draw(screen):
+                clicked_buttons.append(button_name)
+        
+        return clicked_buttons
