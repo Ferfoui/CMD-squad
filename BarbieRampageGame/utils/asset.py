@@ -18,6 +18,7 @@ class Assets():
                 
         ### Polices d'écriture ###
         self.default_font = pygame.font.Font(PS2P_FONT_LOCATION, 15)
+        self.default_font_bigger = pygame.font.Font(PS2P_FONT_LOCATION, 22)
 
     def load_image(self, texture_location: str, width: int, height: int) -> pygame.Surface:
         """Charge une image

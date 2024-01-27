@@ -69,6 +69,7 @@ def timer_minute(milisec: int) -> str:
     return f"{hour:02}:{min - hour * 60:02}:{sec - min * 60:02}"
 
 def respawn_player():
+    death_menu.reset_animation()
     world.init_data("level0_data.json", assets)
     return world.process_data()
 
@@ -79,8 +80,8 @@ world.init_data("level0_data.json", assets)
 player = world.process_data()
 
 start_menu = menus.StartMenu(assets)
+
 death_menu = menus.DeathMenu(assets)
-death_menu.load_death_animation(f"{TEXTURES_ROOT}deathscreen/falling/", f"{TEXTURES_ROOT}deathscreen/landing/")
 
 # Variables pour la boucle
 run = True
