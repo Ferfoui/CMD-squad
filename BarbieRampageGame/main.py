@@ -32,7 +32,7 @@ assets = utils.Assets()
 # Tous les paramètres que le joueur peut modifier comme les touches, etc...
 game_settings = utils.Settings()
 
-### Fonctions ##d
+### Fonctions ###
 
 def draw_text(screen: pygame.Surface, text: str, font: pygame.font.Font, text_col: ColorValue, x: int, y: int, do_place_center: bool):
     """Fonction qui affiche du texte

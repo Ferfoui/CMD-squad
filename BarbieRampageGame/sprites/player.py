@@ -38,7 +38,7 @@ class Player(pygame.sprite.Sprite):
         # Si le joueur est en train de courir
         self.is_running = False
 
-        # Valeur absolue du temps pour l'animation du joueur
+        # Valeur du temps pour l'animation du joueur
         self.update_time = pygame.time.get_ticks()
         
         #self.ANIMATION_TYPES = ['Idle', 'Run', 'Jump', 'Death']
@@ -80,7 +80,7 @@ class Player(pygame.sprite.Sprite):
             number_of_frames = len(os.listdir(f"{texture_location}/{animation}"))
             for i in range(number_of_frames):
                 # Charge l'image dans la mémoire
-                img = pygame.image.load(f"{texture_location}/{animation}/{i}.png").convert_alpha()
+                img = pygame.image.load(f"{texture_location}/{animation}/{i:02}.png").convert_alpha()
                 # Converti l'image pour qu'elle soit de la taille voulue
                 img = pygame.transform.scale(img, (int(img.get_width() * scale), int(img.get_height() * scale)))
                 animation_dict[animation].append(img)
