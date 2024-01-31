@@ -136,5 +136,7 @@ while run:
     # Mise à jour de l'écran à chaque tours de boucle
     pygame.display.update()
 
+# Sauvegarde des paramètres
+game_settings.save_settings()
 # Fermeture du programme
 pygame.quit()

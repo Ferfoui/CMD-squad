@@ -56,3 +56,7 @@ PS2P_FONT_LOCATION = FONTS_ROOT + "Press_Start_2P/PressStart2P-REGULAR.ttf"
 DATA_ROOT = RESSOURCES_ROOT + "data/"
 
 WORLDS_DATA_LOCATION = DATA_ROOT + "worlds/"
+
+
+### L'endroit où se trouvera les fichiers de sauvegarde
+SAVE_ROOT = "GAMESAVE/"
