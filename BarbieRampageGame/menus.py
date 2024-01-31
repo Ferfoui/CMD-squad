@@ -7,26 +7,28 @@ import utils
 
 # Classe du menu de démarrage
 class StartMenu(utils.Menu):
-    def __init__(self, assets: utils.Assets):
+    def __init__(self, assets: utils.Assets, settings: utils.Settings):
         """Initialise le menu de démarrage
 
         Args:
-            assets (Assets): classe qui contient les assets
+            assets (Assets): classe qui contient les assets du jeu
+            settings (Settings): classe qui contient les paramètres du jeu
         """
         super().__init__(COLOR_WHITE_AZURE)
         
         # Ajoute l'image au milieu de l'écran
-        self.add_image(assets.cmd_img, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, True)
+        self.add_image(assets.cmd_img, settings.screen_width // 2, settings.screen_height // 2, True)
         # Ajoute le bouton de démarrage
-        self.add_text_button("start", "PRESS ENTER TO START :3", assets.default_font, COLOR_HOT_PINK, SCREEN_WIDTH//2, SCREEN_HEIGHT*0.96, 1, True)
+        self.add_text_button("start", "PRESS ENTER TO START :3", assets.default_font, COLOR_HOT_PINK, settings.screen_width//2, settings.screen_height * 0.96, 1, True)
 
 
 class DeathMenu(utils.Menu):
-    def __init__(self, assets: utils.Assets):
+    def __init__(self, assets: utils.Assets, settings: utils.Settings):
         """Initialise le menu de mort
 
         Args:
             assets (Assets): classe qui contient les assets du jeu
+            settings (Settings): classe qui contient les paramètres du jeu
         """
         super().__init__(COLOR_DARK)
         
@@ -40,13 +42,13 @@ class DeathMenu(utils.Menu):
         # Intervalle en pourcent pour le positionnement aléatoire de la tête sur l'axe horizontal
         self.RANDOM_RANGE = (20, 70)
         
-        self.reset_animation()
+        self.reset_animation(settings.screen_width)
         
         # L'état actuel de l'animation
         self.head_actual_state = 'falling'
         
         # Ajoute le bouton de respawn
-        self.add_text_button('respawn', "PRESS ENTER TO RESPAWN T^T", assets.default_font_bigger, COLOR_HOT_PINK, SCREEN_WIDTH//2, SCREEN_HEIGHT * 0.9, 1, True)
+        self.add_text_button('respawn', "PRESS ENTER TO RESPAWN T^T", assets.default_font_bigger, COLOR_HOT_PINK, settings.screen_width//2, settings.screen_height * 0.9, 1, True)
     
     
     def load_death_animation(self, falling_texture_location: str, landing_texture_location: str) -> dict[str, list[pygame.Surface]]:
@@ -151,8 +153,11 @@ class DeathMenu(utils.Menu):
         return clicked_buttons
     
     
-    def reset_animation(self):
+    def reset_animation(self, screen_width: int):
         """Remet les paramètres par défaut à l'animation du menu
+        
+        Args:
+            screen_width (int): hauteur de l'écran en pixel
         """
         self.frame_index = 0
         self.head_actual_state = 'falling'
@@ -162,5 +167,5 @@ class DeathMenu(utils.Menu):
         
         # Positionnement de la tête de Barbie avec la position des abscisses aléatoire
         random_postion = random.randint(self.RANDOM_RANGE[0], self.RANDOM_RANGE[1]) / 100
-        self.barbie_head_rect.bottomleft = (SCREEN_WIDTH * random_postion, 0)
+        self.barbie_head_rect.bottomleft = (screen_width * random_postion, 0)
         

@@ -7,7 +7,7 @@ import utils
 
 # Classe qui permet de gérer le scrolling de l'écran
 class Scroll():
-    def __init__(self, tile_size: int):
+    def __init__(self):
         """Initialise la class Scroll
 
         Args:
@@ -16,7 +16,6 @@ class Scroll():
         self.THRESH = 200
         self.screen_scroll = 0
         self.bg_scroll = 0
-        self.tile_size = tile_size
 
     def set_screen_scroll(self, screen_scroll: int):
         self.screen_scroll = screen_scroll
@@ -24,17 +23,14 @@ class Scroll():
 
 # Classe qui permet de créer des mondes
 class World():
-    def __init__(self, tile_size: int):
+    def __init__(self):
         """Initialise la classe World
-
-        Args:
-            tile_size (int): longueur des côtés des tuiles
         """
         self.world_data = []
-        self.tile_size = tile_size
         self.obstacle_list = []
-        self.scroll = Scroll(tile_size)
-
+        self.scroll = Scroll()
+    
+    def load_tiles_images(self, tile_size):
         # Charge toutes les images
         self.img_dict = {}
         for tile_name in TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES:
@@ -42,12 +38,13 @@ class World():
             img = pygame.transform.scale(img, (tile_size, tile_size * img.get_height() // img.get_width()))
             self.img_dict[tile_name] = img
     
-    def init_data(self, level_name: str, assets: utils.Assets):
+    def init_data(self, level_name: str, assets: utils.Assets, settings: utils.Settings):
         """Initialise les données du niveau
 
         Args:
             level_name (str): nom du niveau dans les fichiers
             rows (int): nombre de lignes dans le niveau
+            settings (Settings): classe qui contient les paramètres du jeu
         """
         # Reset les data du monde
         self.world_data = []
@@ -58,11 +55,16 @@ class World():
         with open(WORLDS_DATA_LOCATION + level_name, 'r') as worldfile:
             self.world_json = json.load(worldfile)
         
+        # La taille des tuiles en pixel est égale à la taille de l'écran divisée par le nombre de ligne
+        self.tile_size = settings.screen_height // self.world_json['attributes']['level_height']
+        
+        self.load_tiles_images(self.tile_size)
+        
         # Récupération des images pour l'arrière-plan
         background_image_names = self.world_json['attributes']['background_images']
         self.background_images = []
         for image_name in background_image_names:
-            self.background_images.append(assets.get_image(image_name, f"{BACKGROUND_TEXTURES_LOCATION}{image_name}.png", SCREEN_WIDTH, 0))
+            self.background_images.append(assets.get_image(image_name, f"{BACKGROUND_TEXTURES_LOCATION}{image_name}.png", settings.screen_width, 0))
         
         for col in range(self.world_json['attributes']['level_size']):
             r = ['air'] * self.world_json['attributes']['level_height']
@@ -71,7 +73,6 @@ class World():
         # Ajout de toutes les tuiles dans le monde
         for tile in self.world_json['tiles']:
             self.world_data[tile['x']][tile['y']] = tile['type']
-        
 
 
     def process_data(self) -> Player:
@@ -100,7 +101,7 @@ class World():
                 elif tile in PLAYER_AND_ENEMIES_TILE_TYPES:
                     # Si c'est le point de spawn du joueur
                     if tile == PLAYER_AND_ENEMIES_TILE_TYPES[0]:
-                        player = Player(x * self.tile_size, y * self.tile_size, self.scroll, 5, 2)
+                        player = Player(x * self.tile_size, y * self.tile_size, self.tile_size)
         
         return player
     

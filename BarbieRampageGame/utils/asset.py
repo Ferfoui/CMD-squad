@@ -4,18 +4,18 @@ from constants import *
 
 # Classe qui gère les assets du jeu
 class Assets():
-    def __init__(self):
+    def __init__(self, settings):
         """Initialise la classe assets dans laquelle se trouve toutes les images, les sons, les polices, etc...
         """
         ### Images ###
         # L'image du chargement du début
-        self.cmd_img = self.load_image_keep_proportion(f"{ASSETS_ROOT}casadojomojo.png", SCREEN_WIDTH // 2)
+        self.cmd_img = self.load_image_keep_proportion(f"{ASSETS_ROOT}casadojomojo.png", settings.screen_width // 2)
         # L'image de débuggage
-        self.debug_img = self.load_image(f"{TEXTURES_ROOT}debug.png", SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+        self.debug_img = self.load_image(f"{TEXTURES_ROOT}debug.png", settings.screen_width // 2, settings.screen_height // 2)
         
         # Dictionnaire dans lequel se trouve les images qui se font charger de l'extérieur de la classe
         self.saved_external_images = {}
-                
+        
         ### Polices d'écriture ###
         self.default_font = pygame.font.Font(PS2P_FONT_LOCATION, 15)
         self.default_font_bigger = pygame.font.Font(PS2P_FONT_LOCATION, 22)

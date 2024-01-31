@@ -4,10 +4,6 @@
 GAME_NAME = "Barbie Rampage"
 GAME_VERSION = "V0.1"
 
-# La taille de l'écran
-SCREEN_WIDTH = 700 # La largeur
-SCREEN_HEIGHT = int(SCREEN_WIDTH * 0.8) # La hauteur
-
 # Le nombre d'images par seconde
 FPS = 60
 

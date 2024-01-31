@@ -11,8 +11,11 @@ import menus
 # Initialisation du moteur graphique
 pygame.init()
 
+# Tous les paramètres que le joueur peut modifier comme les touches, etc...
+game_settings = utils.Settings()
+
 # Définition de la taille de l'écran
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+screen = pygame.display.set_mode((game_settings.screen_width, game_settings.screen_height))
 
 # Changement du nom de l'écran vers le nom du jeu
 pygame.display.set_caption(f"{GAME_NAME} {GAME_VERSION}")
@@ -20,17 +23,8 @@ pygame.display.set_caption(f"{GAME_NAME} {GAME_VERSION}")
 # Met en place l'horloge
 clock = pygame.time.Clock()
 
-### Variables ###
-# Constantes provisoires
-ROWS = 16
-COLS = 150
-TILE_SIZE = SCREEN_HEIGHT // ROWS
-
 # Tous les assets du jeu, c'est à dire les images, les sons, les polices, etc...
-assets = utils.Assets()
-
-# Tous les paramètres que le joueur peut modifier comme les touches, etc...
-game_settings = utils.Settings()
+assets = utils.Assets(game_settings)
 
 ### Fonctions ###
 
@@ -69,19 +63,24 @@ def timer_minute(milisec: int) -> str:
     return f"{hour:02}:{min - hour * 60:02}:{sec - min * 60:02}"
 
 def respawn_player():
-    death_menu.reset_animation()
-    world.init_data("level0_data.json", assets)
+    """Fais réapparaître le joueur
+
+    Returns:
+        Player: joueur recréé
+    """
+    death_menu.reset_animation(game_settings.screen_width)
+    world.init_data("level0_data.json", assets, game_settings)
     return world.process_data()
 
-world = World(TILE_SIZE)
+world = World()
 
-world.init_data("level0_data.json", assets)
+world.init_data("level0_data.json", assets, game_settings)
 
 player = world.process_data()
 
-start_menu = menus.StartMenu(assets)
+start_menu = menus.StartMenu(assets, game_settings)
 
-death_menu = menus.DeathMenu(assets)
+death_menu = menus.DeathMenu(assets, game_settings)
 
 # Variables pour la boucle
 run = True
@@ -107,10 +106,11 @@ while run:
         # Affiche le joueur
         player.draw(screen)
         
-        player.move(world, game_settings.keybinds)
+        player.move(world, game_settings)
         
         if not player.is_alive:
-            death_menu.draw(screen, True)
+            if 'respawn' in death_menu.draw(screen, True):
+                player = respawn_player()
             
 
     if game_settings.do_draw_game_time:
