@@ -79,12 +79,13 @@ world.init_data("level0_data.json", assets, game_settings)
 player = world.process_data()
 
 start_menu = menus.StartMenu(assets, game_settings)
-
 death_menu = menus.DeathMenu(assets, game_settings)
+pause_menu = menus.PauseMenu(game_settings)
 
 # Variables pour la boucle
 run = True
 game_loading = True
+pause = False
 current_time = pygame.time.get_ticks()
 
 # Boucle qui va permettre de faire tourner le jeu
@@ -98,15 +99,18 @@ while run:
     if game_loading:
         game_loading = not ("start" in start_menu.draw(screen, True))
     else:
+        
+        # Affiche les éléments à afficher à l'écran
         world.draw(screen)
-
+        player.draw(screen)
+        
         # Met à jour le joueur
         player.update()
         
-        # Affiche le joueur
-        player.draw(screen)
-        
-        player.move(world, game_settings)
+        if pause:
+            pause_menu.draw(screen)
+        else:
+            player.move(world, game_settings)
         
         if not player.is_alive:
             if 'respawn' in death_menu.draw(screen, True):
@@ -131,7 +135,11 @@ while run:
                     # Lancer le jeu si la touche 'enter' est pressée
                     game_loading = False
                 elif not player.is_alive:
+                    # Faire réapparaître le joueur si la touche 'enter' est pressée
                     player = respawn_player()
+            if event.key == pygame.K_ESCAPE:
+                if (not game_loading) and player.is_alive:
+                    pause = not pause
 
     # Mise à jour de l'écran à chaque tours de boucle
     pygame.display.update()

@@ -2,6 +2,7 @@ import os
 import random
 
 import pygame
+from _common import ColorValue
 from constants import *
 import utils
 
@@ -15,14 +16,42 @@ class StartMenu(utils.Menu):
             settings (Settings): classe qui contient les paramètres du jeu
         """
         super().__init__(COLOR_WHITE_AZURE)
-        
         cmd_img = assets.get_image("cmd_img", ASSETS_ROOT + "casadojomojo.png", settings.screen_width // 2, 0)
         # Ajoute l'image au milieu de l'écran
         self.add_image(cmd_img, settings.screen_width // 2, settings.screen_height // 2, True)
         # Ajoute le bouton de démarrage
         self.add_text_button("start", "PRESS ENTER TO START :3", assets.default_font, COLOR_HOT_PINK, settings.screen_width//2, settings.screen_height * 0.96, 1, True)
 
+# Classe du menu pause
+class PauseMenu(utils.Menu):
+    def __init__(self, settings: utils.Settings):
+        """Initialise le menu de pause
 
+        Args:
+            settings (Settings): classe qui contient les paramètres du jeu
+        """
+        super().__init__(COLOR_DARK + (128,))
+        
+        # Création d'un background à moitié transparent
+        self.semi_transparent_background = pygame.Surface((settings.screen_width, settings.screen_height), pygame.SRCALPHA)
+        self.semi_transparent_background.fill(self.background_color)
+        
+    
+    def draw(self, screen: pygame.Surface) -> list[str]:
+        """Affiche les images et les boutons à l'écran et renvoie les noms des boutons qui ont été cliqués
+
+        Args:
+            screen (pygame.Surface): écran sur lequel le menu doit s'afficher
+
+        Returns:
+            list[str]: noms des boutons qui ont été cliqués
+        """
+        # Affiche le background à moitié transparent
+        screen.blit(self.semi_transparent_background, (0, 0))
+        
+        return super().draw(screen, False)
+
+# Classe du menu de mort et de réapparition
 class DeathMenu(utils.Menu):
     def __init__(self, assets: utils.Assets, settings: utils.Settings):
         """Initialise le menu de mort
