@@ -8,8 +8,6 @@ class Assets():
         """Initialise la classe assets dans laquelle se trouve toutes les images, les sons, les polices, etc...
         """
         ### Images ###
-        # L'image du chargement du début
-        self.cmd_img = self.load_image_keep_proportion(f"{ASSETS_ROOT}casadojomojo.png", settings.screen_width // 2)
         # L'image de débuggage
         self.debug_img = self.load_image(f"{TEXTURES_ROOT}debug.png", settings.screen_width // 2, settings.screen_height // 2)
         
@@ -49,14 +47,14 @@ class Assets():
         image = pygame.transform.scale(image, (width, width * image.get_height() // image.get_width()))
         return image
     
-    def get_image(self, name: str, texture_location: str, width: int, height) -> pygame.Surface:
+    def get_image(self, name: str, texture_location: str, width: int, height: int = 0) -> pygame.Surface:
         """Renvoie l'image voulue et la sauvegarde pour ne pas avoir à la chargé plusieurs fois
 
         Args:
             name (str): nom de l'image
             texture_location (str): position de la texture
             width (int): largeur de l'image
-            height (int | None): hauteur de l'image, si la hauteur n'est pas donnée, les proportions de l'image seront automatiquement conservées
+            height (int or None): hauteur de l'image, si la hauteur n'est pas donnée ou qu'elle est égale à 0, les proportions de l'image seront automatiquement conservées
 
         Returns:
             pygame.Surface: image demandée

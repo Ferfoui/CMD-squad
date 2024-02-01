@@ -133,20 +133,20 @@ class Player(pygame.sprite.Sprite):
             # Vérifie les colisions
             for tile in world.obstacle_list:
                 # Vérifie les collisions sur l'axe horizontal
-                if tile[1].colliderect(self.rect.x + dx, self.rect.y, self.width, self.height):
+                if tile.rect.colliderect(self.rect.x + dx, self.rect.y, self.width, self.height):
                     dx = 0
                 # Vérifie les collisions sur l'axe vertical
-                if tile[1].colliderect(self.rect.x, self.rect.y + dy + 1, self.width, self.height):
+                if tile.rect.colliderect(self.rect.x, self.rect.y + dy + 1, self.width, self.height):
                     # Vérifie si le joueur est en dessous d'une platforme
                     if self.vel_y < 0:
                         self.vel_y = 0
-                        dy = tile[1].bottom - self.rect.top
+                        dy = tile.rect.bottom - self.rect.top
                     # Vérifie si le joueur touche le sol
                     elif self.vel_y >= 0:
                         self.vel_y = 0
                         self.in_air = False
                         self.jump = False
-                        dy = tile[1].top - self.rect.bottom
+                        dy = tile.rect.top - self.rect.bottom
 
             # Si le joueur à un mouvement vertical alors il est dans les airs
             if abs(dy) > 0:
@@ -171,13 +171,24 @@ class Player(pygame.sprite.Sprite):
             dx (int): distance de laquelle le joueur s'est déplacé
             settings (Settings): classe qui contient les paramètres du jeu
         """
-        if (self.rect.right > settings.screen_width - world.scroll.THRESH and world.scroll.bg_scroll < (world.level_length * world.tile_size) - settings.screen_width)\
-				or (self.rect.left < world.scroll.THRESH and world.scroll.bg_scroll > abs(dx)):
-            self.rect.x -= dx
+        
+        right_thresh_position = settings.screen_width - world.scroll.thresh
+        left_thresh_position = world.scroll.thresh
+        
+        # Taille du monde en pixel
+        world_size = (world.level_length * world.tile_size) - settings.screen_width
+        
+        # Si le joueur est proche de la bordure droite ou gauche, faire défiler l'écran
+        if ((self.rect.right > right_thresh_position) and (world.scroll.bg_scroll < world_size))\
+				or ((self.rect.left < left_thresh_position) and (world.scroll.bg_scroll > abs(dx))):
             world.scroll.set_screen_scroll(-dx)
+        # Remet le scrolling du monde à son état initial s'il faut le
+        elif not (world.scroll.bg_scroll > abs(dx)):
+            world.scroll.set_screen_scroll(world.scroll.bg_scroll)
         else:
             world.scroll.set_screen_scroll(0)
         
+        self.rect.x += world.scroll.screen_scroll
     
     def update_animation(self):
         """Met à jour l'animation du joueur"""

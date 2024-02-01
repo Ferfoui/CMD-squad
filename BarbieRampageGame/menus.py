@@ -16,8 +16,9 @@ class StartMenu(utils.Menu):
         """
         super().__init__(COLOR_WHITE_AZURE)
         
+        cmd_img = assets.get_image("cmd_img", ASSETS_ROOT + "casadojomojo.png", settings.screen_width // 2, 0)
         # Ajoute l'image au milieu de l'écran
-        self.add_image(assets.cmd_img, settings.screen_width // 2, settings.screen_height // 2, True)
+        self.add_image(cmd_img, settings.screen_width // 2, settings.screen_height // 2, True)
         # Ajoute le bouton de démarrage
         self.add_text_button("start", "PRESS ENTER TO START :3", assets.default_font, COLOR_HOT_PINK, settings.screen_width//2, settings.screen_height * 0.96, 1, True)
 

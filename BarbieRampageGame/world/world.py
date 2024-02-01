@@ -7,19 +7,56 @@ import utils
 
 # Classe qui permet de gérer le scrolling de l'écran
 class Scroll():
-    def __init__(self):
+    def __init__(self, tile_size: int):
         """Initialise la class Scroll
 
         Args:
             tile_size (int): taille des tuiles
         """
-        self.THRESH = 200
+        self.reset_thresh(tile_size)
         self.screen_scroll = 0
         self.bg_scroll = 0
 
     def set_screen_scroll(self, screen_scroll: int):
         self.screen_scroll = screen_scroll
         self.bg_scroll -= screen_scroll
+    
+    def reset_thresh(self, tile_size: int):
+        """Reset la limite de distance entre le joueur et le bord de l'écran
+
+        Args:
+            tile_size (int): taille des tuiles
+        """
+        self.thresh = 6 * tile_size
+
+# Classe qui permet de créer les tuiles
+class Tile():
+    def __init__(self, image: pygame.Surface, tile_rect: pygame.Rect):
+        """Initialise une tuile de niveau
+
+        Args:
+            image (pygame.Surface): image de la tuile
+            tile_rect (pygame.Rect): rectangle de la tuile
+        """
+        self.image = image
+        self.rect = tile_rect
+        self.initial_x_coordinate = self.rect.x
+    
+    def scroll_tile(self, background_scroll_value):
+        """Positionne la tuile correctement en fonction du défilement global de l'écran
+
+        Args:
+            background_scroll_value (float): défilement global de l'écran
+        """
+        self.rect.x = -background_scroll_value + self.initial_x_coordinate
+    
+    def draw(self, screen: pygame.Surface):
+        """Méthode qui permet d'afficher la tuile
+
+        Args:
+            screen (Surface): fenêtre sur laquelle le tuile doit être affiché
+        """
+        screen.blit(self.image, self.rect)
 
 # Classe qui permet de créer des mondes
 class World():
@@ -28,7 +65,8 @@ class World():
         """
         self.world_data = []
         self.obstacle_list = []
-        self.scroll = Scroll()
+        
+        self.scroll = None
     
     def load_tiles_images(self, tile_size):
         # Charge toutes les images
@@ -59,6 +97,12 @@ class World():
         self.tile_size = settings.screen_height // self.world_json['attributes']['level_height']
         
         self.load_tiles_images(self.tile_size)
+        
+        # Initialise le scrolling du niveau
+        if self.scroll == None:
+            self.scroll = Scroll(self.tile_size)
+        else:
+            self.scroll.reset_thresh(self.tile_size)
         
         # Récupération des images pour l'arrière-plan
         background_image_names = self.world_json['attributes']['background_images']
@@ -94,8 +138,8 @@ class World():
                     img_rect = img.get_rect()
                     img_rect.x = x * self.tile_size
                     img_rect.y = y * self.tile_size
-                    tile_data = (img, img_rect)
                     if tile in OBSTACLES_TILE_TYPES:
+                        tile_data = Tile(img, img_rect)
                         self.obstacle_list.append(tile_data)
                 # Si c'est un personnage comme le joueur ou un ennemi
                 elif tile in PLAYER_AND_ENEMIES_TILE_TYPES:
@@ -114,8 +158,8 @@ class World():
         self.draw_background(screen)
         
         for tile in self.obstacle_list:
-            tile[1][0] += self.scroll.screen_scroll
-            screen.blit(tile[0], tile[1])
+            tile.scroll_tile(self.scroll.bg_scroll)
+            tile.draw(screen)
     
     def draw_background(self, screen: pygame.Surface):
         """Fonction qui affiche l'arrière plan
