@@ -19,7 +19,7 @@ COLOR_DARK_ORANGE = (107, 28, 6)
 COLOR_HOT_PINK = (227, 28, 121)
 
 # Les noms des tuiles
-OBSTACLES_TILE_TYPES = ['dirt_default', 'dirt_default_right_border', 'dirt_default_left_border', 'dirt_default_down_border', 'dirt_default_down_left_corner', 'dirt_default_down_right_corner', 'grass_default', 'grass_default_right_border', 'grass_default_left_border']
+OBSTACLES_TILE_TYPES = ['dirt_default', 'dirt_default_right_border', 'dirt_default_left_border', 'dirt_default_down_border', 'dirt_default_down_left_corner', 'dirt_default_down_right_corner', 'grass_default', 'grass_default_right_border', 'grass_default_left_border', 'sand']
 ENTITY_TILE_TYPES = []
 PLAYER_AND_ENEMIES_TILE_TYPES = ['player_spawn']
 
