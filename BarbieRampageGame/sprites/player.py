@@ -60,6 +60,10 @@ class Player(pygame.sprite.Sprite):
         self.width = self.image.get_width()
         self.height = self.image.get_height()
     
+
+    def create_health_bar(self, x, y):
+        self.health_bar = utils.HealthBar(x, y, 100, 20, self.health)
+    
     
     def load_animation(self, animation_types: list[str], texture_location: str, scale) -> dict[str, list[pygame.Surface]]:
         """Méthode qui permet de charger les animations du joueur
@@ -245,6 +249,8 @@ class Player(pygame.sprite.Sprite):
         """Méthode qui doit être appelée à chaque frame pour mettre à jour les caractéristiques du joueur"""
         
         self.check_if_alive()
+
+        self.health_bar.hp = self.health
 
         self.update_animation()
 

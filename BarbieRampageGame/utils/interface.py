@@ -131,3 +131,20 @@ class Menu():
                 clicked_buttons.append(button_name)
         
         return clicked_buttons
+
+class HealthBar():
+    def __init__(self, x, y, width, height, max_hp):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.hp = max_hp
+        self.max_hp = max_hp
+    
+    def draw(self,surface):
+        #calcul du ratio de vie
+        ratio = self.hp / self.max_hp
+        pygame.draw.rect(surface, "red", (self.x, self.y, self.width, self.height))
+        pygame.draw.rect(surface, "pink", (self.x, self.y, self.width * ratio, self.height))
+
+
