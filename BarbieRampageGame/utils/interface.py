@@ -109,7 +109,7 @@ class Menu():
         button = Button(x, y, text_img, text_img, scale, do_place_center)
         self.buttons_to_draw[button_name] = button
     
-    def draw(self, screen: pygame.Surface, do_draw_background: bool) -> list[str]:
+    def draw(self, screen: pygame.Surface, do_draw_background: bool) -> dict[str, bool]:
         """Affiche les images et les boutons à l'écran et renvoie les noms des boutons qui ont été cliqués
 
         Args:
@@ -117,7 +117,7 @@ class Menu():
             do_draw_background (bool): si la couleur d'arrière-plan doit être affichée
 
         Returns:
-            list[str]: noms des boutons qui ont été cliqués
+            dict[str, bool]: noms des boutons avec la valeur true s'ils ont été cliqués
         """
         if do_draw_background:
             screen.fill(self.background_color)
@@ -125,10 +125,9 @@ class Menu():
         for image, img_rect in self.images_to_draw:
             screen.blit(image, img_rect)
         
-        clicked_buttons = []
+        clicked_buttons = {}
         for button_name, button in self.buttons_to_draw.items():
-            if button.draw(screen):
-                clicked_buttons.append(button_name)
+            clicked_buttons[button_name] = button.draw(screen)
         
         return clicked_buttons
 

@@ -83,7 +83,7 @@ player.create_health_bar(10, game_settings.screen_width // 8)
 
 start_menu = menus.StartMenu(assets, game_settings)
 death_menu = menus.DeathMenu(assets, game_settings)
-pause_menu = menus.PauseMenu(game_settings)
+pause_menu = menus.PauseMenu(assets, game_settings)
 
 # Variables pour la boucle
 run = True
@@ -100,7 +100,7 @@ while run:
     current_time = pygame.time.get_ticks()
     
     if game_loading:
-        game_loading = not ("start" in start_menu.draw(screen, True))
+        game_loading = not start_menu.draw(screen, True)['start']
     else:
         
         # Affiche les éléments à afficher à l'écran
@@ -113,12 +113,18 @@ while run:
         player.health_bar.draw(screen)
 
         if pause:
-            pause_menu.draw(screen)
+            menu_buttons = pause_menu.draw(screen)
+            if menu_buttons['quit']:
+                run = False
+            elif menu_buttons['settings']:
+                print("settings button has been clicked")
+            elif menu_buttons['back']:
+                pause = False
         else:
             player.move(world, game_settings)
         
         if not player.is_alive:
-            if 'respawn' in death_menu.draw(screen, True):
+            if death_menu.draw(screen, True)['respawn']:
                 player = respawn_player()
             
 
