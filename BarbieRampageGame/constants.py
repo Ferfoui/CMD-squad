@@ -4,10 +4,6 @@
 GAME_NAME = "Barbie Rampage"
 GAME_VERSION = "V0.1"
 
-# La taille de l'écran
-SCREEN_WIDTH = 700 # La largeur
-SCREEN_HEIGHT = int(SCREEN_WIDTH * 0.8) # La hauteur
-
 # Le nombre d'images par seconde
 FPS = 60
 
@@ -56,3 +52,7 @@ PS2P_FONT_LOCATION = FONTS_ROOT + "Press_Start_2P/PressStart2P-REGULAR.ttf"
 DATA_ROOT = RESSOURCES_ROOT + "data/"
 
 WORLDS_DATA_LOCATION = DATA_ROOT + "worlds/"
+
+
+### L'endroit où se trouvera les fichiers de sauvegarde
+SAVE_ROOT = "GAMESAVE/"

@@ -2,25 +2,24 @@ import pygame
 import os
 
 from constants import *
+import utils
 
 # Classe qui permet de créer le joueur
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x: int, y: int, scroll, speed, scale):
+    def __init__(self, x: int, y: int, tile_size: int):
         """Initialise la classe Player
 
         Args:
             x (int): position en abscisses où le joueur va être créé
             y (int): position en ordonnées où le joueur va être créé
-            scroll (Scroll): valeurs de scrolling dont le joueur a besoin
-            speed (int or float): vitesse à laquelle se déplace le joueur (en pixel par frame)
-            scale (int or float): nombre par lequel on multiplie la taille du Sprite pour obtenir la taille du joueur
+            tile_size (int): taille d'une tuile en pixel
         """
         super().__init__()
         
-        self.scroll = scroll
+        self.size_factor = tile_size / 35
         
         self.is_alive = True
-        self.speed = speed
+        self.speed = 5 * self.size_factor
         self.health = 100
 
         # Variable qui permet de faire tourner le sprite du joueur quand il bouge dans l'autre sens
@@ -38,12 +37,13 @@ class Player(pygame.sprite.Sprite):
         # Si le joueur est en train de courir
         self.is_running = False
 
-        # Valeur absolue du temps pour l'animation du joueur
+        # Valeur du temps pour l'animation du joueur
         self.update_time = pygame.time.get_ticks()
         
         #self.ANIMATION_TYPES = ['Idle', 'Run', 'Jump', 'Death']
         self.ANIMATION_TYPES = ['Idle', 'Run']
         
+        scale = 2 * self.size_factor
         # Dictionnaire dans lequel il y a les frames des différentes animations du joueur
         self.animation_dict = self.load_animation(self.ANIMATION_TYPES, f"{PLAYER_TEXTURES_LOCATION}default", scale)
         # Index de la frame actuelle du joueur
@@ -80,19 +80,19 @@ class Player(pygame.sprite.Sprite):
             number_of_frames = len(os.listdir(f"{texture_location}/{animation}"))
             for i in range(number_of_frames):
                 # Charge l'image dans la mémoire
-                img = pygame.image.load(f"{texture_location}/{animation}/{i}.png").convert_alpha()
+                img = pygame.image.load(f"{texture_location}/{animation}/{i:02}.png").convert_alpha()
                 # Converti l'image pour qu'elle soit de la taille voulue
                 img = pygame.transform.scale(img, (int(img.get_width() * scale), int(img.get_height() * scale)))
                 animation_dict[animation].append(img)
         
         return animation_dict
 
-    def move(self, world, keybinds: dict[str, int]):
+    def move(self, world, settings: utils.Settings):
         """Méthode qui permet de mettre à jour la position du joueur
 
         Args:
             world (World): monde dans lequel le joueur se déplace
-            keybinds (dict[str, key]): touches choisi par l'utilisateur
+            settings (Settings): classe qui contient les paramètres du jeu
         """
         dx = 0
         dy = 0
@@ -103,26 +103,29 @@ class Player(pygame.sprite.Sprite):
         
         if self.is_alive:
             # Mouvement à gauche
-            if input_key[keybinds['move_left']]:
-                dx = -self.speed
+            if input_key[settings.keybinds['move_left']]:
+                dx -= self.speed
                 self.is_running = True
                 self.flip = True
                 self.direction = -1
             # Mouvement à droite
-            if input_key[keybinds['move_right']]:
-                dx = self.speed
+            if input_key[settings.keybinds['move_right']]:
+                dx += self.speed
                 self.is_running = True
                 self.flip = False
                 self.direction = 1
+                # Ne pas faire courir Barbie si on appuie en même temps sur la touche pour aller à droite et à gauche
+                if dx == 0:
+                    self.is_running = False
 
             # Sauts
-            if input_key[keybinds['move_jump']] and self.jump == False and self.in_air == False:
-                self.vel_y = -14
+            if input_key[settings.keybinds['move_jump']] and self.jump == False and self.in_air == False:
+                self.vel_y = -14 * self.size_factor
                 self.jump = True
                 self.in_air = True
             
             # Application de la gravité
-            self.vel_y += GRAVITY
+            self.vel_y += GRAVITY * self.size_factor
             if self.vel_y > 10:
                 self.vel_y
             dy += self.vel_y
@@ -130,27 +133,27 @@ class Player(pygame.sprite.Sprite):
             # Vérifie les colisions
             for tile in world.obstacle_list:
                 # Vérifie les collisions sur l'axe horizontal
-                if tile[1].colliderect(self.rect.x + dx, self.rect.y, self.width, self.height):
+                if tile.rect.colliderect(self.rect.x + dx, self.rect.y, self.width, self.height):
                     dx = 0
                 # Vérifie les collisions sur l'axe vertical
-                if tile[1].colliderect(self.rect.x, self.rect.y + dy + 1, self.width, self.height):
+                if tile.rect.colliderect(self.rect.x, self.rect.y + dy + 1, self.width, self.height):
                     # Vérifie si le joueur est en dessous d'une platforme
                     if self.vel_y < 0:
                         self.vel_y = 0
-                        dy = tile[1].bottom - self.rect.top
+                        dy = tile.rect.bottom - self.rect.top
                     # Vérifie si le joueur touche le sol
                     elif self.vel_y >= 0:
                         self.vel_y = 0
                         self.in_air = False
                         self.jump = False
-                        dy = tile[1].top - self.rect.bottom
+                        dy = tile.rect.top - self.rect.bottom
 
             # Si le joueur à un mouvement vertical alors il est dans les airs
             if abs(dy) > 0:
                 self.in_air = True
         
             # Tuer le joueur s'il sort de l'écran par le bas
-            if self.rect.top + dy > SCREEN_HEIGHT:
+            if self.rect.top + dy > settings.screen_height:
                 self.health = 0
                 self.vel_y = 0
 
@@ -158,22 +161,34 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += dx
         self.rect.y += dy
         
-        self.update_scrolling(world, dx)
+        self.update_scrolling(world, dx, settings)
     
-    def update_scrolling(self, world, dx: int):
+    def update_scrolling(self, world, dx: int, settings: utils.Settings):
         """Met à jour le scrolling en fonction de la position du joueur par rapport à l'écran
 
         Args:
             world (World): monde dans lequel le joueur se déplace
             dx (int): distance de laquelle le joueur s'est déplacé
+            settings (Settings): classe qui contient les paramètres du jeu
         """
-        if (self.rect.right > SCREEN_WIDTH - self.scroll.THRESH and self.scroll.bg_scroll < (world.level_length * self.scroll.tile_size) - SCREEN_WIDTH)\
-				or (self.rect.left < self.scroll.THRESH and self.scroll.bg_scroll > abs(dx)):
-            self.rect.x -= dx
-            self.scroll.set_screen_scroll(-dx)
-        else:
-            self.scroll.set_screen_scroll(0)
         
+        right_thresh_position = settings.screen_width - world.scroll.thresh
+        left_thresh_position = world.scroll.thresh
+        
+        # Taille du monde en pixel
+        world_size = (world.level_length * world.tile_size) - settings.screen_width
+        
+        # Si le joueur est proche de la bordure droite ou gauche, faire défiler l'écran
+        if ((self.rect.right > right_thresh_position) and (world.scroll.bg_scroll < world_size))\
+				or ((self.rect.left < left_thresh_position) and (world.scroll.bg_scroll > abs(dx))):
+            world.scroll.set_screen_scroll(-dx)
+        # Remet le scrolling du monde à son état initial s'il faut le
+        elif not (world.scroll.bg_scroll > abs(dx)):
+            world.scroll.set_screen_scroll(world.scroll.bg_scroll)
+        else:
+            world.scroll.set_screen_scroll(0)
+        
+        self.rect.x += world.scroll.screen_scroll
     
     def update_animation(self):
         """Met à jour l'animation du joueur"""
