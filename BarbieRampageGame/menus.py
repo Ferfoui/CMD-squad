@@ -2,7 +2,6 @@ import os
 import random
 
 import pygame
-from _common import ColorValue
 from constants import *
 import utils
 

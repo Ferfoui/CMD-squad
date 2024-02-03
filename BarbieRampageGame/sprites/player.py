@@ -61,8 +61,8 @@ class Player(pygame.sprite.Sprite):
         self.height = self.image.get_height()
     
 
-    def create_health_bar(self, x, y):
-        self.health_bar = utils.HealthBar(x, y, 100, 20, self.health)
+    def create_health_bar(self, x: int, y: int, assets: utils.Assets):
+        self.health_bar = utils.HealthBar(x, y, 256, self.health, assets)
     
     
     def load_animation(self, animation_types: list[str], texture_location: str, scale) -> dict[str, list[pygame.Surface]]:

@@ -2,6 +2,7 @@ import pygame
 
 from _common import ColorValue
 from constants import *
+from .asset import Assets
 
 # Classe qui permet de gérer les boutons
 class Button():
@@ -132,18 +133,20 @@ class Menu():
         return clicked_buttons
 
 class HealthBar():
-    def __init__(self, x, y, width, height, max_hp):
+    def __init__(self, x, y, width: int, max_hp: int, assets: Assets):
         self.x = x
         self.y = y
         self.width = width
-        self.height = height
         self.hp = max_hp
         self.max_hp = max_hp
-    
-    def draw(self,surface):
-        #calcul du ratio de vie
+        self.image = assets.get_image("health_bar", f"{TEXTURES_ROOT}gui/Health_bar_empty.png", width)
+        self.height = self.image.get_height()
+        
+    def draw(self, screen: pygame.Surface):
+        # Calcul du ratio de vie
         ratio = self.hp / self.max_hp
-        pygame.draw.rect(surface, "red", (self.x, self.y, self.width, self.height))
-        pygame.draw.rect(surface, "pink", (self.x, self.y, self.width * ratio, self.height))
+        #pygame.draw.rect(screen, "red", (self.x + 10, self.y + 10, self.width - 20, self.height - 20))
+        pygame.draw.rect(screen, COLOR_HEALTH_PINK, (self.x + 5, self.y + 5, (self.width - 10) * ratio, self.height - 10))
+        screen.blit(self.image, (self.x, self.y))
 
 
