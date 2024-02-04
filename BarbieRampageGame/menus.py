@@ -1,12 +1,12 @@
-import os
-import random
+import pygame, random, os
 
-import pygame
+from _common import ColorValue
 from constants import *
+import interface as gui
 import utils
 
 # Classe du menu de démarrage
-class StartMenu(utils.Menu):
+class StartMenu(gui.Menu):
     def __init__(self, assets: utils.Assets, settings: utils.Settings):
         """Initialise le menu de démarrage
 
@@ -22,14 +22,15 @@ class StartMenu(utils.Menu):
         self.add_text_button("start", "PRESS ENTER TO START :3", assets.default_font, COLOR_HOT_PINK, settings.screen_width//2, settings.screen_height * 0.96, 1, True)
 
 # Classe du menu pause
-class PauseMenu(utils.Menu):
+class PauseMenu(gui.Menu):
     def __init__(self, assets: utils.Assets, settings: utils.Settings):
         """Initialise le menu de pause
 
         Args:
             settings (Settings): classe qui contient les paramètres du jeu
         """
-        super().__init__(COLOR_DARK + (128,))
+        background_color = COLOR_DARK + (128,) # Le '128' correspond à l'opacité de la couleur
+        super().__init__(background_color)
         
         self.add_text_button("quit", "quit the game", assets.default_font_bigger, COLOR_WHITE_AZURE, settings.screen_width//2, settings.screen_height * 0.4, 1, True)
         self.add_text_button("settings", "game settings", assets.default_font_bigger, COLOR_WHITE_AZURE, settings.screen_width//2, settings.screen_height * 0.5, 1, True)
@@ -67,8 +68,15 @@ class PauseMenu(utils.Menu):
         
         return clicked_buttons
 
+class SettingsMenu(gui.Menu):
+    def __init__(self):
+        super().__init__(COLOR_DARK)
+        
+    def draw(self, screen: pygame.Surface) -> dict[str, bool]:
+        return super().draw(screen, True)
+
 # Classe du menu de mort et de réapparition
-class DeathMenu(utils.Menu):
+class DeathMenu(gui.Menu):
     def __init__(self, assets: utils.Assets, settings: utils.Settings):
         """Initialise le menu de mort
 

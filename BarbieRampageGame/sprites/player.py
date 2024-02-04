@@ -1,8 +1,8 @@
-import pygame
-import os
+import pygame, os
 
 from constants import *
 import utils
+import interface as gui
 
 # Classe qui permet de créer le joueur
 class Player(pygame.sprite.Sprite):
@@ -62,7 +62,7 @@ class Player(pygame.sprite.Sprite):
     
 
     def create_health_bar(self, x: int, y: int, assets: utils.Assets):
-        self.health_bar = utils.HealthBar(x, y, 256, self.health, assets)
+        self.health_bar = gui.HealthBar(x, y, 256, self.health, assets)
     
     
     def load_animation(self, animation_types: list[str], texture_location: str, scale) -> dict[str, list[pygame.Surface]]:

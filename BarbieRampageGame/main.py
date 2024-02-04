@@ -7,6 +7,7 @@ from constants import *
 from world import World
 import utils
 import menus
+import interface
 
 # Initialisation du moteur graphique
 pygame.init()
@@ -85,6 +86,8 @@ start_menu = menus.StartMenu(assets, game_settings)
 death_menu = menus.DeathMenu(assets, game_settings)
 pause_menu = menus.PauseMenu(assets, game_settings)
 
+test_drop_down = interface.DropDown(400, 400, [COLOR_WHITE_AZURE, COLOR_DARK], [COLOR_ORANGE, COLOR_DARK_ORANGE], 200, 50, assets.default_font, "choose", ['mdr', 'lol'])
+
 # Variables pour la boucle
 run = True
 game_loading = True
@@ -111,7 +114,11 @@ while run:
         player.update()
         
         player.health_bar.draw(screen)
-
+        
+        
+        test_drop_down.draw(screen)
+        
+        
         if pause:
             # Gestion du menu pause
             menu_buttons = pause_menu.draw(screen)
@@ -121,6 +128,8 @@ while run:
                 print("settings button has been clicked")
             elif menu_buttons['back']:
                 pause = False
+            
+            
         else:
             player.move(world, game_settings)
         
