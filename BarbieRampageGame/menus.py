@@ -1,6 +1,5 @@
 import pygame, random, os
 
-from _common import ColorValue
 from constants import *
 import interface as gui
 import utils
@@ -70,8 +69,15 @@ class PauseMenu(gui.Menu):
 
 class SettingsMenu(gui.Menu):
     def __init__(self, assets: utils.Assets, settings: utils.Settings):
+        """Initialise le menu pause
+
+        Args:
+            assets (Assets): classe qui contient les assets du jeu
+            settings (Settings): classe qui contient les paramètres du jeu
+        """
         super().__init__(COLOR_DARK)
         self.settings = settings
+        self.do_restart = False
         
         self.add_text("resolution :", assets.default_font, COLOR_WHITE_AZURE, settings.screen_width / 4, settings.screen_height / 8, True)
         self.add_drop_down("resolution", settings.screen_width / 2, settings.screen_height / 8, [COLOR_WHITE_AZURE, COLOR_GRAY], [COLOR_WHITE_AZURE, COLOR_GRAY], 200, 50, assets.default_font, self.settings.resolution_name, list(RESOLUTION_OPTIONS.keys()), True)
@@ -79,16 +85,30 @@ class SettingsMenu(gui.Menu):
         self.add_text("après avoir changé cette option", assets.default_font, COLOR_WHITE_AZURE, settings.screen_width / 2, settings.screen_height * 7/32, True)
         
     def draw(self, screen: pygame.Surface) -> dict[str, any]:
+        """Affiche le menu pause
+
+        Args:
+            screen (pygame.Surface): écran sur lequel le menu doit être affiché
+
+        Returns:
+            dict[str, any]: dict[str, any]: dictionnaire avec les noms des gui et la valeur qui leur est assigné. Pour les 'Button' (dict[str, bool]), pour les 'DropDown' (dict[str, str])
+        """
         gui_values = super().draw(screen, True)
         self.change_resolution(gui_values["resolution"])
         return gui_values
 
     def change_resolution(self, resolution_str_value: str):
+        """Change la résolution dans les paramètres
+
+        Args:
+            resolution_str_value (str): nom de la résolution
+        """
         if self.settings.resolution_name != resolution_str_value:
             new_width, new_height = RESOLUTION_OPTIONS[resolution_str_value]
             self.settings.screen_width = new_width
             self.settings.screen_height = new_height
             self.settings.resolution_name = resolution_str_value
+            self.do_restart = True
 
 # Classe du menu de mort et de réapparition
 class DeathMenu(gui.Menu):
