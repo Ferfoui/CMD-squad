@@ -85,13 +85,15 @@ player.create_health_bar(10, game_settings.screen_width // 18, assets)
 start_menu = menus.StartMenu(assets, game_settings)
 death_menu = menus.DeathMenu(assets, game_settings)
 pause_menu = menus.PauseMenu(assets, game_settings)
+settings_menu = menus.SettingsMenu(assets, game_settings)
 
-test_drop_down = interface.DropDown(400, 400, [COLOR_WHITE_AZURE, COLOR_DARK], [COLOR_ORANGE, COLOR_DARK_ORANGE], 200, 50, assets.default_font, "choose", ['mdr', 'lol'])
+test_drop_down = interface.DropDown(400, 400, [COLOR_WHITE_AZURE, COLOR_GRAY], [COLOR_WHITE_AZURE, COLOR_GRAY], 200, 50, assets.default_font, "choose", ['mdr', 'lol'])
 
 # Variables pour la boucle
 run = True
 game_loading = True
 pause = False
+settings_choice = False
 current_time = pygame.time.get_ticks()
 
 # Boucle qui va permettre de faire tourner le jeu
@@ -115,21 +117,18 @@ while run:
         
         player.health_bar.draw(screen)
         
-        
-        test_drop_down.draw(screen)
-        
-        
         if pause:
-            # Gestion du menu pause
-            menu_buttons = pause_menu.draw(screen)
-            if menu_buttons['quit']:
-                run = False
-            elif menu_buttons['settings']:
-                print("settings button has been clicked")
-            elif menu_buttons['back']:
-                pause = False
-            
-            
+            if settings_choice:
+                settings_menu.draw(screen)
+            else:
+                # Gestion du menu pause
+                menu_buttons = pause_menu.draw(screen)
+                if menu_buttons['quit']:
+                    run = False
+                elif menu_buttons['settings']:
+                    settings_choice = True
+                elif menu_buttons['back']:
+                    pause = False
         else:
             player.move(world, game_settings)
         
@@ -160,7 +159,11 @@ while run:
                     player = respawn_player()
             if event.key == pygame.K_ESCAPE:
                 if (not game_loading) and player.is_alive:
-                    pause = not pause
+                    if settings_choice:
+                        settings_choice = False
+                    else:
+                        # Activer ou desactiver le menu pause
+                        pause = not pause
 
     # Mise à jour de l'écran à chaque tours de boucle
     pygame.display.update()

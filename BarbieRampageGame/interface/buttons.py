@@ -67,10 +67,10 @@ class Button():
         action = False
 
 		# Position de la souris
-        pos = pygame.mouse.get_pos()
+        mpos = pygame.mouse.get_pos()
 
 		# Vérifie si la souris a clické sur le bouton
-        if self.rect.collidepoint(pos):
+        if self.rect.collidepoint(mpos):
             if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
                 action = True
                 self.clicked = True
@@ -127,18 +127,31 @@ class DropDown():
         """
         self.update()
         
+        BORDER_RADIUS = 4
+        TEXT_COLOR = (0, 0, 0)
         # Affiche la case principale
-        pygame.draw.rect(screen, self.menu_colors[self.menu_active], self.rect, 0)
-        text = self.font.render(self.main_option, 1, (0, 0, 0))
+        if not self.draw_menu:
+            # Met des coins arrondis sur tous les bords
+            pygame.draw.rect(screen, self.menu_colors[self.menu_active], self.rect, 2, border_radius = BORDER_RADIUS)
+        else:
+            # Met des coins arrondis sur les deux bords supérieurs
+            pygame.draw.rect(screen, self.menu_colors[self.menu_active], self.rect, 2, border_top_left_radius = BORDER_RADIUS, border_top_right_radius = BORDER_RADIUS)
+        text = self.font.render(self.main_option, 1, self.menu_colors[0])
         screen.blit(text, text.get_rect(center = self.rect.center))
 
         # Affiche les autres cases
         if self.draw_menu:
             for i, text in enumerate(self.options):
                 rect = self.rect.copy()
-                rect.y += (i+1) * self.rect.height
-                pygame.draw.rect(screen, self.options_colors[1 if i == self.active_option else 0], rect, 0)
-                text = self.font.render(text, 1, (0, 0, 0))
+                # Place le rectangle en dessous du précédent
+                rect.y += (i + 1) * self.rect.height
+                
+                # Met des coins arrondis uniquement sur la dernière case
+                if i == len(self.options) - 1:
+                    pygame.draw.rect(screen, self.options_colors[i == self.active_option], rect, 0, border_bottom_left_radius = BORDER_RADIUS, border_bottom_right_radius = BORDER_RADIUS)
+                else:
+                    pygame.draw.rect(screen, self.options_colors[i == self.active_option], rect, 0)
+                text = self.font.render(text, 1, TEXT_COLOR)
                 screen.blit(text, text.get_rect(center = rect.center))
         
         return self.main_option

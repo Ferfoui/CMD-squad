@@ -4,7 +4,7 @@ from _common import ColorValue
 from constants import *
 from utils import Assets
 
-from .buttons import Button
+from .buttons import Button, DropDown
 
 # Classe qui gère les menus
 class Menu():
@@ -17,6 +17,7 @@ class Menu():
         self.background_color = background_color
         self.images_to_draw = []
         self.buttons_to_draw = {}
+        self.drop_downs_to_draw = {}
         
     def add_image(self, image: pygame.Surface, x: int, y: int, do_place_center: bool = False):
         """Ajoute une image au menu
@@ -35,6 +36,26 @@ class Menu():
         
         self.images_to_draw.append((image, img_rect))
     
+    def add_text(self, text: str, font: pygame.font.Font, text_col: ColorValue, x: int, y: int, do_place_center: bool = False):
+        """Ajoute du texte au menu
+
+        Args:
+            text (str): texte qui doit être affiché
+            font (pygame.font.Font): police d'écriture
+            text_col (ColorValue): couleur du texte
+            x (int): position en abscisses où le texte va être affiché
+            y (int): position en ordonnées où le texte va être affiché
+            do_place_center (bool, optional): si les coordonnées données sont celles du centre du texte. False par défaut
+        """
+        text_img = font.render(text, True, text_col)
+        
+        if do_place_center:
+            img_rect = text_img.get_rect(center = (x, y))
+        else:
+            img_rect = text_img.get_rect(topleft = (x, y))
+        
+        self.images_to_draw.append((text_img, img_rect))
+    
     def add_text_button(self, button_name: str, text_to_draw: str, font: pygame.font.Font, text_col: ColorValue, x: int, y: int, scale, do_place_center: bool = False):
         """Ajoute un bouton sous forme de texte au menu
 
@@ -52,7 +73,27 @@ class Menu():
         button = Button(x, y, text_img, text_img, scale, do_place_center)
         self.buttons_to_draw[button_name] = button
     
-    def draw(self, screen: pygame.Surface, do_draw_background: bool) -> dict[str, bool]:
+    def add_drop_down(self, drop_down_name: str, x: int, y: int, menu_colors: list[ColorValue, ColorValue], options_colors: list[ColorValue, ColorValue],
+                 width: int, height: int, font: pygame.font.Font, main_option: str, options: list[str], do_place_center: bool = False):
+        """Ajoute un menu déroulant au menu
+
+        Args:
+            drop_down_name (str): nom du menu déroulant
+            x (int): position en abscisses où le menu déroulant va être créé
+            y (int): position en ordonnées où le menu déroulant va être créé
+            menu_colors (list[ColorValue, ColorValue]): liste de la couleur de base et de la couleur active de l'option par défaut
+            options_color (list[ColorValue, ColorValue]): liste de la couleur de base et de la couleur active des options
+            width (int): largeur d'une case
+            height (int): hauteur d'une case
+            font (pygame.font.Font): police utilisée
+            main_option (str): nom de l'option par défaut
+            options (list[str]): noms des options
+            do_place_center (bool, optional): si les coordonnées données sont celles du centre du menu. False par défaut
+        """
+        drop_down = DropDown(x, y, menu_colors, options_colors, width, height, font, main_option, options, do_place_center)
+        self.drop_downs_to_draw[drop_down_name] = drop_down
+    
+    def draw(self, screen: pygame.Surface, do_draw_background: bool) -> dict[str, any]:
         """Affiche les images et les boutons à l'écran et renvoie les noms des boutons qui ont été cliqués
 
         Args:
@@ -60,7 +101,7 @@ class Menu():
             do_draw_background (bool): si la couleur d'arrière-plan doit être affichée
 
         Returns:
-            dict[str, bool]: noms des boutons avec la valeur true s'ils ont été cliqués
+            dict[str, any]: dictionnaire avec les noms des gui et la valeur qui leur est assigné. Pour les 'Button' (dict[str, bool]), pour les 'DropDown' (dict[str, str])
         """
         if do_draw_background:
             screen.fill(self.background_color)
@@ -68,11 +109,14 @@ class Menu():
         for image, img_rect in self.images_to_draw:
             screen.blit(image, img_rect)
         
-        clicked_buttons = {}
+        self.gui_values = {}
         for button_name, button in self.buttons_to_draw.items():
-            clicked_buttons[button_name] = button.draw(screen)
-        
-        return clicked_buttons
+            self.gui_values[button_name] = button.draw(screen)
+
+        for drop_down_name, drop_down in self.drop_downs_to_draw.items():
+            self.gui_values[drop_down_name] = drop_down.draw(screen)
+            
+        return self.gui_values
 
 class HealthBar():
     def __init__(self, x, y, width: int, max_hp: int, assets: Assets):

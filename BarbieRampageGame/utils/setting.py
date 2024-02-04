@@ -51,6 +51,11 @@ class Settings():
             # Pour debug
             self.do_draw_game_time = settings_json['debug']['do_draw_game_time']
             print("Settings have been loaded")
+        
+        for name, resolution in RESOLUTION_OPTIONS.items():
+            if self.screen_width == resolution[0]:
+                self.resolution_name = name
+                return
     
     def save_settings(self):
         """Sauvegarde les paramètres configurés par le joueur

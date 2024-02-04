@@ -69,11 +69,26 @@ class PauseMenu(gui.Menu):
         return clicked_buttons
 
 class SettingsMenu(gui.Menu):
-    def __init__(self):
+    def __init__(self, assets: utils.Assets, settings: utils.Settings):
         super().__init__(COLOR_DARK)
+        self.settings = settings
         
-    def draw(self, screen: pygame.Surface) -> dict[str, bool]:
-        return super().draw(screen, True)
+        self.add_text("resolution :", assets.default_font, COLOR_WHITE_AZURE, settings.screen_width / 4, settings.screen_height / 8, True)
+        self.add_drop_down("resolution", settings.screen_width / 2, settings.screen_height / 8, [COLOR_WHITE_AZURE, COLOR_GRAY], [COLOR_WHITE_AZURE, COLOR_GRAY], 200, 50, assets.default_font, self.settings.resolution_name, list(RESOLUTION_OPTIONS.keys()), True)
+        self.add_text("/!\\ Attention, le jeu doit être redémarré", assets.default_font, COLOR_WHITE_AZURE, settings.screen_width / 2, settings.screen_height * 3/16, True)
+        self.add_text("après avoir changé cette option", assets.default_font, COLOR_WHITE_AZURE, settings.screen_width / 2, settings.screen_height * 7/32, True)
+        
+    def draw(self, screen: pygame.Surface) -> dict[str, any]:
+        gui_values = super().draw(screen, True)
+        self.change_resolution(gui_values["resolution"])
+        return gui_values
+
+    def change_resolution(self, resolution_str_value: str):
+        if self.settings.resolution_name != resolution_str_value:
+            new_width, new_height = RESOLUTION_OPTIONS[resolution_str_value]
+            self.settings.screen_width = new_width
+            self.settings.screen_height = new_height
+            self.settings.resolution_name = resolution_str_value
 
 # Classe du menu de mort et de réapparition
 class DeathMenu(gui.Menu):
