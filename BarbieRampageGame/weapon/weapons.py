@@ -21,6 +21,9 @@ class Weapon():
     
     def init_textures(self, name, texture_path, assets: utils.Assets, weapon_width: int) -> pygame.Surface:
         return assets.get_image(name, texture_path, weapon_width, 0)
+    
+    def shoot(self, direction: int):
+        pass
 
 class ARB4RB13(Weapon):
     def __init__(self, assets: Assets, weapon_width, x, y):
@@ -44,3 +47,5 @@ class Bullet():
                 animation_dict[animation].append(img)
         return animation_dict
         
+    def shoot(self, direction: int):
+        pass
