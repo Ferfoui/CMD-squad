@@ -32,6 +32,8 @@ class ARB4RB13(Weapon):
 class Bullet():
     def __init__(self,scale):
         self.animation = self.load_animation(["bullet_start","bullet_end"],TEXTURES_ROOT+"weapons/bullets",scale)
+        self.index = 0
+        self.image = self.animation["bullet_start"][0]
     
     def load_animation(self, animation_types: list[str], texture_location: str, scale) -> dict[str, list[pygame.Surface]]:
         animation_dict = {}
@@ -49,3 +51,6 @@ class Bullet():
         
     def shoot(self, direction: int):
         pass
+    
+    def draw(self, screen: pygame.Surface):
+        screen.blit()
