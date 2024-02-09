@@ -1,13 +1,11 @@
-import os
-import random
+import pygame, random, os
 
-import pygame
-from _common import ColorValue
 from constants import *
+import interface as gui
 import utils
 
 # Classe du menu de démarrage
-class StartMenu(utils.Menu):
+class StartMenu(gui.Menu):
     def __init__(self, assets: utils.Assets, settings: utils.Settings):
         """Initialise le menu de démarrage
 
@@ -16,43 +14,104 @@ class StartMenu(utils.Menu):
             settings (Settings): classe qui contient les paramètres du jeu
         """
         super().__init__(COLOR_WHITE_AZURE)
-        cmd_img = assets.get_image("cmd_img", ASSETS_ROOT + "casadojomojo.png", settings.screen_width // 2, 0)
+        cmd_img = assets.get_image("cmd_img", ASSETS_ROOT + "casadojomojo.png", settings.screen_width // 2)
         # Ajoute l'image au milieu de l'écran
         self.add_image(cmd_img, settings.screen_width // 2, settings.screen_height // 2, True)
         # Ajoute le bouton de démarrage
         self.add_text_button("start", "PRESS ENTER TO START :3", assets.default_font, COLOR_HOT_PINK, settings.screen_width//2, settings.screen_height * 0.96, 1, True)
 
 # Classe du menu pause
-class PauseMenu(utils.Menu):
-    def __init__(self, settings: utils.Settings):
+class PauseMenu(gui.Menu):
+    def __init__(self, assets: utils.Assets, settings: utils.Settings):
         """Initialise le menu de pause
 
         Args:
             settings (Settings): classe qui contient les paramètres du jeu
         """
-        super().__init__(COLOR_DARK + (128,))
+        background_color = COLOR_DARK + (128,) # Le '128' correspond à l'opacité de la couleur
+        super().__init__(background_color)
+        
+        self.add_text_button("quit", "quit the game", assets.default_font_bigger, COLOR_WHITE_AZURE, settings.screen_width//2, settings.screen_height * 0.4, 1, True)
+        self.add_text_button("settings", "game settings", assets.default_font_bigger, COLOR_WHITE_AZURE, settings.screen_width//2, settings.screen_height * 0.5, 1, True)
+        self.add_text_button("back", "back to game", assets.default_font_bigger, COLOR_WHITE_AZURE, settings.screen_width//2, settings.screen_height * 0.6, 1, True)
         
         # Création d'un background à moitié transparent
         self.semi_transparent_background = pygame.Surface((settings.screen_width, settings.screen_height), pygame.SRCALPHA)
         self.semi_transparent_background.fill(self.background_color)
         
     
-    def draw(self, screen: pygame.Surface) -> list[str]:
+    def draw(self, screen: pygame.Surface) -> dict[str, bool]:
         """Affiche les images et les boutons à l'écran et renvoie les noms des boutons qui ont été cliqués
 
         Args:
             screen (pygame.Surface): écran sur lequel le menu doit s'afficher
 
         Returns:
-            list[str]: noms des boutons qui ont été cliqués
+            dict[str, bool]: noms des boutons avec la valeur true s'ils ont été cliqués
         """
         # Affiche le background à moitié transparent
         screen.blit(self.semi_transparent_background, (0, 0))
+
+        clicked_buttons = super().draw(screen, False)
         
-        return super().draw(screen, False)
+        AROUND_BORDER_SIZE = 15
+        border_rect = pygame.Rect(0, 0, screen.get_width()/2, 23 + 2 * AROUND_BORDER_SIZE)
+        
+        # Affiche une bordure autour de chaque boutons
+        for button in self.buttons_to_draw.values():
+            
+            # Positionnement du rectangle pour la bourdure
+            border_rect.center = button.rect.center
+            
+            pygame.draw.rect(screen, COLOR_HOT_PINK, border_rect, 4, border_radius= 6)
+        
+        return clicked_buttons
+
+class SettingsMenu(gui.Menu):
+    def __init__(self, assets: utils.Assets, settings: utils.Settings):
+        """Initialise le menu pause
+
+        Args:
+            assets (Assets): classe qui contient les assets du jeu
+            settings (Settings): classe qui contient les paramètres du jeu
+        """
+        super().__init__(COLOR_DARK)
+        self.settings = settings
+        self.do_restart = False
+        
+        self.add_text("resolution :", assets.default_font, COLOR_WHITE_AZURE, settings.screen_width / 4, settings.screen_height / 8, True)
+        self.add_drop_down("resolution", settings.screen_width * 5/8, settings.screen_height / 8, [COLOR_WHITE_AZURE, COLOR_GRAY], [COLOR_WHITE_AZURE, COLOR_GRAY], 200, 50, assets.default_font, self.settings.resolution_name, list(RESOLUTION_OPTIONS.keys()), True)
+        self.add_text("/!\\ Attention, le jeu doit être redémarré", assets.default_font, COLOR_WHITE_AZURE, settings.screen_width / 2, settings.screen_height * 3/16, True)
+        self.add_text("après avoir changé cette option", assets.default_font, COLOR_WHITE_AZURE, settings.screen_width / 2, settings.screen_height * 7/32, True)
+        
+    def draw(self, screen: pygame.Surface) -> dict[str, any]:
+        """Affiche le menu pause
+
+        Args:
+            screen (pygame.Surface): écran sur lequel le menu doit être affiché
+
+        Returns:
+            dict[str, any]: dict[str, any]: dictionnaire avec les noms des gui et la valeur qui leur est assigné. Pour les 'Button' (dict[str, bool]), pour les 'DropDown' (dict[str, str])
+        """
+        gui_values = super().draw(screen, True)
+        self.change_resolution(gui_values["resolution"])
+        return gui_values
+
+    def change_resolution(self, resolution_str_value: str):
+        """Change la résolution dans les paramètres
+
+        Args:
+            resolution_str_value (str): nom de la résolution
+        """
+        if self.settings.resolution_name != resolution_str_value:
+            new_width, new_height = RESOLUTION_OPTIONS[resolution_str_value]
+            self.settings.screen_width = new_width
+            self.settings.screen_height = new_height
+            self.settings.resolution_name = resolution_str_value
+            self.do_restart = True
 
 # Classe du menu de mort et de réapparition
-class DeathMenu(utils.Menu):
+class DeathMenu(gui.Menu):
     def __init__(self, assets: utils.Assets, settings: utils.Settings):
         """Initialise le menu de mort
 
@@ -164,7 +223,7 @@ class DeathMenu(utils.Menu):
         self.barbie_head_rect.y += dy
         
 
-    def draw(self, screen: pygame.Surface, do_draw_background: bool) -> list[str]:
+    def draw(self, screen: pygame.Surface, do_draw_background: bool) -> dict[str, bool]:
         """Affiche les images et les boutons à l'écran, renvoie les noms des boutons qui ont été cliqués et affiche l'animation de la tête de Barbie qui tombe
 
         Args:
@@ -172,7 +231,7 @@ class DeathMenu(utils.Menu):
             do_draw_background (bool): si la couleur d'arrière-plan doit être affichée
 
         Returns:
-            list[str]: noms des boutons qui ont été cliqués
+            dict[str, bool]: noms des boutons avec la valeur true s'ils ont été cliqués
         """
         clicked_buttons = super().draw(screen, do_draw_background)
         

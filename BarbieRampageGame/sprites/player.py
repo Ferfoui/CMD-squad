@@ -1,8 +1,8 @@
-import pygame
-import os
+import pygame, os
 
 from constants import *
 import utils
+import interface as gui
 
 # Classe qui permet de créer le joueur
 class Player(pygame.sprite.Sprite):
@@ -59,6 +59,10 @@ class Player(pygame.sprite.Sprite):
         
         self.width = self.image.get_width()
         self.height = self.image.get_height()
+    
+
+    def create_health_bar(self, x: int, y: int, assets: utils.Assets):
+        self.health_bar = gui.HealthBar(x, y, 256, self.health, assets)
     
     
     def load_animation(self, animation_types: list[str], texture_location: str, scale) -> dict[str, list[pygame.Surface]]:
@@ -245,6 +249,8 @@ class Player(pygame.sprite.Sprite):
         """Méthode qui doit être appelée à chaque frame pour mettre à jour les caractéristiques du joueur"""
         
         self.check_if_alive()
+
+        self.health_bar.hp = self.health
 
         self.update_animation()
 
