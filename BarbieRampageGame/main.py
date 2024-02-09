@@ -7,7 +7,8 @@ from constants import *
 from world import World
 import utils
 import menus
-import interface
+import weapon
+
 
 
 # Initialisation du moteur graphique
@@ -72,29 +73,22 @@ def respawn_player():
     """
     death_menu.reset_animation(game_settings.screen_width)
     world.init_data("level0_data.json", assets, game_settings)
-    player = world.process_data()
-    player.create_health_bar(10, game_settings.screen_width // 8, assets)
-    return player
+    return world.process_data()
 
 world = World()
 
 world.init_data("level0_data.json", assets, game_settings)
 
 player = world.process_data()
-player.create_health_bar(10, game_settings.screen_width // 18, assets)
 
 start_menu = menus.StartMenu(assets, game_settings)
 death_menu = menus.DeathMenu(assets, game_settings)
-pause_menu = menus.PauseMenu(assets, game_settings)
-settings_menu = menus.SettingsMenu(assets, game_settings)
-
-test_drop_down = interface.DropDown(400, 400, [COLOR_WHITE_AZURE, COLOR_GRAY], [COLOR_WHITE_AZURE, COLOR_GRAY], 200, 50, assets.default_font, "choose", ['mdr', 'lol'])
-
+pause_menu = menus.PauseMenu(game_settings)
+assault_riffle = weapon.ARB4RB13(assets, 300, 200, 300)
 # Variables pour la boucle
 run = True
 game_loading = True
 pause = False
-settings_choice = False
 current_time = pygame.time.get_ticks()
 
 # Boucle qui va permettre de faire tourner le jeu
@@ -106,34 +100,23 @@ while run:
     current_time = pygame.time.get_ticks()
     
     if game_loading:
-        game_loading = not start_menu.draw(screen, True)['start']
+        game_loading = not ("start" in start_menu.draw(screen, True))
     else:
         
         # Affiche les éléments à afficher à l'écran
         world.draw(screen)
         player.draw(screen)
-        
-        player.health_bar.draw(screen)
+        assault_riffle.draw(screen)
+        # Met à jour le joueur
+        player.update()
         
         if pause:
-            if settings_choice:
-                settings_menu.draw(screen)
-            else:
-                # Gestion du menu pause
-                menu_buttons = pause_menu.draw(screen)
-                if menu_buttons['quit']:
-                    run = False
-                elif menu_buttons['settings']:
-                    settings_choice = True
-                elif menu_buttons['back']:
-                    pause = False
+            pause_menu.draw(screen)
         else:
-            # Met à jour le joueur
-            player.update()
             player.move(world, game_settings)
         
         if not player.is_alive:
-            if death_menu.draw(screen, True)['respawn']:
+            if 'respawn' in death_menu.draw(screen, True):
                 player = respawn_player()
             
 
@@ -159,11 +142,7 @@ while run:
                     player = respawn_player()
             if event.key == pygame.K_ESCAPE:
                 if (not game_loading) and player.is_alive:
-                    if settings_choice:
-                        settings_choice = False
-                    else:
-                        # Activer ou desactiver le menu pause
-                        pause = not pause
+                    pause = not pause
 
     # Mise à jour de l'écran à chaque tours de boucle
     pygame.display.update()
