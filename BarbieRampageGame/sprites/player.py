@@ -53,9 +53,11 @@ class Player(pygame.sprite.Sprite):
         self.action = self.ANIMATION_TYPES[0]
         # Met l'image correspondant à son action
         self.image = self.animation_dict[self.action][self.frame_index]
-        # Crée la hitbox du joueur
+        # Crée le rectangle du joueur
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
+        # Crée la hitbox du joueur
+        self.mask = pygame.mask.from_surface(self.image)
         
         self.width = self.image.get_width()
         self.height = self.image.get_height()
@@ -98,8 +100,7 @@ class Player(pygame.sprite.Sprite):
             world (World): monde dans lequel le joueur se déplace
             settings (Settings): classe qui contient les paramètres du jeu
         """
-        dx = 0
-        dy = 0
+        dx, dy = 0, 0
         self.is_running = False
         
         # Les touches entrées par l'utilisateur
@@ -135,22 +136,7 @@ class Player(pygame.sprite.Sprite):
             dy += self.vel_y
             
             # Vérifie les colisions
-            for tile in world.obstacle_list:
-                # Vérifie les collisions sur l'axe horizontal
-                if tile.rect.colliderect(self.rect.x + dx, self.rect.y, self.width, self.height):
-                    dx = 0
-                # Vérifie les collisions sur l'axe vertical
-                if tile.rect.colliderect(self.rect.x, self.rect.y + dy + 1, self.width, self.height):
-                    # Vérifie si le joueur est en dessous d'une platforme
-                    if self.vel_y < 0:
-                        self.vel_y = 0
-                        dy = tile.rect.bottom - self.rect.top
-                    # Vérifie si le joueur touche le sol
-                    elif self.vel_y >= 0:
-                        self.vel_y = 0
-                        self.in_air = False
-                        self.jump = False
-                        dy = tile.rect.top - self.rect.bottom
+            dx, dy = self.check_collides(dx, dy, world)
 
             # Si le joueur à un mouvement vertical alors il est dans les airs
             if abs(dy) > 0:
@@ -166,6 +152,39 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += dy
         
         self.update_scrolling(world, dx, settings)
+    
+    def check_collides(self, dx: int, dy: int, world) -> tuple[int, int]:
+        
+        for tile in world.obstacle_list:
+            next_x_position = self.rect.x + dx
+            next_y_position = self.rect.y + dy + 1
+            
+            player_tile_x_offset = next_x_position - tile.rect.x
+            player_tile_y_offset = next_y_position - tile.rect.y
+            
+            # Vérifie les collisions sur l'axe horizontal
+            if tile.rect.colliderect(next_x_position, self.rect.y, self.width, self.height):
+                print('co')
+                # Vérifie la hitbox des deux masks en cas de collision entre rectangle
+                if tile.mask.overlap(self.mask, (player_tile_x_offset, player_tile_y_offset)):
+                    print('llide')
+                    dx = 0
+            # Vérifie les collisions sur l'axe vertical
+            if tile.rect.colliderect(self.rect.x, next_y_position, self.width, self.height):
+                # Vérifie la hitbox des deux masks en cas de collision entre rectangle
+                if tile.mask.overlap(self.mask, (player_tile_x_offset, player_tile_y_offset)):
+                    # Vérifie si le joueur est en dessous d'une platforme
+                    if self.vel_y < 0:
+                        self.vel_y = 0
+                        dy = tile.rect.bottom - self.rect.top
+                    # Vérifie si le joueur touche le sol
+                    elif self.vel_y >= 0:
+                        self.vel_y = 0
+                        self.in_air = False
+                        self.jump = False
+                        dy = tile.rect.top - self.rect.bottom
+        
+        return dx, dy
     
     def update_scrolling(self, world, dx: int, settings: utils.Settings):
         """Met à jour le scrolling en fonction de la position du joueur par rapport à l'écran

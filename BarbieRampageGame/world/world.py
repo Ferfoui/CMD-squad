@@ -39,6 +39,7 @@ class Tile():
             tile_rect (pygame.Rect): rectangle de la tuile
         """
         self.image = image
+        self.mask = pygame.mask.from_surface(self.image)
         self.rect = tile_rect
         self.initial_x_coordinate = self.rect.x
     

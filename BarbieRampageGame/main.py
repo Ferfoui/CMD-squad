@@ -9,6 +9,7 @@ import utils
 import menus
 import interface
 
+
 # Initialisation du moteur graphique
 pygame.init()
 
