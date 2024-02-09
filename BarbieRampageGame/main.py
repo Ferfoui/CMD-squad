@@ -155,7 +155,6 @@ while run:
                     player = respawn_player()
             if event.key == pygame.K_ESCAPE:
                 if (not game_loading) and player.is_alive:
-                    pause = not pause
                     if settings_choice:
                         settings_choice = False
                     else:
