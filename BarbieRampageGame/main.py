@@ -7,6 +7,8 @@ from constants import *
 from world import World
 import utils
 import menus
+import weapon
+
 
 # Initialisation du moteur graphique
 pygame.init()
@@ -81,7 +83,7 @@ player = world.process_data()
 start_menu = menus.StartMenu(assets, game_settings)
 death_menu = menus.DeathMenu(assets, game_settings)
 pause_menu = menus.PauseMenu(game_settings)
-
+assault_riffle = weapon.ARB4RB13(assets, 300, 200, 300)
 # Variables pour la boucle
 run = True
 game_loading = True
@@ -103,7 +105,7 @@ while run:
         # Affiche les éléments à afficher à l'écran
         world.draw(screen)
         player.draw(screen)
-        
+        assault_riffle.draw(screen)
         # Met à jour le joueur
         player.update()
         
