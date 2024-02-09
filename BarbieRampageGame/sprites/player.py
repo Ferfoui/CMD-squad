@@ -164,10 +164,10 @@ class Player(pygame.sprite.Sprite):
             
             # Vérifie les collisions sur l'axe horizontal
             if tile.rect.colliderect(next_x_position, self.rect.y, self.width, self.height):
-                print('co')
+                #print('co')
                 # Vérifie la hitbox des deux masks en cas de collision entre rectangle
-                if tile.mask.overlap(self.mask, (player_tile_x_offset, player_tile_y_offset)):
-                    print('llide')
+                #if tile.mask.overlap(self.mask, (player_tile_x_offset, player_tile_y_offset)):
+                #    print('llide')
                     dx = 0
             # Vérifie les collisions sur l'axe vertical
             if tile.rect.colliderect(self.rect.x, next_y_position, self.width, self.height):
