@@ -38,19 +38,9 @@
             "y": 15
         },
         {
-            "type": "sand",
-            "x": 1,
-            "y": 13
-        },
-        {
             "type": "grass_default",
             "x": 1,
             "y": 15
-        },
-        {
-            "type": "sand",
-            "x": 2,
-            "y": 13
         },
         {
             "type": "grass_default",
@@ -63,11 +53,6 @@
             "y": 15
         },
         {
-            "type": "sand",
-            "x": 4,
-            "y": 10
-        },
-        {
             "type": "player_spawn",
             "x": 4,
             "y": 12
@@ -76,11 +61,6 @@
             "type": "grass_default",
             "x": 4,
             "y": 15
-        },
-        {
-            "type": "sand",
-            "x": 5,
-            "y": 10
         },
         {
             "type": "grass_default",
@@ -823,9 +803,19 @@
             "y": 15
         },
         {
+            "type": "sand",
+            "x": 95,
+            "y": 11
+        },
+        {
             "type": "grass_default",
             "x": 95,
             "y": 15
+        },
+        {
+            "type": "sand",
+            "x": 96,
+            "y": 11
         },
         {
             "type": "grass_default",
@@ -853,9 +843,19 @@
             "y": 15
         },
         {
+            "type": "sand",
+            "x": 101,
+            "y": 13
+        },
+        {
             "type": "grass_default",
             "x": 101,
             "y": 15
+        },
+        {
+            "type": "sand",
+            "x": 102,
+            "y": 13
         },
         {
             "type": "grass_default",
@@ -888,9 +888,19 @@
             "y": 15
         },
         {
+            "type": "sand",
+            "x": 108,
+            "y": 9
+        },
+        {
             "type": "grass_default",
             "x": 108,
             "y": 15
+        },
+        {
+            "type": "sand",
+            "x": 109,
+            "y": 9
         },
         {
             "type": "grass_default",

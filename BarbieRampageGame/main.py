@@ -71,6 +71,7 @@ def respawn_player():
     """
     death_menu.reset_animation(game_settings.screen_width)
     world.init_data("level0_data.json", assets, game_settings)
+    player.create_health_bar(10, game_settings.screen_width // 8, assets)
     return world.process_data()
 
 world = World()
@@ -78,6 +79,7 @@ world = World()
 world.init_data("level0_data.json", assets, game_settings)
 
 player = world.process_data()
+player.create_health_bar(10, game_settings.screen_width // 8, assets)
 
 start_menu = menus.StartMenu(assets, game_settings)
 death_menu = menus.DeathMenu(assets, game_settings)
@@ -107,9 +109,6 @@ while run:
         world.draw(screen)
         player.draw(screen)
         
-        # Met à jour le joueur
-        player.update()
-        
         if pause:
             if settings_choice:
                 settings_menu.draw(screen)
@@ -122,6 +121,11 @@ while run:
                     settings_choice = True
                 elif menu_buttons['back']:
                     pause = False
+                    
+        else:
+            # Met à jour le joueur
+            player.update()
+            player.move(world, game_settings)
         
         if not player.is_alive:
             if 'respawn' in death_menu.draw(screen, True):
