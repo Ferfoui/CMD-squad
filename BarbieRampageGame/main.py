@@ -9,8 +9,6 @@ import utils
 import menus
 import weapon
 
-
-
 # Initialisation du moteur graphique
 pygame.init()
 
@@ -83,7 +81,9 @@ player = world.process_data()
 
 start_menu = menus.StartMenu(assets, game_settings)
 death_menu = menus.DeathMenu(assets, game_settings)
-pause_menu = menus.PauseMenu(game_settings)
+pause_menu = menus.PauseMenu(assets, game_settings)
+settings_menu = menus.SettingsMenu(assets, game_settings)
+
 assault_riffle = weapon.ARB4RB13(assets, 300, 200, 300)
 # Variables pour la boucle
 run = True
@@ -106,14 +106,22 @@ while run:
         # Affiche les éléments à afficher à l'écran
         world.draw(screen)
         player.draw(screen)
-        assault_riffle.draw(screen)
+        
         # Met à jour le joueur
         player.update()
         
         if pause:
-            pause_menu.draw(screen)
-        else:
-            player.move(world, game_settings)
+            if settings_choice:
+                settings_menu.draw(screen)
+            else:
+                # Gestion du menu pause
+                menu_buttons = pause_menu.draw(screen)
+                if menu_buttons['quit']:
+                    run = False
+                elif menu_buttons['settings']:
+                    settings_choice = True
+                elif menu_buttons['back']:
+                    pause = False
         
         if not player.is_alive:
             if 'respawn' in death_menu.draw(screen, True):
@@ -143,6 +151,11 @@ while run:
             if event.key == pygame.K_ESCAPE:
                 if (not game_loading) and player.is_alive:
                     pause = not pause
+                    if settings_choice:
+                        settings_choice = False
+                    else:
+                        # Activer ou desactiver le menu pause
+                        pause = not pause
 
     # Mise à jour de l'écran à chaque tours de boucle
     pygame.display.update()
