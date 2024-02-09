@@ -171,4 +171,4 @@ while run:
 # Sauvegarde des paramètres
 game_settings.save_settings()
 # Fermeture du programme
-pygame.quit()
+pygame.quit

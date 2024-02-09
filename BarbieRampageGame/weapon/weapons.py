@@ -21,6 +21,9 @@ class Weapon():
     
     def init_textures(self, name, texture_path, assets: utils.Assets, weapon_width: int) -> pygame.Surface:
         return assets.get_image(name, texture_path, weapon_width, 0)
+    
+    def shoot(self, direction: int):
+        pass
 
 class ARB4RB13(Weapon):
     def __init__(self, assets: Assets, weapon_width, x, y):
@@ -29,6 +32,8 @@ class ARB4RB13(Weapon):
 class Bullet():
     def __init__(self,scale):
         self.animation = self.load_animation(["bullet_start","bullet_end"],TEXTURES_ROOT+"weapons/bullets",scale)
+        self.index = 0
+        self.image = self.animation["bullet_start"][0]
     
     def load_animation(self, animation_types: list[str], texture_location: str, scale) -> dict[str, list[pygame.Surface]]:
         animation_dict = {}
@@ -44,3 +49,8 @@ class Bullet():
                 animation_dict[animation].append(img)
         return animation_dict
         
+    def shoot(self, direction: int):
+        pass
+    
+    def draw(self, screen: pygame.Surface):
+        screen.blit()
