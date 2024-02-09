@@ -91,6 +91,7 @@ assault_riffle = weapon.ARB4RB13(assets, 300, 200, 300)
 run = True
 game_loading = True
 pause = False
+settings_choice = False
 current_time = pygame.time.get_ticks()
 
 # Boucle qui va permettre de faire tourner le jeu
