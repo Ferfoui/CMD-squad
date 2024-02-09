@@ -112,9 +112,6 @@ while run:
         world.draw(screen)
         player.draw(screen)
         
-        # Met à jour le joueur
-        player.update()
-        
         player.health_bar.draw(screen)
         
         if pause:
@@ -130,6 +127,8 @@ while run:
                 elif menu_buttons['back']:
                     pause = False
         else:
+            # Met à jour le joueur
+            player.update()
             player.move(world, game_settings)
         
         if not player.is_alive:
