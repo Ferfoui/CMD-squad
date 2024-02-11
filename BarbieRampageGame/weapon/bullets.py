@@ -76,6 +76,7 @@ class Bullet(pygame.sprite.Sprite):
         """Fais bouger la balle
         """
         #TODO: Faire bouger la balle
+        # on peut faire bouger la balle ajoutant une valeur à self.rect.x
     
     def check_collides(self, player: pygame.sprite.Sprite, enemy_group: pygame.sprite.Group):
         """Vérifie les collisions entre la balle et le joueur ou un ennemi
@@ -85,6 +86,7 @@ class Bullet(pygame.sprite.Sprite):
             enemy_group (pygame.sprite.Group): groupe des ennemis
         """
         #TODO: Vérifier les collisions
+        # ici on peut faire une boucle for pour vérifier les collisions avec chaques ennemis
         # https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.spritecollide
 
     def update(self):
