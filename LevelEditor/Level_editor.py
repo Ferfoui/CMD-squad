@@ -1,14 +1,14 @@
 # Codé par la CMD-squad
 
-import pygame
-import sys
-import json
+import pygame, sys
 
 # Pour pouvoir importer les fichier se trouvant dans le jeu
 sys.path.append("./BarbieRampageGame/")
 
 import constants as consts
 import interface
+
+import tools
 
 # Initialisation du moteur graphique
 pygame.init()
@@ -33,10 +33,8 @@ screen = pygame.display.set_mode((SCREEN_WIDTH + SIDE_MARGIN, SCREEN_HEIGHT + LO
 pygame.display.set_caption("Éditeur de niveaux pour le jeu Barbie Rampage")
 
 # Déclaration des variables de l'éditeur
-ROWS = 16
-MAX_COLS = 150
-TILE_SIZE = SCREEN_HEIGHT // ROWS
-level = 0
+TILE_SIZE = SCREEN_HEIGHT // 16
+current_level = 0
 current_tile = consts.TILE_TYPES[0]
 scroll_left = False
 scroll_right = False
@@ -91,84 +89,22 @@ def draw_background(screen: pygame.Surface):
 # Function qui affiche les grilles
 def draw_grid(screen: pygame.Surface):
     # Les lignes verticales
-	for column in range(MAX_COLS + 1):                   # La coordonnée en haut de la ligne       La coordonnée en bas de la ligne
+	for column in range(world.world_size + 1):                   # La coordonnée en haut de la ligne       La coordonnée en bas de la ligne
 		pygame.draw.line(screen, consts.COLOR_WHITE_AZURE, (column * TILE_SIZE - scroll, 0), (column * TILE_SIZE - scroll, SCREEN_HEIGHT))
 	# Les lignes horizontales
-	for row in range(ROWS + 1):
+	for row in range(world.rows + 1):
 		pygame.draw.line(screen, consts.COLOR_WHITE_AZURE, (0, row * TILE_SIZE), (SCREEN_WIDTH, row * TILE_SIZE))
-
-# Fonction qui donne un monde vide
-def empty_world(world_size: int):
-    world = []
-    for row in range(world_size):
-        r = ["air"] * ROWS
-        world.append(r)
-    
-    return world
 
 # Fonction qui affiche le monde
 def draw_world(screen: pygame.Surface):
-    for x, column in enumerate(world_data):
+    for x, column in enumerate(world.world_map):
         for y, tile_name in enumerate(column):
             if tile_name in consts.TILE_TYPES:
                 screen.blit(img_dict[tile_name], (x * TILE_SIZE - scroll, y * TILE_SIZE))
 
-# Fonction qui sauvegarde le monde dans un fichier json
-def save_world():
-    # Dictionnaire qui sera converti en json
-    world_dict = {}
-    
-    # Création d'un dictionnaire pour les attributs du niveau
-    world_dict['attributes'] = {}
-    
-    world_dict['attributes']['level_size'] = MAX_COLS
-    world_dict['attributes']['level_height'] = ROWS
-    world_dict['attributes']['background_images'] = ["sky_default"]
-    
-    # Création d'une liste qui va contenir toutes les tuiles
-    world_dict['tiles'] = []
-
-    # Ajout des coordonnées des tuiles et leur type dans la liste
-    for x, column in enumerate(world_data):
-        for y, tile in enumerate(column):
-            if tile in consts.TILE_TYPES:
-                tile_dict = {
-                    'type': tile,
-                    'x': x,
-                    'y': y
-                    }
-                world_dict['tiles'].append(tile_dict)
-    
-    # Transformation du dictionnaire en json
-    world_json = json.dumps(world_dict, indent=4)
-    # Création du fichier json
-    with open(f'{consts.WORLDS_DATA_LOCATION}level{level}_data.json', 'w') as outfile:
-        outfile.write(world_json)
-
-# Fonction qui charge le monde à partir d'un fichier json
-def load_world():
-    # Ouverture du fichier json
-    with open(f'{consts.WORLDS_DATA_LOCATION}level{level}_data.json', 'r') as worldfile:
-        world_dict = json.load(worldfile)
-    
-    # Création d'un monde vide de la longueur du niveau à charger
-    world = empty_world(world_dict['attributes']['level_size'])
-    
-    # Ajout de toutes les tuiles dans le monde
-    for tile in world_dict['tiles']:
-        if tile['type'] in consts.TILE_TYPES:
-            world[tile['x']][tile['y']] = tile['type']
-
-    return world
 
 # Crée une liste vide de tuiles
-world_data = empty_world(MAX_COLS)
-
-# Crée le sol
-for column in range(MAX_COLS):
-    # remplace toutes les tuiles les plus basses par de l'herbe
-    world_data[column][ROWS - 1] = "grass_default"
-
+world = tools.World()
 
 run = True
 # Boucle qui va permettre de faire tourner l'éditeur
@@ -192,12 +128,12 @@ while run:
     
     # Sauvegarde le monde si l'utilisateur appuie sur le boutons "save"
     if save_button.draw(screen):
-        save_world()
+        world.save_world()
 
     # Charge le monde si l'utilisateur appuie sur le boutons "load"
     if load_button.draw(screen):
         scroll = 0
-        world_data = load_world()
+        world.load_world()
     
     # Affiche les boutons et vérifie si l'utilisateur a cliqué dessus
     for tile_name, button in button_dict.items():
@@ -226,10 +162,10 @@ while run:
     if mouse_pos[0] < SCREEN_WIDTH and mouse_pos[1] < SCREEN_HEIGHT:
         # Met à jour la valeur de la tuile
         if pygame.mouse.get_pressed()[0] == 1:
-            if world_data[x][y] != current_tile:
-                world_data[x][y] = current_tile
+            if world.world_map[x][y] != current_tile:
+                world.world_map[x][y] = current_tile
         if pygame.mouse.get_pressed()[2] == 1:
-            world_data[x][y] = 'air'
+            world.world_map[x][y] = 'air'
 
 
     for event in pygame.event.get():
