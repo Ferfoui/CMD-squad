@@ -1,2 +1,2 @@
 # Initialisation du module
-from .weapons import ARB4RB13
+from .weapons import Arb4rb13

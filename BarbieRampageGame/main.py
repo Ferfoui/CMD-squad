@@ -7,7 +7,6 @@ from constants import *
 from world import World
 import utils
 import menus
-import interface
 
 # Initialisation du moteur graphique
 pygame.init()
@@ -86,8 +85,6 @@ start_menu = menus.StartMenu(assets, game_settings)
 death_menu = menus.DeathMenu(assets, game_settings)
 pause_menu = menus.PauseMenu(assets, game_settings)
 settings_menu = menus.SettingsMenu(assets, game_settings)
-
-test_drop_down = interface.DropDown(400, 400, [COLOR_WHITE_AZURE, COLOR_GRAY], [COLOR_WHITE_AZURE, COLOR_GRAY], 200, 50, assets.default_font, "choose", ['mdr', 'lol'])
 
 # Variables pour la boucle
 run = True

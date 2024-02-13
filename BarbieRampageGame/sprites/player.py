@@ -56,7 +56,15 @@ class Player(pygame.sprite.Sprite):
         # Crée le rectangle du joueur
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
-        # Crée la hitbox du joueur
+        
+        # Crée une hitbox approximative du joueur
+        self.hitbox = self.rect.copy()
+        self.hitbox.width = self.rect.width * 1/2
+        self.hitbox.height = self.rect.height * 31/32
+        self.hitbox.centerx = self.rect.centerx
+        self.hitbox.bottom = self.rect.bottom
+        
+        # Crée la hitbox exacte du joueur
         self.mask = pygame.mask.from_surface(self.image)
         
         self.width = self.image.get_width()
@@ -148,41 +156,46 @@ class Player(pygame.sprite.Sprite):
                 self.vel_y = 0
 
         # Met à jour la position du joueur
-        self.rect.x += dx
-        self.rect.y += dy
+        self.move_player_position(dx, dy, world, settings)
+    
+    def move_player_position(self, delta_x: int, delta_y: int, world, settings: utils.Settings):
+        """Change la position du joueur
+
+        Args:
+            delta_x (int): distance de laquelle le joueur s'est déplacé sur l'axe horizontal
+            delta_y (int): distance de laquelle le joueur s'est déplacé sur l'axe vertical
+            world (World): monde dans lequel le joueur se déplace
+            settings (Settings): classe qui contient les paramètres du jeu
+        """
+        self.rect.x += delta_x
+        self.rect.y += delta_y
         
-        self.update_scrolling(world, dx, settings)
+        #self.hitbox.center = self.rect.center
+        
+        self.update_scrolling(world, delta_x, settings)
     
     def check_collides(self, dx: int, dy: int, world) -> tuple[int, int]:
         
         for tile in world.obstacle_list:
-            next_x_position = self.rect.x + dx
-            next_y_position = self.rect.y + dy + 1
-            
-            player_tile_x_offset = next_x_position - tile.rect.x
-            player_tile_y_offset = next_y_position - tile.rect.y
+            next_x_position = self.hitbox.x + dx
+            next_y_position = self.hitbox.y + dy + 1
             
             # Vérifie les collisions sur l'axe horizontal
-            if tile.rect.colliderect(next_x_position, self.rect.y, self.width, self.height):
-                #print('co')
-                # Vérifie la hitbox des deux masks en cas de collision entre rectangle
-                if tile.mask.overlap(self.mask, (player_tile_x_offset, player_tile_y_offset)):
-                #    print('llide')
-                    dx = 0
+            if tile.rect.colliderect(next_x_position, self.hitbox.y, self.hitbox.width, self.hitbox.height):
+                dx = 0
             # Vérifie les collisions sur l'axe vertical
-            if tile.rect.colliderect(self.rect.x, next_y_position, self.width, self.height):
+            if tile.rect.colliderect(self.hitbox.x, next_y_position, self.hitbox.width, self.hitbox.height):
                 # Vérifie la hitbox des deux masks en cas de collision entre rectangle
-                if tile.mask.overlap(self.mask, (player_tile_x_offset, player_tile_y_offset)):
-                    # Vérifie si le joueur est en dessous d'une platforme
-                    if self.vel_y < 0:
-                        self.vel_y = 0
-                        dy = tile.rect.bottom - self.rect.top
-                    # Vérifie si le joueur touche le sol
-                    elif self.vel_y >= 0:
-                        self.vel_y = 0
-                        self.in_air = False
-                        self.jump = False
-                        dy = tile.rect.top - self.rect.bottom
+                # Vérifie si le joueur est en dessous d'une platforme
+                if self.vel_y < 0:
+                    self.vel_y = 0
+                    dy = tile.rect.bottom - self.rect.top
+                # Vérifie si le joueur touche le sol
+                elif self.vel_y >= 0:
+                    self.vel_y = 0
+                    self.in_air = False
+                    self.jump = False
+                    dy = tile.rect.top - self.rect.bottom
         
         return dx, dy
     
@@ -191,7 +204,7 @@ class Player(pygame.sprite.Sprite):
 
         Args:
             world (World): monde dans lequel le joueur se déplace
-            dx (int): distance de laquelle le joueur s'est déplacé
+            dx (int): distance de laquelle le joueur s'est déplacé sur l'axe horizontal
             settings (Settings): classe qui contient les paramètres du jeu
         """
         
@@ -268,6 +281,9 @@ class Player(pygame.sprite.Sprite):
         """Méthode qui doit être appelée à chaque frame pour mettre à jour les caractéristiques du joueur"""
         
         self.check_if_alive()
+        
+        self.hitbox.bottom = self.rect.bottom
+        self.hitbox.centerx = self.rect.centerx
 
         self.health_bar.hp = self.health
 
@@ -280,3 +296,5 @@ class Player(pygame.sprite.Sprite):
             screen (Surface): fenêtre sur laquelle le joueur doit être affiché
         """
         screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
+        #pygame.draw.rect(screen, COLOR_ORANGE, self.rect, 2)
+        #pygame.draw.rect(screen, COLOR_RED, self.hitbox, 2)
