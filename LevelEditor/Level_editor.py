@@ -95,14 +95,6 @@ def draw_grid(screen: pygame.Surface):
 	for row in range(world.rows + 1):
 		pygame.draw.line(screen, consts.COLOR_WHITE_AZURE, (0, row * TILE_SIZE), (SCREEN_WIDTH, row * TILE_SIZE))
 
-# Fonction qui affiche le monde
-def draw_world(screen: pygame.Surface):
-    for x, column in enumerate(world.world_map):
-        for y, tile_name in enumerate(column):
-            if tile_name in consts.TILE_TYPES:
-                screen.blit(img_dict[tile_name], (x * TILE_SIZE - scroll, y * TILE_SIZE))
-
-
 # Crée une liste vide de tuiles
 world = tools.World()
 
@@ -117,7 +109,7 @@ while run:
     draw_background(screen)
     
     # Affiche le monde
-    draw_world(screen)
+    world.draw(screen, TILE_SIZE, scroll, img_dict)
 
     # Affiche les grilles
     draw_grid(screen)

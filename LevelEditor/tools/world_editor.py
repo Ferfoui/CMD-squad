@@ -1,4 +1,4 @@
-import pygame, sys, json
+import pygame, json
 
 import constants as consts
 
@@ -80,4 +80,12 @@ class World():
         # Création du fichier json
         with open(f'{consts.WORLDS_DATA_LOCATION}{self.level_name}.json', 'w') as outfile:
             outfile.write(world_json)
+    
+    # Fonction qui affiche le monde
+    def draw(self, screen: pygame.Surface, tile_size: int, scroll: int, img_dict: dict[str, pygame.Surface]):
+        for x, column in enumerate(self.world_map):
+            for y, tile_name in enumerate(column):
+                if tile_name in consts.TILE_TYPES:
+                    screen.blit(img_dict[tile_name], (x * tile_size - scroll, y * tile_size))
+
 
