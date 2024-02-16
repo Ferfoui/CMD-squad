@@ -204,4 +204,65 @@ class DropDown():
 
         return -1
 
-    
+class InputBox:
+    def __init__(self, x: int, y: int, width: int, height: int, font: pygame.font.Font,color_active: ColorValue,
+                 color_inactive: ColorValue, text='', do_place_center: bool = False):
+        """Crée une entrée de texte
+
+        Args:
+            x (int): position sur l'axe horizontal
+            y (int): position sur l'axe vertical
+            width (int): largeur de l'entrée de texte
+            height (int): hauteur de l'entrée de texte
+            font (pygame.font.Font): police d'écriture utilisée
+            color_active (ColorValue): couleur du texte quand l'entrée est utilisé
+            color_inactive (ColorValue): couleur du texte quand l'entrée n'est pas utilisé
+            text (str, optional): texte à afficher. '' par défaut
+            do_place_center (bool, optional): si les coordonnées données sont celles du centre du menu. False par défaut
+        """
+        self.rect = pygame.Rect(x, y, width, height)
+        if do_place_center:
+            self.rect.center = (x, y)
+        self.current_color = color_inactive
+        self.color_active = color_active
+        self.color_inactive = color_inactive
+        self.text = text
+        self.font = font
+        self.txt_surface = self.font.render(text, True, self.current_color)
+        self.active = False
+
+    def check_status(self, event: pygame.event.Event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            # If the user clicked on the input_box rect.
+            if self.rect.collidepoint(event.pos):
+                # Toggle the active variable.
+                self.active = not self.active
+            else:
+                self.active = False
+            # Change the current color of the input box.
+            self.current_color = self.color_active if self.active else self.color_inactive
+        if event.type == pygame.KEYDOWN:
+            if self.active:
+                if event.key == pygame.K_RETURN:
+                    print(self.text)
+                    self.text = ''
+                elif event.key == pygame.K_BACKSPACE:
+                    self.text = self.text[:-1]
+                else:
+                    self.text += event.unicode
+                # Re-render the text.
+                self.txt_surface = self.font.render(self.text, True, self.current_color)
+
+    def update(self, event: pygame.event.Event):
+        # Resize the box if the text is too long.
+        width = max(200, self.txt_surface.get_width()+10)
+        self.rect.w = width
+        
+        self.check_status(event)
+
+    def draw(self, screen):
+        # Blit the text.
+        screen.blit(self.txt_surface, (self.rect.x+5, self.rect.y+5))
+        # Blit the rect.
+        pygame.draw.rect(screen, self.current_color, self.rect, 2)
+ 
