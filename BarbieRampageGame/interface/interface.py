@@ -135,4 +135,19 @@ class HealthBar():
         pygame.draw.rect(screen, COLOR_HEALTH_PINK, (self.x + 5, self.y + 5, (self.width - 10) * ratio, self.height - 10))
         screen.blit(self.image, (self.x, self.y))
 
-
+class KillCounter():
+    def __init__(self, x, y, width: int, max_kl: int, assets: Assets):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.kl = max_kl
+        self.max_kl = max_kl
+        self.image = assets.get_image("kill_counter", f"{TEXTURES_ROOT}gui/Health_bar_empty.png", width)
+        self.height = self.image.get_height()
+        
+    def draw(self, screen: pygame.Surface):
+        # Calcul du ratio de kills
+        ratio = self.kl / self.max_kl
+        #pygame.draw.rect(screen, "red", (self.x + 10, self.y + 10, self.width - 20, self.height - 20))
+        pygame.draw.rect(screen, COLOR_RED, (self.x + 5, self.y + 5, (self.width -10) * ratio, self.height - 10))
+        screen.blit(self.image, (self.x, self.y))

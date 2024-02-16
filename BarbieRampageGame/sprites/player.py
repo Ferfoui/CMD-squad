@@ -21,6 +21,7 @@ class Player(pygame.sprite.Sprite):
         self.is_alive = True
         self.speed = 5 * self.size_factor
         self.health = 100
+        self.kills = 100
 
         # Variable qui permet de faire tourner le sprite du joueur quand il bouge dans l'autre sens
         self.flip = False
@@ -73,6 +74,9 @@ class Player(pygame.sprite.Sprite):
 
     def create_health_bar(self, x: int, y: int, assets: utils.Assets):
         self.health_bar = gui.HealthBar(x, y, 256, self.health, assets)
+
+    def create_kill_counter(self, x: int, y: int, assets: utils.Assets):
+        self.kill_counter = gui.KillCounter(x, y, 256, self.kills, assets)
     
     
     def load_animation(self, animation_types: list[str], texture_location: str, scale) -> dict[str, list[pygame.Surface]]:
@@ -286,6 +290,7 @@ class Player(pygame.sprite.Sprite):
         self.hitbox.centerx = self.rect.centerx
 
         self.health_bar.hp = self.health
+        self.kill_counter.kl = self.kills
 
         self.update_animation()
 
