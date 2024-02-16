@@ -142,7 +142,7 @@ class KillCounter():
         self.width = width
         self.kl = max_kl
         self.max_kl = max_kl
-        self.image = assets.get_image("kill_counter", f"{TEXTURES_ROOT}gui/Health_bar_empty.png", width)
+        self.image = assets.get_image("kill_counter", f"{TEXTURES_ROOT}gui/Kill_bar.png", width)
         self.height = self.image.get_height()
         
     def draw(self, screen: pygame.Surface):
