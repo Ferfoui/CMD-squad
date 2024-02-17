@@ -7,6 +7,7 @@ from constants import *
 from world import World
 import utils
 import menus
+import weapon
 
 # Initialisation du moteur graphique
 pygame.init()
@@ -86,6 +87,11 @@ death_menu = menus.DeathMenu(assets, game_settings)
 pause_menu = menus.PauseMenu(assets, game_settings)
 settings_menu = menus.SettingsMenu(assets, game_settings)
 
+# debug
+bullet_group = pygame.sprite.Group()
+
+ar_weapon = weapon.Arb4rb13(assets, 50, 400, 300)
+
 # Variables pour la boucle
 run = True
 game_loading = True
@@ -108,9 +114,12 @@ while run:
         # Affiche les éléments à afficher à l'écran
         world.draw(screen)
         player.draw(screen)
+        ar_weapon.draw(screen)
+        bullet_group.draw(screen)
         
         # Met à jour le joueur
         player.update()
+        bullet_group.update()
         
         player.health_bar.draw(screen)
         
@@ -161,6 +170,8 @@ while run:
                     else:
                         # Activer ou desactiver le menu pause
                         pause = not pause
+            if event.key == pygame.K_TAB:
+                ar_weapon.shoot(1,bullet_group)
 
     # Mise à jour de l'écran à chaque tours de boucle
     pygame.display.update()

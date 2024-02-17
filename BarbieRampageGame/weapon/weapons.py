@@ -2,11 +2,13 @@
 
 import pygame
 
+from .bullets import Bullet 
 from constants import *
 import utils
 
 # La classe qui crée les armes
 class Weapon():
+    #TODO: Rendre l'arme obtensible, faire fonctionner les balles, faire en sorte que les armes fassent des dégâts
     def __init__(self, weapon_name: str, texture_path: str, assets: utils.Assets, weapon_width: int, x: int, y: int):
         """Créé une nouvelle arme
 
@@ -46,13 +48,16 @@ class Weapon():
         """
         return assets.get_image(name, texture_path, weapon_width)
     
-    def shoot(self, direction: int):
+    def shoot(self, direction: int, bullet_group):
         """Tire une munition
 
         Args:
             direction (int): direction dans laquelle la balle va, 1 si c'est vers la droite et -1 si c'est vers la gauche
         """
-        #TODO: créer une munition qui va apparaître sur le canon de l'arme
+        
+        bullet = Bullet(1, self.rect.x, self.rect.y, direction)
+        bullet_group.add(bullet)
+        
 
 class Arb4rb13(Weapon):
     def __init__(self, assets: utils.Assets, weapon_width: int, x: int, y: int):
