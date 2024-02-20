@@ -218,9 +218,13 @@ class InputBox:
         self.active = False
         
         self.input_states = UserInputStates.get_instance()
+        self.input_states.add_method_to_be_processed(self.check_status)
         
-    def check_status(self):
+    def check_status(self, event: pygame.event.Event):
         """Vérifie l'état de l'entrée de texte et la met à jour en fonction de ce que l'utilisateur a fait
+        
+        Args:
+            event (pygame.event.Event): évènement de pygame
         """
         self.clicked = False
         mpos = pygame.mouse.get_pos()
@@ -235,32 +239,31 @@ class InputBox:
             # Change the current color of the input box.
             self.current_color = self.color_active if self.active else self.color_inactive
         
-        if self.active:
-            print("active")
-        if self.input_states.keydown:
-            print("keydown")
-        
         # Si l'entrée de texte est active et que l'utilisateur a appuyé sur une touche
-        if self.active and self.input_states.keydown:
-            print("keypressed")
-            if self.input_states.pressed_key == pygame.K_RETURN:
+        if self.active and event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RETURN:
                 print(self.text)
                 self.text = ''
-            elif self.input_states.keypressed == pygame.K_BACKSPACE:
+            elif event.key == pygame.K_BACKSPACE:
                 self.text = self.text[:-1]
             else:
-                self.text += self.input_states.key_unicode
+                self.text += event.unicode
             # Re-render the text.
             self.txt_surface = self.font.render(self.text, True, self.current_color)
 
     def update(self):
-        self.check_status()
-        
+        """Met à jour la taille de l'entrée de texte
+        """
         # Resize the box if the text is too long.
         width = max(200, self.txt_surface.get_width()+10)
         self.rect.w = width
 
-    def draw(self, screen):
+    def draw(self, screen: pygame.Surface):
+        """Affiche l'entrée de texte à l'écran
+
+        Args:
+            screen (pygame.Surface): écran sur lequel l'entrée de texte doit être affichée
+        """
         self.update()
         # Blit the text.
         screen.blit(self.txt_surface, (self.rect.x + 5, self.rect.y + 5))

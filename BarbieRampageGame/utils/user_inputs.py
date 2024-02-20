@@ -17,7 +17,15 @@ class UserInputStates():
         self.RESET_CLICKED_STATE_TIME = 20
         self.update_time = pygame.time.get_ticks()
         self._clicked = False
-        self.keydown = False
+        self.methods_to_be_processed = []
+    
+    def add_method_to_be_processed(self, method: callable):
+        """Ajoute une méthode qui sera exécutée lors de l'appel de la méthode process_events
+
+        Args:
+            method (callable): méthode à exécuter
+        """
+        self.methods_to_be_processed.append(method)
     
     def process_events(self, event: pygame.event):
         """Gère les évènements de l'utilisateur
@@ -25,12 +33,9 @@ class UserInputStates():
         Args:
             event (pygame.event): évènement de pygame
         """
-        self.keydown = True if event.type == pygame.KEYDOWN else False
-        self.pressed_key = event.key if self.keydown else None
-        self.key_unicode = event.unicode if self.keydown else None
         
-        if event.type != 1024:
-            print(event.type, self.keydown, self.key_unicode, sep=" : ")
+        for method in self.methods_to_be_processed:
+            method(event)
     
     def mouse_single_pressed(self) -> bool:
         """Renvoie si la souris a cliqué

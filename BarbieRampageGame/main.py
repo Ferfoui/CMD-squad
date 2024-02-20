@@ -123,8 +123,6 @@ while run:
         player.health_bar.draw(screen)
         player.kill_counter.draw(screen)
         
-        
-
         if pause:
             if settings_choice:
                 settings_menu.draw(screen)
@@ -144,7 +142,7 @@ while run:
             if death_menu.draw(screen, True)['respawn']:
                 player = respawn_player()
             
-    #input_box.draw(screen)
+    input_box.draw(screen)
     
     if game_settings.do_draw_game_time:
         # Afficher le temps actuel à l'écran
