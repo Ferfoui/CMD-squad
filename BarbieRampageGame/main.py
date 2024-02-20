@@ -7,6 +7,7 @@ from constants import *
 from world import World
 import utils
 import menus
+import interface
 
 # Initialisation du moteur graphique
 pygame.init()
@@ -25,6 +26,8 @@ clock = pygame.time.Clock()
 
 # Tous les assets du jeu, c'est à dire les images, les sons, les polices, etc...
 assets = utils.Assets(game_settings)
+# Pour les imputs
+user_inputs_utils = utils.UserInputStates.get_instance()
 
 ### Fonctions ###
 
@@ -88,6 +91,9 @@ death_menu = menus.DeathMenu(assets, game_settings)
 pause_menu = menus.PauseMenu(assets, game_settings)
 settings_menu = menus.SettingsMenu(assets, game_settings)
 
+# Debug
+input_box = interface.InputBox(300, 50, 50, 30, assets.default_font, COLOR_GRAY, COLOR_DARK, 'test')
+
 # Variables pour la boucle
 run = True
 game_loading = True
@@ -116,8 +122,9 @@ while run:
         
         player.health_bar.draw(screen)
         player.kill_counter.draw(screen)
-
         
+        
+
         if pause:
             if settings_choice:
                 settings_menu.draw(screen)
@@ -137,13 +144,15 @@ while run:
             if death_menu.draw(screen, True)['respawn']:
                 player = respawn_player()
             
-
+    #input_box.draw(screen)
+    
     if game_settings.do_draw_game_time:
         # Afficher le temps actuel à l'écran
         draw_text(screen, "game time: ", assets.default_font, COLOR_DARK, 5, 5, False)
         draw_text(screen, timer_minute(current_time), assets.default_font, COLOR_DARK, 15, 25, False)
 
     for event in pygame.event.get():
+        user_inputs_utils.process_events(event)
         
         # Faire quitter la boucle si l'utilisateur quitte le jeu
         if event.type == pygame.QUIT:
@@ -151,6 +160,7 @@ while run:
         
         # Quand des touches sont pressées
         if event.type == pygame.KEYDOWN:
+            
             if event.key == pygame.K_RETURN:
                 if game_loading:
                     # Lancer le jeu si la touche 'enter' est pressée

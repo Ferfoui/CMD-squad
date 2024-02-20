@@ -1,5 +1,6 @@
 import pygame
 from _common import ColorValue
+from utils.user_inputs import UserInputStates
 
 # Classe qui permet de créer les boutons
 class Button():
@@ -111,9 +112,8 @@ class DropDown():
         self.draw_menu = False
         self.menu_active = False
         self.active_option = -1
-        self.clicked = False
         
-        self.update_time = pygame.time.get_ticks()
+        self.input_states = UserInputStates.get_instance()
         
         
     def draw(self, screen: pygame.Surface) -> str:
@@ -157,12 +157,11 @@ class DropDown():
         return self.main_option
     
     def update(self) -> int:
-        """Met à jour le menu déroulant
+        """Met à jour le statut du menu déroulant
 
         Returns:
             int: index de l'option choisie, -1 si aucune option n'a été choisie
         """
-        RESET_CLICKED_STATE_TIME = 20
         # Position de la souris
         mpos = pygame.mouse.get_pos()
         # Si la souris est se trouve sur le menu
@@ -176,22 +175,9 @@ class DropDown():
             if rect.collidepoint(mpos):
                 self.active_option = i
                 break
-
-        # Arrête d'afficher le menu si la souris ne se trouve plus dessus
-        if not self.menu_active and self.active_option == -1:
-            self.draw_menu = False
-        
-        # Reset l'update time si la souris a été clickée
-        if pygame.mouse.get_pressed()[0] == 1:
-            self.update_time = pygame.time.get_ticks()
-           
-        if pygame.time.get_ticks() - self.update_time > RESET_CLICKED_STATE_TIME:
-            self.clicked = False
         
         # Vérifie si la souris a clické sur une des options du menu déroulant
-        if pygame.mouse.get_pressed()[0] and not self.clicked:
-            
-            self.clicked = True
+        if self.input_states.mouse_single_pressed():
             # Si la souris se trouve sur la case principale, le menu doit s'afficher ou arrêter de s'afficher
             if self.menu_active:
                 self.draw_menu = not self.draw_menu
@@ -230,39 +216,53 @@ class InputBox:
         self.font = font
         self.txt_surface = self.font.render(text, True, self.current_color)
         self.active = False
-
-    def check_status(self, event: pygame.event.Event):
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            # If the user clicked on the input_box rect.
-            if self.rect.collidepoint(event.pos):
-                # Toggle the active variable.
+        
+        self.input_states = UserInputStates.get_instance()
+        
+    def check_status(self):
+        """Vérifie l'état de l'entrée de texte et la met à jour en fonction de ce que l'utilisateur a fait
+        """
+        self.clicked = False
+        mpos = pygame.mouse.get_pos()
+        
+        if self.input_states.mouse_single_pressed():
+            # Si l'utilisateur a cliqué sur l'entrée de texte
+            if self.rect.collidepoint(mpos):
+                # Fais basculer l'état du l'entrée
                 self.active = not self.active
             else:
                 self.active = False
             # Change the current color of the input box.
             self.current_color = self.color_active if self.active else self.color_inactive
-        if event.type == pygame.KEYDOWN:
-            if self.active:
-                if event.key == pygame.K_RETURN:
-                    print(self.text)
-                    self.text = ''
-                elif event.key == pygame.K_BACKSPACE:
-                    self.text = self.text[:-1]
-                else:
-                    self.text += event.unicode
-                # Re-render the text.
-                self.txt_surface = self.font.render(self.text, True, self.current_color)
+        
+        if self.active:
+            print("active")
+        if self.input_states.keydown:
+            print("keydown")
+        
+        # Si l'entrée de texte est active et que l'utilisateur a appuyé sur une touche
+        if self.active and self.input_states.keydown:
+            print("keypressed")
+            if self.input_states.pressed_key == pygame.K_RETURN:
+                print(self.text)
+                self.text = ''
+            elif self.input_states.keypressed == pygame.K_BACKSPACE:
+                self.text = self.text[:-1]
+            else:
+                self.text += self.input_states.key_unicode
+            # Re-render the text.
+            self.txt_surface = self.font.render(self.text, True, self.current_color)
 
-    def update(self, event: pygame.event.Event):
+    def update(self):
+        self.check_status()
+        
         # Resize the box if the text is too long.
         width = max(200, self.txt_surface.get_width()+10)
         self.rect.w = width
-        
-        self.check_status(event)
 
     def draw(self, screen):
+        self.update()
         # Blit the text.
-        screen.blit(self.txt_surface, (self.rect.x+5, self.rect.y+5))
+        screen.blit(self.txt_surface, (self.rect.x + 5, self.rect.y + 5))
         # Blit the rect.
         pygame.draw.rect(screen, self.current_color, self.rect, 2)
- 
