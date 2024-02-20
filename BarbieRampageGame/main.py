@@ -141,8 +141,6 @@ while run:
         if not player.is_alive:
             if death_menu.draw(screen, True)['respawn']:
                 player = respawn_player()
-            
-    input_box.draw(screen)
     
     if game_settings.do_draw_game_time:
         # Afficher le temps actuel à l'écran
