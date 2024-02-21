@@ -4,7 +4,8 @@ from utils.user_inputs import UserInputStates
 
 # Classe qui permet de créer les boutons
 class Button():
-    def __init__(self, x: int, y: int, image: pygame.Surface, clicked_image: pygame.Surface, scale, do_place_center: bool = False):
+    def __init__(self, x: int, y: int, image: pygame.Surface, clicked_image: pygame.Surface,
+                 scale: float, do_place_center: bool = False):
         """Initialise la classe Button
 
         Args:
@@ -12,7 +13,7 @@ class Button():
             y (int): position en ordonnées où le bouton va être créé
             image (Surface): image qui correspond au bouton
             clicked_image (Surface): image qui va s'afficher quand on clicke sur le bouton
-            scale (int or float): nombre par lequel on multiplie la taille de l'image pour obtenir la taille du bouton
+            scale (float): nombre par lequel on multiplie la taille de l'image pour obtenir la taille du bouton
             do_place_center (bool, optional): si les coordonnées données sont celles du centre du bouton. False par défaut
         """
         width = image.get_width()
@@ -28,14 +29,22 @@ class Button():
         self.do_draw_clicked_img = False
         # Le temps pour pouvoir changer l'image pendant un certain temps
         self.update_time = pygame.time.get_ticks()
+        
+        self.clickable = True
     
+    def set_clickability_state(self, state: bool):
+        """Change l'accès au bouton
+
+        Args:
+            state (bool): si le bouton est clickable ou non
+        """
+        self.clickable = state
     
     def set_clicked_img(self):
         """Affiche l'image qui indique que le bouton à été activé
         """
         self.do_draw_clicked_img = True
         self.update_time = pygame.time.get_ticks()
-
 
     def draw(self, screen: pygame.Surface) -> bool:
         """Affiche le bouton
@@ -66,19 +75,20 @@ class Button():
         """Met à jour l'état du bouton
         """
         action = False
+        
+        if self.clickable:
+            # Position de la souris
+            mpos = pygame.mouse.get_pos()
 
-		# Position de la souris
-        mpos = pygame.mouse.get_pos()
+            # Vérifie si la souris a clické sur le bouton
+            if self.rect.collidepoint(mpos):
+                if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
+                    action = True
+                    self.clicked = True
+                    self.set_clicked_img()
 
-		# Vérifie si la souris a clické sur le bouton
-        if self.rect.collidepoint(mpos):
-            if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
-                action = True
-                self.clicked = True
-                self.set_clicked_img()
-
-            if pygame.mouse.get_pressed()[0] == 0:
-                self.clicked = False
+                if pygame.mouse.get_pressed()[0] == 0:
+                    self.clicked = False
         
         return action
 

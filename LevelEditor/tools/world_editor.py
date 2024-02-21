@@ -8,7 +8,8 @@ class World():
         
         self.rows = 16
         self.world_size = 150
-        self.level_name = "level0_data"
+        self.level_name = "level0"
+        self.file_name = f"{self.level_name}_data.json"
         self.new_world()
     
     def empty(self):
@@ -33,7 +34,7 @@ class World():
         """charge le monde à partir d'un fichier json
         """
         # Ouverture du fichier json
-        with open(f'{consts.WORLDS_DATA_LOCATION}{self.level_name}.json', 'r') as worldfile:
+        with open(f'{consts.WORLDS_DATA_LOCATION}{self.file_name}', 'r') as worldfile:
             world_dict = json.load(worldfile)
         
         # Création d'un monde vide de la longueur du niveau à charger
@@ -87,5 +88,3 @@ class World():
             for y, tile_name in enumerate(column):
                 if tile_name in consts.TILE_TYPES:
                     screen.blit(img_dict[tile_name], (x * tile_size - scroll, y * tile_size))
-
-

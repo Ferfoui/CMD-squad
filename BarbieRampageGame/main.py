@@ -26,7 +26,7 @@ clock = pygame.time.Clock()
 
 # Tous les assets du jeu, c'est à dire les images, les sons, les polices, etc...
 assets = utils.Assets(game_settings)
-# Pour les imputs
+# Pour les imputs du joueur
 user_inputs_utils = utils.UserInputStates.get_instance()
 
 ### Fonctions ###
@@ -92,7 +92,6 @@ pause_menu = menus.PauseMenu(assets, game_settings)
 settings_menu = menus.SettingsMenu(assets, game_settings)
 
 # Debug
-input_box = interface.InputBox(300, 50, 50, 30, assets.default_font, COLOR_GRAY, COLOR_DARK, 'test')
 
 # Variables pour la boucle
 run = True

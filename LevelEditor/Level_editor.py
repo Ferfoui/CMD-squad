@@ -6,8 +6,10 @@ import pygame, sys
 sys.path.append("./BarbieRampageGame/")
 
 import constants as consts
-import interface
+from _common import ColorValue
 
+import utils
+import interface
 import tools
 
 # Initialisation du moteur graphique
@@ -40,6 +42,9 @@ scroll_left = False
 scroll_right = False
 scroll = 0
 scroll_speed = 1
+
+# Pour les imputs du joueur
+user_inputs_utils = utils.UserInputStates.get_instance()
 
 # La police utilisée
 default_font = pygame.font.Font(consts.PS2P_FONT_LOCATION, 30)
@@ -75,10 +80,26 @@ for tile_name in consts.TILE_TYPES:
 		button_row += 1
 		button_col = 0
 
+
+# Crée une liste vide de tuiles
+world = tools.World()
+
+# Création d'une entrée de texte
+level_name_entry = interface.InputBox(SCREEN_WIDTH * 13//12, SCREEN_HEIGHT + (LOWER_MARGIN // 2), 200, 50, default_font, consts.COLOR_WHITE_AZURE, consts.COLOR_LIGHT_GRAY, world.level_name, True)
+
 ### Fonctions ###
 
-# Function pour afficher du text
-def draw_text(text, font, text_col, x, y):
+# Function pour afficher du texte
+def draw_text(text: str, font: pygame.font.Font, text_col: ColorValue, x: int, y: int):
+    """Affiche du texte
+
+    Args:
+        text (str): texte à afficher
+        font (pygame.font.Font): poilce à utiliser
+        text_col (ColorValue): couleur du texte
+        x (int): position en abscisses où le texte va être affiché
+        y (int): position en ordonnées où le texte va être affiché
+    """
     img = font.render(text, True, text_col)
     screen.blit(img, (x, y))
 
@@ -89,14 +110,11 @@ def draw_background(screen: pygame.Surface):
 # Function qui affiche les grilles
 def draw_grid(screen: pygame.Surface):
     # Les lignes verticales
-	for column in range(world.world_size + 1):                   # La coordonnée en haut de la ligne       La coordonnée en bas de la ligne
+	for column in range(world.world_size + 1):           # La coordonnée en haut de la ligne       La coordonnée en bas de la ligne
 		pygame.draw.line(screen, consts.COLOR_WHITE_AZURE, (column * TILE_SIZE - scroll, 0), (column * TILE_SIZE - scroll, SCREEN_HEIGHT))
 	# Les lignes horizontales
 	for row in range(world.rows + 1):
 		pygame.draw.line(screen, consts.COLOR_WHITE_AZURE, (0, row * TILE_SIZE), (SCREEN_WIDTH, row * TILE_SIZE))
-
-# Crée une liste vide de tuiles
-world = tools.World()
 
 run = True
 # Boucle qui va permettre de faire tourner l'éditeur
@@ -131,6 +149,8 @@ while run:
     for tile_name, button in button_dict.items():
         if button.draw(screen):
             current_tile = tile_name
+    
+    level_name_entry.draw(screen)
 
     # Encadre en rouge le bouton séléctionné
     pygame.draw.rect(screen, consts.COLOR_RED, button_dict[current_tile].rect, 3)
@@ -161,6 +181,8 @@ while run:
 
 
     for event in pygame.event.get():
+        user_inputs_utils.process_events(event)
+        
         if event.type == pygame.QUIT:
             # Faire quitter la boucle si l'utilisateur quitte le jeu
             run = False
