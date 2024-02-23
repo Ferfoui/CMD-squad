@@ -105,16 +105,26 @@ def draw_text(text: str, font: pygame.font.Font, text_col: ColorValue, x: int, y
 
 # Function qui affiche le background
 def draw_background(screen: pygame.Surface):
+    """Affiche l'arrière-plan sur l'écran donné.
+
+    Args:
+        screen (pygame.Surface): La surface de l'écran sur laquelle afficher.
+    """
     screen.fill(consts.COLOR_DARK)
 
 # Function qui affiche les grilles
 def draw_grid(screen: pygame.Surface):
+    """Affiche les grilles sur l'écran donné.
+
+    Args:
+        screen (pygame.Surface): écran sur lequel afficher les grilles
+    """
     # Les lignes verticales
-	for column in range(world.world_size + 1):           # La coordonnée en haut de la ligne       La coordonnée en bas de la ligne
-		pygame.draw.line(screen, consts.COLOR_WHITE_AZURE, (column * TILE_SIZE - scroll, 0), (column * TILE_SIZE - scroll, SCREEN_HEIGHT))
+    for column in range(world.world_size + 1):           # La coordonnée en haut de la ligne       La coordonnée en bas de la ligne
+        pygame.draw.line(screen, consts.COLOR_WHITE_AZURE, (column * TILE_SIZE - scroll, 0), (column * TILE_SIZE - scroll, SCREEN_HEIGHT))
 	# Les lignes horizontales
-	for row in range(world.rows + 1):
-		pygame.draw.line(screen, consts.COLOR_WHITE_AZURE, (0, row * TILE_SIZE), (SCREEN_WIDTH, row * TILE_SIZE))
+    for row in range(world.rows + 1):
+        pygame.draw.line(screen, consts.COLOR_WHITE_AZURE, (0, row * TILE_SIZE), (SCREEN_WIDTH, row * TILE_SIZE))
 
 run = True
 # Boucle qui va permettre de faire tourner l'éditeur
@@ -179,6 +189,8 @@ while run:
         if pygame.mouse.get_pressed()[2] == 1:
             world.world_map[x][y] = 'air'
 
+    # Met à jour le nom du niveau
+    world.set_level_name(level_name_entry.text)
 
     for event in pygame.event.get():
         user_inputs_utils.process_events(event)

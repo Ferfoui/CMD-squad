@@ -8,9 +8,17 @@ class World():
         
         self.rows = 16
         self.world_size = 150
-        self.level_name = "level0"
-        self.file_name = f"{self.level_name}_data.json"
+        self.set_level_name("level0")
         self.new_world()
+    
+    def set_level_name(self, level_name: str):
+        """Définit le nom du niveau
+
+        Args:
+            level_name (str): nom du niveau
+        """
+        self.level_name = level_name
+        self.file_name = f"{self.level_name}_data.json"
     
     def empty(self):
         """Reset le monde
@@ -79,7 +87,7 @@ class World():
         # Transformation du dictionnaire en json
         world_json = json.dumps(world_dict, indent=4)
         # Création du fichier json
-        with open(f'{consts.WORLDS_DATA_LOCATION}{self.level_name}.json', 'w') as outfile:
+        with open(f'{consts.WORLDS_DATA_LOCATION}{self.file_name}', 'w') as outfile:
             outfile.write(world_json)
     
     # Fonction qui affiche le monde
