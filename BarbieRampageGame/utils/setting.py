@@ -9,9 +9,11 @@ class Settings():
     def __init__(self):
         """Initialise la classe Settings dans laquelle se trouve les paramètres du jeu
         """
+        self.SETTINGS_LOCATION = os.path.join(SAVE_ROOT, "settings.json")
         self.set_default_settings()
         
         self.load_settings()
+        
     
     def set_default_settings(self):
         """Initialise les paramètres par défaut
@@ -35,10 +37,10 @@ class Settings():
         """Charge les paramètres sauvegardés
         """
         # Charge les paramètres si le fichiers existe
-        if os.path.exists(SAVE_ROOT + "settings.json"):
+        if os.path.exists(self.SETTINGS_LOCATION):
             print("Loading game settings")
             # Ouverture du fichier json
-            with open(SAVE_ROOT + "settings.json", 'r') as settingsfile:
+            with open(self.SETTINGS_LOCATION, 'r') as settingsfile:
                 settings_json = json.load(settingsfile)
             
             # L'écran
@@ -79,7 +81,7 @@ class Settings():
         # Transformation du dictionnaire en json
         settings_json = json.dumps(settings_dict, indent=4)
         # Création du fichier json
-        with open(SAVE_ROOT + "settings.json", 'w') as outfile:
+        with open(self.SETTINGS_LOCATION, 'w') as outfile:
             outfile.write(settings_json)
         
         print("Settings have been saved")

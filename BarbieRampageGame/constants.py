@@ -1,3 +1,5 @@
+from os import path
+
 ###### Les constantes sont définies dans ce fichier ######
 
 # Le nom du jeu
@@ -11,6 +13,7 @@ FPS = 60
 COLOR_WHITE_AZURE = (240, 255, 255)
 COLOR_SKY_BLUE = (52, 117, 183)
 COLOR_GRAY = (60, 64, 64)
+COLOR_LIGHT_GRAY = (120, 128, 128)
 COLOR_DARK = (20, 21, 25)
 COLOR_RED = (200, 25, 25)
 COLOR_ORANGE = (189, 68, 23)
@@ -34,28 +37,29 @@ TILE_TYPES = TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES + PLAYER_AND_ENEMIES_TILE_TYP
 GRAVITY = 0.75
 
 # L'endroit ou se trouve tous les fichiers non python du jeu
-RESSOURCES_ROOT = "BarbieRampageGame/resources/"
+#RESSOURCES_ROOT = "BarbieRampageGame/resources/"
+RESSOURCES_ROOT = path.realpath("BarbieRampageGame/resources/")
 
 ### Les images et les sons utilisés (les assets)
-ASSETS_ROOT = RESSOURCES_ROOT + "assets/"
-TEXTURES_ROOT = ASSETS_ROOT + "textures/" # Le chemin des textures
-SOUNDS_ROOT = ASSETS_ROOT + "sounds/" # Le chemin des effets sonores
-FONTS_ROOT = ASSETS_ROOT + "fonts/" # Le chemin vers les polices d'écriture
+ASSETS_ROOT = path.join(RESSOURCES_ROOT, "assets/")
+TEXTURES_ROOT = path.join(ASSETS_ROOT, "textures/") # Le chemin des textures
+SOUNDS_ROOT = path.join(ASSETS_ROOT, "sounds/") # Le chemin des effets sonores
+FONTS_ROOT = path.join(ASSETS_ROOT, "fonts/") # Le chemin vers les polices d'écriture
 
-PLAYER_TEXTURES_LOCATION = TEXTURES_ROOT + "player/"
+PLAYER_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "player/")
 
-TILES_TEXTURES_LOCATION = TEXTURES_ROOT + "tiles/"
+TILES_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "tiles/")
 
-BACKGROUND_TEXTURES_LOCATION = TEXTURES_ROOT + "background/"
+BACKGROUND_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "background/")
 
-PS2P_FONT_LOCATION = FONTS_ROOT + "Press_Start_2P/PressStart2P-REGULAR.ttf"
+PS2P_FONT_LOCATION = path.join(FONTS_ROOT, "Press_Start_2P/PressStart2P-REGULAR.ttf")
 
 
 ### Les données utilisées (les data)
-DATA_ROOT = RESSOURCES_ROOT + "data/"
+DATA_ROOT = path.join(RESSOURCES_ROOT, "data/")
 
-WORLDS_DATA_LOCATION = DATA_ROOT + "worlds/"
+WORLDS_DATA_LOCATION = path.join(DATA_ROOT, "worlds/")
 
 
 ### L'endroit où se trouvera les fichiers de sauvegarde
-SAVE_ROOT = "GAMESAVE/"
+SAVE_ROOT = path.realpath("GAMESAVE/")

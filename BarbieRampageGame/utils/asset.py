@@ -9,7 +9,7 @@ class Assets():
         """
         ### Images ###
         # L'image de débuggage
-        self.debug_img = self.load_image(f"{TEXTURES_ROOT}debug.png", settings.screen_width // 2, settings.screen_height // 2)
+        self.debug_img = self.load_image(f"{TEXTURES_ROOT}gui/debug.png", settings.screen_width // 2, settings.screen_height // 2)
         
         # Dictionnaire dans lequel se trouve les images qui se font charger de l'extérieur de la classe
         self.saved_external_images = {}
@@ -20,7 +20,7 @@ class Assets():
 
     def load_image(self, texture_location: str, width: int, height: int) -> pygame.Surface:
         """Charge une image
-
+        
         Args:
             texture_location (str): position de la texture
             width (int): largeur de l'image
