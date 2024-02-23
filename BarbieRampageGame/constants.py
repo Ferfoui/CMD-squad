@@ -47,6 +47,7 @@ SOUNDS_ROOT = path.join(ASSETS_ROOT, "sounds/") # Le chemin des effets sonores
 FONTS_ROOT = path.join(ASSETS_ROOT, "fonts/") # Le chemin vers les polices d'écriture
 
 PLAYER_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "player/")
+ENEMIES_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "enemies/")
 
 TILES_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "tiles/")
 
