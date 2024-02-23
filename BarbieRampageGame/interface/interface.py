@@ -152,10 +152,15 @@ class BulletCounter():
         self.bullet= max_bullet
         self.max_bullet = max_bullet
         #self.image = assets.get_image("bullet_count", f"{TEXTURES_ROOT}gui/Bullet_count")
-        self.image = assets.debug_img
+        self.image = assets.get_image("bullet_counter", f"{TEXTURES_ROOT}gui/Bullet_count.png", width)
         self.height = self.image.get_height()
+        self.font = assets.default_font
+
+
     def draw(self, screen):
-        pass
+        screen.blit(self.image, (self.x, self.y))
+        draw_text(screen, "Bullets: ",self.font, COLOR_DARK, self.x+50, self.y, False)
+        
 
 class KillCounter():
     def __init__(self, x, y, width: int, max_kl: int, assets: Assets):
