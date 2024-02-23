@@ -74,8 +74,8 @@ def respawn_player():
     death_menu.reset_animation(game_settings.screen_width)
     world.init_data("level0_data.json", assets, game_settings)
     player = world.process_data()
-    player.create_health_bar(10, game_settings.screen_width // 8, assets)
-    player.create_kill_counter(10, game_settings.screen_width // 8, assets)
+    player.create_health_bar(10, game_settings.screen_width // 18, assets)
+    player.create_kill_counter(10, game_settings.screen_width * 5/45, assets)
     return player
 
 world = World()
@@ -84,7 +84,7 @@ world.init_data("level0_data.json", assets, game_settings)
 
 player = world.process_data()
 player.create_health_bar(10, game_settings.screen_width // 18, assets)
-player.create_kill_counter(10, game_settings.screen_width * 4/45, assets)
+player.create_kill_counter(10, game_settings.screen_width * 5/45, assets)
 
 start_menu = menus.StartMenu(assets, game_settings)
 death_menu = menus.DeathMenu(assets, game_settings)
