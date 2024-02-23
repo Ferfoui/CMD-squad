@@ -8,6 +8,7 @@ from world import World
 import utils
 import menus
 import interface
+import sprites
 
 # Initialisation du moteur graphique
 pygame.init()
@@ -92,6 +93,7 @@ pause_menu = menus.PauseMenu(assets, game_settings)
 settings_menu = menus.SettingsMenu(assets, game_settings)
 
 # Debug
+dummy_enemy = sprites.Dummy(50, 60, 3)
 
 # Variables pour la boucle
 run = True
@@ -115,6 +117,7 @@ while run:
         # Affiche les éléments à afficher à l'écran
         world.draw(screen)
         player.draw(screen)
+        #dummy_enemy.draw(screen)
         
         # Met à jour le joueur
         player.update()
