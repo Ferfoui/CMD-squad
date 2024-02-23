@@ -77,7 +77,7 @@ def respawn_player():
     player = world.process_data()
     player.create_health_bar(10, game_settings.screen_width // 18, assets)
     player.create_kill_counter(10, game_settings.screen_width * 5/45, assets)
-    player.create_bullet_counter(10, game-setting.screen_width * 40/45, assets)
+    player.create_bullet_counter(10, game_settings.screen_width * 40/45, assets)
     return player
 
 world = World()
