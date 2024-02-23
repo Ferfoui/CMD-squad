@@ -120,6 +120,14 @@ class Menu():
 
 class HealthBar():
     def __init__(self, x, y, width: int, max_hp: int, assets: Assets):
+        """Initialise la barre de vie
+
+        Args: 
+            x (int): position en abscisses où la barre de vie va être créee
+            y (int): position en ordonnées où la barre de vie va être créee
+            width (int): largeur de la barre de vie 
+            assets (Assets): classe des assets
+        """
         self.x = x
         self.y = y
         self.width = width
@@ -135,4 +143,35 @@ class HealthBar():
         pygame.draw.rect(screen, COLOR_HEALTH_PINK, (self.x + 5, self.y + 5, (self.width - 10) * ratio, self.height - 10))
         screen.blit(self.image, (self.x, self.y))
 
+class BulletCounter():
+    #a delete + 30 munis 
+    def __init__(self, x, y, width: int, max_bullet: int, assets: Assets):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.bullet= max_bullet
+        self.max_bullet = max_bullet
+        self.image = assets.get_image("bullet_count", f"{TEXTURES_ROOT}gui/Bullet_count")
+        self.height = self.image.get_height()
+    
+    
+def draw_text(screen: pygame.Surface, text: str, font: pygame.font.Font, text_col: ColorValue, x: int, y: int, do_place_center: bool):
+    """Fonction qui affiche du texte
+
+    Args:
+        screen (pygame.Surface): écran sur lequel le texte doit être affiché
+        text (str): texte qui doit être affiché
+        font (pygame.font.Font): police à utiliser
+        text_col (tuple[int, int, int]): couleur du texte (racismo no)
+        x (int): position en abscisses où le texte va être affiché
+        y (int): position en ordonnées où le texte va être affiché
+        do_place_center (bool): si les coordonnées données sont celles du centre du texte
+    """
+    img = font.render(text, True, text_col)
+    if do_place_center:
+        img_rect = img.get_rect()
+        img_rect.center = (x, y)
+        screen.blit(img, img_rect)
+    else:
+        screen.blit(img, (x, y))
 
