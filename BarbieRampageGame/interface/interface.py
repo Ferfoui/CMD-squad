@@ -143,7 +143,6 @@ class HealthBar():
         pygame.draw.rect(screen, COLOR_HEALTH_PINK, (self.x + 5, self.y + 5, (self.width - 10) * ratio, self.height - 10))
         screen.blit(self.image, (self.x, self.y))
 
-<<<<<<< HEAD
 class BulletCounter():
     #a delete + 30 munis 
     def __init__(self, x, y, width: int, max_bullet: int, assets: Assets):
@@ -152,9 +151,28 @@ class BulletCounter():
         self.width = width
         self.bullet= max_bullet
         self.max_bullet = max_bullet
-        self.image = assets.get_image("bullet_count", f"{TEXTURES_ROOT}gui/Bullet_count")
+        #self.image = assets.get_image("bullet_count", f"{TEXTURES_ROOT}gui/Bullet_count")
+        self.image = assets.debug_img
         self.height = self.image.get_height()
-    
+    def draw(self, screen):
+        pass
+
+class KillCounter():
+    def __init__(self, x, y, width: int, max_kl: int, assets: Assets):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.kl = max_kl
+        self.max_kl = max_kl
+        self.image = assets.get_image("kill_counter", f"{TEXTURES_ROOT}gui/Kill_bar.png", width)
+        self.height = self.image.get_height()
+        
+    def draw(self, screen: pygame.Surface):
+        # Calcul du ratio de kills
+        ratio = self.kl / self.max_kl
+        #pygame.draw.rect(screen, "red", (self.x + 10, self.y + 10, self.width - 20, self.height - 20))
+        pygame.draw.rect(screen, COLOR_RED, (self.x + 5, self.y + 5, (self.width -10) * ratio, self.height - 10))
+        screen.blit(self.image, (self.x, self.y))
     
 def draw_text(screen: pygame.Surface, text: str, font: pygame.font.Font, text_col: ColorValue, x: int, y: int, do_place_center: bool):
     """Fonction qui affiche du texte
@@ -176,21 +194,3 @@ def draw_text(screen: pygame.Surface, text: str, font: pygame.font.Font, text_co
     else:
         screen.blit(img, (x, y))
 
-=======
-class KillCounter():
-    def __init__(self, x, y, width: int, max_kl: int, assets: Assets):
-        self.x = x
-        self.y = y
-        self.width = width
-        self.kl = max_kl
-        self.max_kl = max_kl
-        self.image = assets.get_image("kill_counter", f"{TEXTURES_ROOT}gui/Kill_bar.png", width)
-        self.height = self.image.get_height()
-        
-    def draw(self, screen: pygame.Surface):
-        # Calcul du ratio de kills
-        ratio = self.kl / self.max_kl
-        #pygame.draw.rect(screen, "red", (self.x + 10, self.y + 10, self.width - 20, self.height - 20))
-        pygame.draw.rect(screen, COLOR_RED, (self.x + 5, self.y + 5, (self.width -10) * ratio, self.height - 10))
-        screen.blit(self.image, (self.x, self.y))
->>>>>>> f5608b24574690f927b9a03a88f6b503db5b1b71
