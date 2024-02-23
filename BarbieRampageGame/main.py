@@ -77,6 +77,7 @@ def respawn_player():
     player = world.process_data()
     player.create_health_bar(10, game_settings.screen_width // 18, assets)
     player.create_kill_counter(10, game_settings.screen_width * 5/45, assets)
+    player.create_bullet_counter(10, game-setting.screen_width * 40/45, assets)
     return player
 
 world = World()
@@ -86,6 +87,7 @@ world.init_data("level0_data.json", assets, game_settings)
 player = world.process_data()
 player.create_health_bar(10, game_settings.screen_width // 18, assets)
 player.create_kill_counter(10, game_settings.screen_width * 5/45, assets)
+player.create_bullet_counter(10, game_settings.screen_width * 33/45, assets)
 
 start_menu = menus.StartMenu(assets, game_settings)
 death_menu = menus.DeathMenu(assets, game_settings)
@@ -124,6 +126,7 @@ while run:
         
         player.health_bar.draw(screen)
         player.kill_counter.draw(screen)
+        player.bullet_counter.draw(screen)
         
         if pause:
             if settings_choice:
@@ -148,6 +151,7 @@ while run:
         # Afficher le temps actuel à l'écran
         draw_text(screen, "game time: ", assets.default_font, COLOR_DARK, 5, 5, False)
         draw_text(screen, timer_minute(current_time), assets.default_font, COLOR_DARK, 15, 25, False)
+    
 
     for event in pygame.event.get():
         user_inputs_utils.process_events(event)
