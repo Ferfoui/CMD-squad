@@ -13,7 +13,7 @@ import sprites
 # Initialisation du moteur graphique
 pygame.init()
 
-# Tous les paramètres que le joueur peut modifier comme les touches, etc...
+# Tous les paramètres que le joueur peut modifier comme les touches, etc.
 game_settings = utils.Settings()
 
 # Définition de la taille de l'écran
@@ -25,7 +25,7 @@ pygame.display.set_caption(f"{GAME_NAME} {GAME_VERSION}")
 # Met en place l'horloge
 clock = pygame.time.Clock()
 
-# Tous les assets du jeu, c'est à dire les images, les sons, les polices, etc...
+# Tous les assets du jeu, c'est-à-dire les images, les sons, les polices, etc...
 assets = utils.Assets(game_settings)
 # Pour les imputs du joueur
 user_inputs_utils = utils.UserInputStates.get_instance()
@@ -175,13 +175,13 @@ while run:
                     if settings_choice:
                         settings_choice = False
                     else:
-                        # Activer ou desactiver le menu pause
+                        # Activer ou désactiver le menu pause
                         pause = not pause
 
-    # Mise à jour de l'écran à chaque tours de boucle
+    # Mise à jour de l'écran à chaque tour de boucle
     pygame.display.update()
 
 # Sauvegarde des paramètres
 game_settings.save_settings()
 # Fermeture du programme
-pygame.quit
+pygame.quit()
