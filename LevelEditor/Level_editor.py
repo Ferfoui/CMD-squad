@@ -40,8 +40,6 @@ current_level = 0
 current_tile = consts.TILE_TYPES[0]
 scroll_left = False
 scroll_right = False
-scroll = 0
-scroll_speed = 1
 
 # Pour les imputs du joueur
 user_inputs_utils = utils.UserInputStates.get_instance()
@@ -121,38 +119,37 @@ def draw_grid(screen: pygame.Surface):
     """
     # Les lignes verticales
     for column in range(world.world_size + 1):           # La coordonnée en haut de la ligne       La coordonnée en bas de la ligne
-        pygame.draw.line(screen, consts.COLOR_WHITE_AZURE, (column * TILE_SIZE - scroll, 0), (column * TILE_SIZE - scroll, SCREEN_HEIGHT))
+        pygame.draw.line(screen, consts.COLOR_WHITE_AZURE, (column * TILE_SIZE - world.scroll, 0), (column * TILE_SIZE - world.scroll, SCREEN_HEIGHT))
 	# Les lignes horizontales
     for row in range(world.rows + 1):
         pygame.draw.line(screen, consts.COLOR_WHITE_AZURE, (0, row * TILE_SIZE), (SCREEN_WIDTH, row * TILE_SIZE))
 
-run = True
-# Boucle qui va permettre de faire tourner l'éditeur
-while run:
-    
-    # Fait en sorte que l'éditeur tourne à un nombre limité de FPS
-    clock.tick(FPS)
-    
-    # Affiche le background
+def draw_gui_base():
+    """Affiche les éléments de base de l'interface graphique"""
     draw_background(screen)
-    
-    # Affiche le monde
-    world.draw(screen, TILE_SIZE, scroll, img_dict)
-
-    # Affiche les grilles
+    world.draw(screen, TILE_SIZE, img_dict)
     draw_grid(screen)
     
-    # Affiche le panneau sur lequel il y a les boutons
+    # Affiche le panneau sur lequel les boutons seront affichés
     pygame.draw.rect(screen, consts.COLOR_GRAY, (SCREEN_WIDTH, 0, SIDE_MARGIN, SCREEN_HEIGHT))
     pygame.draw.rect(screen, consts.COLOR_GRAY, (0, SCREEN_HEIGHT - 7, SCREEN_WIDTH + SIDE_MARGIN, int(LOWER_MARGIN * 1.1)))
+
+def manage_buttons(current_tile: str) -> str:
+    """Gère les boutons
     
+    Args:
+        current_tile (str): le nom de la tuile séléctionnée
+    
+    Returns:
+        str: le nom de la tuile séléctionnée
+    """
     # Sauvegarde le monde si l'utilisateur appuie sur le boutons "save"
     if save_button.draw(screen):
         world.save_world()
 
     # Charge le monde si l'utilisateur appuie sur le boutons "load"
     if load_button.draw(screen):
-        scroll = 0
+        world.scroll = 0
         world.load_world()
     
     # Affiche les boutons et vérifie si l'utilisateur a cliqué dessus
@@ -164,24 +161,35 @@ while run:
 
     # Encadre en rouge le bouton séléctionné
     pygame.draw.rect(screen, consts.COLOR_RED, button_dict[current_tile].rect, 3)
+    
+    return current_tile
+
+
+run = True
+# Boucle qui va permettre de faire tourner l'éditeur
+while run:
+    
+    # Fait en sorte que l'éditeur tourne à un nombre limité de FPS
+    clock.tick(FPS)
+    
+    draw_gui_base()
+    
+    current_tile = manage_buttons(current_tile)
 
     # Fais scroller l'écran
-    if scroll_left == True and scroll > 0:
-        scroll -= 5 * scroll_speed
     if scroll_right == True:
-        scroll += 5 * scroll_speed
+        world.scroll_world(1, TILE_SIZE, SCREEN_WIDTH)
+    if scroll_left == True:
+        world.scroll_world(-1, TILE_SIZE, SCREEN_WIDTH)
     
-    # Pour que l'utilisateur ne puisse pas scroller plus loin que ce qu'il est autorisé
-    if scroll < 0:
-        scroll = 0
 
     # Ajout des nouvelles tuiles à l'écran
     mouse_pos = pygame.mouse.get_pos() # Obtention de la position de la souris
-    x = (mouse_pos[0] + scroll) // TILE_SIZE
+    x = (mouse_pos[0] + world.scroll) // TILE_SIZE
     y = mouse_pos[1] // TILE_SIZE
 
     # Vérifie si la souris se trouve dans la zone de la tuile
-    if mouse_pos[0] < SCREEN_WIDTH and mouse_pos[1] < SCREEN_HEIGHT:
+    if (mouse_pos[0] < SCREEN_WIDTH) and (mouse_pos[1] < SCREEN_HEIGHT) and (x < world.world_size) and (y < world.rows):
         # Met à jour la valeur de la tuile
         if pygame.mouse.get_pressed()[0] == 1:
             if world.world_map[x][y] != current_tile:
@@ -206,7 +214,7 @@ while run:
             if event.key == pygame.K_RIGHT:
                 scroll_right = True
             if event.key == pygame.K_LSHIFT:
-                scroll_speed = 5
+                world.scroll_speed = 5
 
         # Quand on arrête d'appuyer sur une touche
         if event.type == pygame.KEYUP:
@@ -215,7 +223,7 @@ while run:
             if event.key == pygame.K_RIGHT:
                 scroll_right = False
             if event.key == pygame.K_LSHIFT:
-                scroll_speed = 1
+                world.scroll_speed = 1
 
     pygame.display.update()
             
