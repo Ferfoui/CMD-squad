@@ -6,6 +6,8 @@ from constants import *
 from world import World
 import utils, menus, interface, sprites
 
+print(f"Bienvenue dans le jeu Barbie Rampage!\nVersion: {GAME_VERSION}\nPar la CMD-squad\n")
+
 # Initialisation du moteur graphique
 pygame.init()
 

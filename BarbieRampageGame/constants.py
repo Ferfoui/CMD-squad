@@ -1,3 +1,4 @@
+import os
 from os import path
 
 ###### Les constantes sont définies dans ce fichier ######
@@ -36,12 +37,21 @@ TILE_TYPES = TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES + PLAYER_AND_ENEMIES_TILE_TYP
 # Les constantes in-game
 GRAVITY = 0.75
 
-# L'endroit ou se trouve tous les fichiers non python du jeu
-#RESSOURCES_ROOT = "BarbieRampageGame/resources/"
-RESSOURCES_ROOT = path.realpath("BarbieRampageGame/resources/")
+
+#### Les chemins vers les fichiers ####
+
+if os.getcwd() == path.realpath("..\\BarbieRampageGame") or os.getcwd() == path.realpath("..\\LevelEditor"):
+    # Si la working directory est "CMD-squad/BarbieRampageGame/"
+    GAME_WORKING_DIR =  path.realpath("..\\BarbieRampageGame/")
+else:
+    # Si la working directory est "CMD-squad/"*
+    GAME_WORKING_DIR =  path.realpath("BarbieRampageGame/")
+
+# L'endroit où se trouve tous les fichiers non python du jeu
+RESOURCES_ROOT = path.join(GAME_WORKING_DIR, "resources/")
 
 ### Les images et les sons utilisés (les assets)
-ASSETS_ROOT = path.join(RESSOURCES_ROOT, "assets/")
+ASSETS_ROOT = path.join(RESOURCES_ROOT, "assets/")
 TEXTURES_ROOT = path.join(ASSETS_ROOT, "textures/") # Le chemin des textures
 SOUNDS_ROOT = path.join(ASSETS_ROOT, "sounds/") # Le chemin des effets sonores
 FONTS_ROOT = path.join(ASSETS_ROOT, "fonts/") # Le chemin vers les polices d'écriture
@@ -57,10 +67,10 @@ PS2P_FONT_LOCATION = path.join(FONTS_ROOT, "Press_Start_2P/PressStart2P-REGULAR.
 
 
 ### Les données utilisées (les data)
-DATA_ROOT = path.join(RESSOURCES_ROOT, "data/")
+DATA_ROOT = path.join(RESOURCES_ROOT, "data/")
 
 WORLDS_DATA_LOCATION = path.join(DATA_ROOT, "worlds/")
 
 
 ### L'endroit où se trouvera les fichiers de sauvegarde
-SAVE_ROOT = path.realpath("GAMESAVE/")
+SAVE_ROOT = path.join(GAME_WORKING_DIR, "..\\GAMESAVE/")
