@@ -120,7 +120,7 @@ class World():
             self.world_data[tile['x']][tile['y']] = tile['type']
 
 
-    def process_data(self) -> Player:
+    def process_data(self, assets: utils.Assets) -> Player:
         """Méthode qui génére le monde en fonction des données données
 
         Returns:
@@ -146,7 +146,7 @@ class World():
                 elif tile in PLAYER_AND_ENEMIES_TILE_TYPES:
                     # Si c'est le point de spawn du joueur
                     if tile == PLAYER_AND_ENEMIES_TILE_TYPES[0]:
-                        player = Player(x * self.tile_size, y * self.tile_size, self.tile_size)
+                        player = Player(x * self.tile_size, y * self.tile_size, self.tile_size, assets)
         
         return player
     

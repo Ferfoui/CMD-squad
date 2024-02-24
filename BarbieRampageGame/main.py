@@ -52,7 +52,7 @@ def spawn_player():
     """
     death_menu.reset_animation(game_settings.screen_width)
     world.init_data("level0_data.json", assets, game_settings)
-    player = world.process_data()
+    player = world.process_data(assets)
     
     # Création des éléments de l'interface
     player.create_health_bar(10, game_settings.screen_width // 18, assets)
@@ -76,7 +76,7 @@ world = World()
 player = spawn_player()
 
 # Debug
-dummy_enemy = sprites.Dummy(50, 60, 3)
+dummy_enemy = sprites.Dummy(50, 60, 3, assets)
 
 # Variables pour la boucle
 run = True
