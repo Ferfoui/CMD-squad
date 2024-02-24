@@ -178,8 +178,11 @@ class KillCounter():
         #pygame.draw.rect(screen, "red", (self.x + 10, self.y + 10, self.width - 20, self.height - 20))
         pygame.draw.rect(screen, COLOR_RED, (self.x + 5, self.y + 5, (self.width -10) * ratio, self.height - 10))
         screen.blit(self.image, (self.x, self.y))
-    
-def draw_text(screen: pygame.Surface, text: str, font: pygame.font.Font, text_col: ColorValue, x: int, y: int, do_place_center: bool):
+
+
+### Fonctions ###
+
+def draw_text(screen: pygame.Surface, text: str, font: pygame.font.Font, text_col: ColorValue, x: int, y: int, do_place_center: bool = False):
     """Fonction qui affiche du texte
 
     Args:
@@ -189,7 +192,7 @@ def draw_text(screen: pygame.Surface, text: str, font: pygame.font.Font, text_co
         text_col (tuple[int, int, int]): couleur du texte (racismo no)
         x (int): position en abscisses où le texte va être affiché
         y (int): position en ordonnées où le texte va être affiché
-        do_place_center (bool): si les coordonnées données sont celles du centre du texte
+        do_place_center (bool, optional): si les coordonnées données sont celles du centre du texte. False par défaut
     """
     img = font.render(text, True, text_col)
     if do_place_center:
