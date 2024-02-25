@@ -80,6 +80,12 @@ class World():
         self.enemy_group = pygame.sprite.Group()
         self.bullet_group = pygame.sprite.Group()
     
+    def empty_sprite_groups(self):
+        """Vide les groupes de sprites
+        """
+        self.enemy_group.empty()
+        self.bullet_group.empty()
+    
     def load_tiles_images(self, tile_size):
         # Charge toutes les images
         self.img_dict = {}
@@ -137,7 +143,7 @@ class World():
         Returns:
             Player: joueur créé dans le monde
         """
-        self.enemy_group.empty()
+        self.empty_sprite_groups()
         
         self.scroll.bg_scroll = 0
         self.obstacle_list = []
