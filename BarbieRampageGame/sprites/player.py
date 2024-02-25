@@ -17,30 +17,28 @@ class Player(pygame.sprite.Sprite):
         """
         super().__init__()
         
-        self.size_factor = tile_size / 35
+        self.size_factor = tile_size * SPRITE_SCALING
         
-        self.is_alive = True
-        self.speed = 5 * self.size_factor
         
-        # Start value 
+        
+        # Valeurs de départ pour la santé, les kills et les balles
         self.health = 100
         self.kills = 100
         self.bullets = 30
-
-        # Variable qui permet de faire tourner le sprite du joueur quand il bouge dans l'autre sens
-        self.flip = False
-        self.move_left = False
-        self.move_right = False
-        # Direction du joueur (1 s'il est tourné vers la droite et -1 s'il est vers la gauche)
-        self.direction = 1
-        # Vitesse du joueur sur l'axe vertical
-        self.vel_y = 0
-        # Si le joueur saute
-        self.jump = False
-        # Si le joueur est dans les airs
-        self.in_air = True
-        # Si le joueur est en train de courir
-        self.is_running = False
+        
+        # Variables pour l'état du joueur
+        self.is_alive = True
+        self.speed = 5 * self.size_factor
+        
+        self.flip = False # Variable qui permet de faire tourner le sprite du joueur quand il bouge dans l'autre sens
+        self.direction = 1 # Direction du joueur (1 s'il est tourné vers la droite et -1 s'il est vers la gauche)
+        self.vel_y = 0 # Vitesse du joueur sur l'axe vertical
+        
+        self.jump = False # Si le joueur saute
+        
+        self.in_air = True # Si le joueur est dans les airs
+        
+        self.is_running = False # Si le joueur est en train de courir
 
         # Valeur du temps pour l'animation du joueur
         self.update_time = pygame.time.get_ticks()

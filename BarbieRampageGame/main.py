@@ -4,7 +4,7 @@ import pygame
 
 from constants import *
 from world import World
-import utils, menus, interface, sprites
+import utils, menus, interface
 
 print(f"Bienvenue dans le jeu Barbie Rampage!\nVersion: {GAME_VERSION}\nPar la CMD-squad\n")
 
@@ -76,7 +76,6 @@ world = World()
 player = spawn_player()
 
 # Debug
-dummy_enemy = sprites.Dummy(50, 60, 3, assets)
 
 # Variables pour la boucle
 run = True
@@ -100,11 +99,13 @@ while run:
         # Affiche les éléments à afficher à l'écran
         world.draw(screen)
         player.draw(screen)
-        #dummy_enemy.draw(screen)
+        world.enemy_group.draw(screen)
         
         # Met à jour le joueur
         player.update()
+        world.enemy_group.update()
         
+        # Affiche les éléments de l'interface
         player.health_bar.draw(screen)
         player.kill_counter.draw(screen)
         player.bullet_counter.draw(screen)
@@ -123,10 +124,15 @@ while run:
                     pause = False
         else:
             player.move(world, game_settings)
+            
+            # Faire bouger les ennemis
+            for enemy in world.enemy_group:
+                enemy.move(world)
         
         if not player.is_alive:
             if death_menu.draw(screen, True)['respawn']:
                 player = spawn_player()
+    
     
     if game_settings.do_draw_game_time:
         # Afficher le temps actuel à l'écran

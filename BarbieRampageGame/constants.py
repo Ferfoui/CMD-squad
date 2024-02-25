@@ -10,6 +10,9 @@ GAME_VERSION = "V0.1"
 # Le nombre d'images par seconde
 FPS = 60
 
+# Dénominateur pour les calculs de la taille des entités
+SPRITE_SCALING = 1/35
+
 # Les couleurs du jeu
 COLOR_WHITE_AZURE = (240, 255, 255)
 COLOR_SKY_BLUE = (52, 117, 183)
@@ -28,7 +31,7 @@ RESOLUTION_OPTIONS = {"GRO": (1200, int(1200 * 0.8)), "PA GRO": (1000, 800), "PO
 # Les noms des tuiles
 OBSTACLES_TILE_TYPES = ['dirt_default', 'dirt_default_right_border', 'dirt_default_left_border', 'dirt_default_down_border', 'dirt_default_down_left_corner', 'dirt_default_down_right_corner', 'grass_default', 'grass_default_right_border', 'grass_default_left_border', 'sand_default','sand_default_right_border','sand_default_left_border','sand_default_top_border','sand_default_top_left_corner','sand_default_top_right_corner']
 ENTITY_TILE_TYPES = []
-PLAYER_AND_ENEMIES_TILE_TYPES = ['player_spawn']
+PLAYER_AND_ENEMIES_TILE_TYPES = ['player_spawn', 'dummy_spawn']
 
 TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES = OBSTACLES_TILE_TYPES + ENTITY_TILE_TYPES
 
