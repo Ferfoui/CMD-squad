@@ -4,7 +4,7 @@ import pygame
 
 from constants import *
 from world import World
-import utils, menus, interface
+import utils, menus, interface, sprites
 
 print(f"Bienvenue dans le jeu Barbie Rampage!\nVersion: {GAME_VERSION}\nPar la CMD-squad\n")
 
@@ -77,6 +77,10 @@ player = spawn_player()
 
 # Debug
 
+moving_dummy = sprites.MovingDummy(500, 400, world.tile_size, 2, assets, 2)
+
+world.enemy_group.add(moving_dummy)
+
 # Variables pour la boucle
 run = True
 game_loading = True
@@ -127,7 +131,7 @@ while run:
             
             # Faire bouger les ennemis
             for enemy in world.enemy_group:
-                enemy.move(world)
+                enemy.ai(world)
         
         if not player.is_alive:
             if death_menu.draw(screen, True)['respawn']:

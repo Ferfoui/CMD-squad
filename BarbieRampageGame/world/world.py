@@ -67,6 +67,7 @@ class World():
         self.world_data = []
         self.obstacle_list = []
         
+        self.player = None
         self.scroll = None
         
         self.load_sprite_groups()
@@ -165,12 +166,12 @@ class World():
                 elif tile in PLAYER_AND_ENEMIES_TILE_TYPES:
                     # Si c'est le point de spawn du joueur
                     if tile == PLAYER_AND_ENEMIES_TILE_TYPES[0]:
-                        player = sprites.Player(x * self.tile_size, y * self.tile_size, self.tile_size, assets)
+                        self.player = sprites.Player(x * self.tile_size, y * self.tile_size, self.tile_size, assets)
                     if tile == PLAYER_AND_ENEMIES_TILE_TYPES[1]:
                         dummy = sprites.Dummy(x * self.tile_size, y * self.tile_size, self.tile_size, 2, assets)
                         self.enemy_group.add(dummy)
         
-        return player
+        return self.player
     
     def draw(self, screen: pygame.Surface):
         """Méthode qui permet d'afficher le monde

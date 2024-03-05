@@ -132,6 +132,9 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.x += dx + world.scroll.screen_scroll
         self.rect.y += dy
     
+    def ai(self, world):
+        self.move(world)
+    
     def update(self):
         """Méthode qui permet de mettre à jour l'ennemi"""
         self.hitbox.bottom = self.rect.bottom
@@ -145,6 +148,42 @@ class Enemy(pygame.sprite.Sprite):
         """
         screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
 
+class MovingEnemy(Enemy):
+    def __init__(self, x: int, y: int, tile_size: int, scale: float, assets: utils.Assets, texture_location: str, speed: int):
+        super().__init__(x, y, tile_size, scale, assets, texture_location)
+        
+        self.speed = speed * self.size_factor
+        self.is_running = False
+    
+    def move(self, world, move_right: bool = False, move_left: bool = False):
+        dx = 0
+        dy = 0
+        self.is_running = False
+        
+        if self.is_alive:
+            
+            if move_left:
+                dx -= self.speed
+                self.is_running = True
+                self.flip = True
+                self.direction = -1
+            if move_right:
+                dx += self.speed
+                self.is_running = True
+                self.flip = False
+                self.direction = 1
+            
+            # Application de la gravité
+            self.vel_y += GRAVITY * self.size_factor
+            if self.vel_y > 10:
+                self.vel_y
+            dy += self.vel_y
+            
+            # Vérifie les collisions
+            dx, dy = self.check_collides(dx, dy, world)
+        
+        self.move_enemy_position(dx, dy, world)
+
 class Dummy(Enemy):
     def __init__(self, x: int, y: int, tile_size: int, scale: float, assets: utils.Assets):
         """Crée un mannenequin d'entraînement
@@ -157,4 +196,13 @@ class Dummy(Enemy):
             assets (utils.Assets): classe qui contient les assets du jeu
         """
         super().__init__(x, y, tile_size, scale, assets, ENEMIES_TEXTURES_LOCATION + "dummy.png")
-    
+
+class MovingDummy(MovingEnemy):
+    def __init__(self, x: int, y: int, tile_size: int, scale: float, assets: utils.Assets, speed: int):
+        super().__init__(x, y, tile_size, scale, assets, ENEMIES_TEXTURES_LOCATION + "dummy.png", speed)
+
+    def ai(self, world):
+        is_player_to_the_right_side = world.player.rect.x > self.rect.x
+        is_player_to_the_left_side = world.player.rect.x < self.rect.x
+        
+        self.move(world, is_player_to_the_right_side, is_player_to_the_left_side)
