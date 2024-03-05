@@ -77,7 +77,7 @@ class World():
         
         world_dict['attributes']['level_size'] = self.world_size
         world_dict['attributes']['level_height'] = self.rows
-        world_dict['attributes']['background_images'] = ["sky_default"]
+        world_dict['attributes']['background_images'] = ["sky_default", "mountains_default"]
         
         # Création d'une liste qui va contenir toutes les tuiles
         world_dict['tiles'] = []

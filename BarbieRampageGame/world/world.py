@@ -170,5 +170,7 @@ class World():
         """
         screen.fill(COLOR_SKY_BLUE)
         width = self.background_images[0].get_width()
+        height = self.background_images[0].get_height()
         for x in range(5):
-            screen.blit(self.background_images[0], ((x * width) - self.scroll.bg_scroll * 0.2, 0))
+            for i, background in enumerate(self.background_images):
+                screen.blit(background, ((x * width) - self.scroll.bg_scroll * (0.2 + 0.1 * i), i * height/2))
