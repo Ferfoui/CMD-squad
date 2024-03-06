@@ -19,8 +19,6 @@ class Player(pygame.sprite.Sprite):
         
         self.size_factor = tile_size * SPRITE_SCALING
         
-        
-        
         # Valeurs de départ pour la santé, les kills et les balles
         self.health = 100
         self.kills = 100
@@ -46,7 +44,7 @@ class Player(pygame.sprite.Sprite):
         #self.ANIMATION_TYPES = ['Idle', 'Run', 'Jump', 'Death']
         self.ANIMATION_TYPES = ['Idle', 'Run']
         
-        scale = 2 * self.size_factor
+        scale = 1.5 * self.size_factor
         # Dictionnaire dans lequel il y a les frames des différentes animations du joueur
         self.animation_dict = self.load_animation(assets, self.ANIMATION_TYPES, f"{PLAYER_TEXTURES_LOCATION}default", scale)
         # Index de la frame actuelle du joueur
@@ -149,7 +147,7 @@ class Player(pygame.sprite.Sprite):
             # Application de la gravité
             self.vel_y += GRAVITY * self.size_factor
             if self.vel_y > 10:
-                self.vel_y
+                self.vel_y = 10
             dy += self.vel_y
             
             # Vérifie les colisions

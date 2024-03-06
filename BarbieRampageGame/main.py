@@ -77,7 +77,7 @@ player = spawn_player()
 
 # Debug
 
-moving_dummy = sprites.MovingDummy(500, 400, world.tile_size, 2, assets, 2)
+moving_dummy = sprites.IntelligentDummy(200, 400, world.tile_size, 2, assets, 2)
 
 world.enemy_group.add(moving_dummy)
 

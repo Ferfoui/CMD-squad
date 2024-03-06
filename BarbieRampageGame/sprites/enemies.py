@@ -29,6 +29,7 @@ class Enemy(pygame.sprite.Sprite):
         # Variables pour le déplacement
         self.vel_y = 0
         self.in_air = False
+        self.jump = False
 
         self.image = assets.load_scaled_image(texture_location, scale * self.size_factor)
 
@@ -112,15 +113,41 @@ class Enemy(pygame.sprite.Sprite):
         if self.is_alive:
             
             # Application de la gravité
-            self.vel_y += GRAVITY * self.size_factor
-            if self.vel_y > 10:
-                self.vel_y
+            self.vel_y = self.apply_gravity(self.vel_y)
             dy += self.vel_y
             
             # Vérifie les collisions
             dx, dy = self.check_collides(dx, dy, world)
         
         self.move_enemy_position(dx, dy, world)
+    
+    def apply_gravity(self, y_velocity: float, gravity_factor: float = 1) -> float:
+        """Méthode qui applique la gravité à l'ennemi
+        
+        Args:
+            y_velocity (float): vitesse de déplacement sur l'axe vertical
+            gravity_factor (int, optional): facteur de gravité. 1 par défaut.
+        """
+        y_velocity += GRAVITY * gravity_factor * self.size_factor
+        if y_velocity > 10:
+            y_velocity = 10
+        
+        return y_velocity
+    
+    def apply_gravity_recursively(self, y_velocity: float, iterations: int, gravity_factor: float = 1) -> float:
+        """Méthode qui applique la gravité à l'ennemi
+        
+        Args:
+            y_velocity (float): vitesse de déplacement sur l'axe vertical
+            iterations (int): nombre d'itérations à appliquer sur la gravité
+            gravity_factor (int, optional): facteur de gravité. 1 par défaut.
+        """
+        if iterations > 0:
+            y_velocity += self.apply_gravity(y_velocity, gravity_factor) + self.apply_gravity_recursively(y_velocity, iterations - 1, gravity_factor)
+        else:
+            y_velocity += self.apply_gravity(y_velocity, gravity_factor)
+        
+        return y_velocity
     
     def move_enemy_position(self, dx: int, dy: int, world):
         """Méthode qui permet de déplacer la position de l'ennemi
@@ -133,6 +160,11 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.y += dy
     
     def ai(self, world):
+        """Méthode qui permet de déplacer l'ennemi de manière autonome
+
+        Args:
+            world (World): monde dans lequel l'ennemi se déplace
+        """
         self.move(world)
     
     def update(self):
@@ -150,12 +182,30 @@ class Enemy(pygame.sprite.Sprite):
 
 class MovingEnemy(Enemy):
     def __init__(self, x: int, y: int, tile_size: int, scale: float, assets: utils.Assets, texture_location: str, speed: int):
+        """Crée un ennemi qui peut se déplacer
+
+        Args:
+            x (int): position de l'ennemi sur l'axe des abscisses
+            y (int): position de l'ennemi sur l'axe des ordonnées
+            tile_size (int): taille des tuiles
+            scale (float): facteur de redimensionnement
+            assets (utils.Assets): classe qui contient les assets du jeu
+            texture_location (str): position de la texture
+            speed (int): vitesse de l'ennemi
+        """
         super().__init__(x, y, tile_size, scale, assets, texture_location)
         
         self.speed = speed * self.size_factor
         self.is_running = False
     
     def move(self, world, move_right: bool = False, move_left: bool = False):
+        """Méthode qui permet de déplacer l'ennemi
+
+        Args:
+            world (World): Monde dans lequel l'ennemi se déplace
+            move_right (bool, optional): si l'ennemi doit se déplacer vers la droite. False par défaut.
+            move_left (bool, optional): si l'ennemi doit se déplacer vers la gauche. False par défaut.
+        """
         dx = 0
         dy = 0
         self.is_running = False
@@ -174,15 +224,118 @@ class MovingEnemy(Enemy):
                 self.direction = 1
             
             # Application de la gravité
-            self.vel_y += GRAVITY * self.size_factor
-            if self.vel_y > 10:
-                self.vel_y
+            self.vel_y = self.apply_gravity(self.vel_y)
             dy += self.vel_y
             
             # Vérifie les collisions
             dx, dy = self.check_collides(dx, dy, world)
         
         self.move_enemy_position(dx, dy, world)
+
+class IntelligentEnemy(MovingEnemy):
+    def __init__(self, x: int, y: int, tile_size: int, scale: float, assets: utils.Assets, texture_location: str, speed: int):
+        """Crée un ennemi intelligent
+
+        Args:
+            x (int): position de l'ennemi sur l'axe des abscisses
+            y (int): position de l'ennemi sur l'axe des ordonnées
+            tile_size (int): taille des tuiles
+            scale (float): facteur de redimensionnement
+            assets (utils.Assets): classe qui contient les assets du jeu
+            texture_location (str): position de la texture
+            speed (int): vitesse de l'ennemi
+        """
+        super().__init__(x, y, tile_size, scale, assets, texture_location, speed)
+    
+    def ai(self, world):
+        # TODO: Utiliser des lignes de vue pour que les ennemis puissent voir le joueur et agissent en conséquence
+        return super().ai(world)
+    
+    def move(self, world, move_right: bool = False, move_left: bool = False):
+        """Méthode qui permet de déplacer l'ennemi
+
+        Args:
+            world (World): monde dans lequel l'ennemi se déplace
+            move_right (bool, optional): si l'ennemi doit se déplacer vers la droite. False par défaut.
+            move_left (bool, optional): si l'ennemi doit se déplacer vers la gauche. False par défaut.
+        """
+        dx = 0
+        dy = 0
+        self.is_running = False
+        
+        if self.is_alive:
+            
+            if move_left:
+                dx -= self.speed
+                self.is_running = True
+                self.flip = True
+                self.direction = -1
+            if move_right:
+                dx += self.speed
+                self.is_running = True
+                self.flip = False
+                self.direction = 1
+            
+            # Vérifie si l'ennemi doit sauter
+            if (not self.jump) and (not self.in_air) and \
+                (self.predict_collides(dx, dy, world) or self.predict_void(dx, dy, world)):
+                
+                self.vel_y = -14 * self.size_factor
+                self.jump = True
+                self.in_air = True
+            
+            # Application de la gravité
+            self.vel_y = self.apply_gravity(self.vel_y)
+            dy += self.vel_y
+            
+            # Vérifie les collisions
+            dx, dy = self.check_collides(dx, dy, world)
+        
+        self.move_enemy_position(dx, dy, world)
+    
+    def predict_collides(self, dx: int, dy: int, world) -> bool:
+        """Vérifie si l'ennemi va rentrer en collision avec un obstacle
+
+        Args:
+            dx (int): distance de déplacement sur l'axe horizontal
+            dy (int): distance de déplacement sur l'axe vertical
+            world (World): monde dans lequel le joueur se déplace
+        
+        Returns:
+            bool: si l'ennemi va rentrer en collision avec un obstacle dans le prochain déplacement
+        """
+        next_x_position = self.hitbox.x + dx
+        next_y_position = self.hitbox.y + dy
+        
+        for tile in world.obstacle_list:
+            
+            # Vérifie les collisions sur l'axe horizontal
+            if tile.rect.colliderect(next_x_position, next_y_position, self.hitbox.width, self.hitbox.height):
+                return True
+    
+    def predict_void(self, dx, dy, world) -> bool:
+        """Vérifie si l'ennemi va tomber dans le vide
+
+        Args:
+            dx (int): distance de déplacement sur l'axe horizontal
+            dy (int): distance de déplacement sur l'axe vertical
+            world (World): monde dans lequel le joueur se déplace
+        
+        Returns:
+            bool: si l'ennemi va tomber dans le vide dans le prochain déplacement
+        """
+        next_x_position = self.hitbox.x + dx
+        next_y_position = self.hitbox.y + dy + self.apply_gravity(self.vel_y)
+        
+        tile_collide = True
+        for tile in world.obstacle_list:
+            
+            # Vérifie si l'ennemi va tomber dans un vide de 5 fois sa taille
+            if tile.rect.colliderect(next_x_position, next_y_position, self.hitbox.width, self.hitbox.height * 5):
+                tile_collide = False
+                break
+        
+        return tile_collide
 
 class Dummy(Enemy):
     def __init__(self, x: int, y: int, tile_size: int, scale: float, assets: utils.Assets):
@@ -197,12 +350,27 @@ class Dummy(Enemy):
         """
         super().__init__(x, y, tile_size, scale, assets, ENEMIES_TEXTURES_LOCATION + "dummy.png")
 
-class MovingDummy(MovingEnemy):
+class IntelligentDummy(IntelligentEnemy):
     def __init__(self, x: int, y: int, tile_size: int, scale: float, assets: utils.Assets, speed: int):
+        """Crée un mannequin d'entraînement intelligent
+        
+        Args:
+            x (int): position de l'ennemi sur l'axe des abscisses
+            y (int): position de l'ennemi sur l'axe des ordonnées
+            tile_size (int): taille des tuiles
+            scale (float): facteur de redimensionnement
+            assets (utils.Assets): classe qui contient les assets du jeu
+            speed (int): vitesse de l'ennemi
+        """
         super().__init__(x, y, tile_size, scale, assets, ENEMIES_TEXTURES_LOCATION + "dummy.png", speed)
 
     def ai(self, world):
-        is_player_to_the_right_side = world.player.rect.x > self.rect.x
-        is_player_to_the_left_side = world.player.rect.x < self.rect.x
+        """Méthode qui permet de déplacer l'ennemi vers le joueur
+
+        Args:
+            world (World): _description_
+        """
+        move_right = world.player.rect.x > self.rect.right + 3 * self.size_factor
+        move_left = world.player.rect.right < self.rect.x - 3 * self.size_factor
         
-        self.move(world, is_player_to_the_right_side, is_player_to_the_left_side)
+        self.move(world, move_right, move_left)
