@@ -248,8 +248,30 @@ class IntelligentEnemy(MovingEnemy):
         super().__init__(x, y, tile_size, scale, assets, texture_location, speed)
     
     def ai(self, world):
-        # TODO: Utiliser des lignes de vue pour que les ennemis puissent voir le joueur et agissent en conséquence
         return super().ai(world)
+    
+    def can_see_player(self, world) -> bool:
+        """Métode qui permet de vérifier si l'ennemi peut voir le joueur
+
+        Args:
+            world (World): monde dans lequel l'ennemi se déplace
+
+        Returns:
+            bool: si l'ennemi peut voir le joueur
+        """
+        line = ((self.rect.centerx, self.rect.top), (world.player.rect.centerx, world.player.rect.top))
+        sight_distance = 20 * self.size_factor
+        dx = self.x - world.player.x
+        dy = self.y - world.player.y
+        distance = (dx**2 + dy**2)**0.5
+        
+        if distance <= sight_distance:
+            for tile in world.obstacle_list:
+                if tile.rect.collidepoint(line[1]):
+                    return False
+            return True
+        
+        return False
     
     def move(self, world, move_right: bool = False, move_left: bool = False):
         """Méthode qui permet de déplacer l'ennemi
