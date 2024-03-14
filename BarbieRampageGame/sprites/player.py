@@ -107,6 +107,10 @@ class Player(pygame.sprite.Sprite):
                 animation_dict[animation].append(img)
         
         return animation_dict
+    
+    def get_head_y(self) -> int:
+        """Renvoie la position en ordonnées de la tête du joueur"""
+        return self.rect.top + self.rect.height // 6
 
     def move(self, world, settings: utils.Settings):
         """Méthode qui permet de mettre à jour la position du joueur

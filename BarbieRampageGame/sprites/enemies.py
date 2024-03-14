@@ -1,4 +1,4 @@
-import pygame
+import pygame, math
 
 from constants import *
 import utils
@@ -54,6 +54,14 @@ class Enemy(pygame.sprite.Sprite):
         """
         hitbox = self.rect.copy()
         return hitbox
+    
+    def get_head_y(self) -> int:
+        """Récupère la position de la tête de l'ennemi
+
+        Returns:
+            int: position de la tête de l'ennemi
+        """
+        return self.rect.y + (self.rect.height // 4)
         
     def check_collides_with_world(self, dx: int, dy: int, world) -> tuple[int, int]:
         """Vérifie les collisions de l'ennemi avec les obstacles du monde
@@ -72,7 +80,8 @@ class Enemy(pygame.sprite.Sprite):
             
             # Vérifie les collisions sur l'axe horizontal
             if tile.rect.colliderect(next_x_position, self.hitbox.y, self.hitbox.width, self.hitbox.height):
-                dx = 0
+                offset_between_tile = tile.rect.left - self.hitbox.x
+                dx = offset_between_tile - self.hitbox.width  * self.direction
             # Vérifie les collisions sur l'axe vertical
             if tile.rect.colliderect(self.hitbox.x, next_y_position, self.hitbox.width, self.hitbox.height):
                 # Vérifie si l'ennemi est en dessous d'une platforme
@@ -246,6 +255,7 @@ class IntelligentEnemy(MovingEnemy):
             speed (int): vitesse de l'ennemi
         """
         super().__init__(x, y, tile_size, scale, assets, texture_location, speed)
+        self.viewline = ((self.rect.centerx, self.rect.top), (self.rect.centerx, self.rect.top))
     
     def ai(self, world):
         return super().ai(world)
@@ -259,19 +269,23 @@ class IntelligentEnemy(MovingEnemy):
         Returns:
             bool: si l'ennemi peut voir le joueur
         """
-        line = ((self.rect.centerx, self.rect.top), (world.player.rect.centerx, world.player.rect.top))
-        sight_distance = 20 * self.size_factor
-        dx = self.x - world.player.x
-        dy = self.y - world.player.y
-        distance = (dx**2 + dy**2)**0.5
+        line = ((self.rect.centerx, self.get_head_y()), (world.player.rect.centerx, world.player.get_head_y()))
+        
+        sight_distance = 500 * self.size_factor
+        dx = self.rect.x - world.player.rect.x
+        dy = self.rect.y - world.player.rect.y
+        distance = math.sqrt(dx**2 + dy**2)
         
         if distance <= sight_distance:
             for tile in world.obstacle_list:
-                if tile.rect.collidepoint(line[1]):
+                if tile.rect.clipline(line[0], line[1]):
                     return False
             return True
         
         return False
+    
+    def draw(self, screen: pygame.Surface):
+        super().draw(screen)
     
     def move(self, world, move_right: bool = False, move_left: bool = False):
         """Méthode qui permet de déplacer l'ennemi
@@ -334,6 +348,8 @@ class IntelligentEnemy(MovingEnemy):
             # Vérifie les collisions sur l'axe horizontal
             if tile.rect.colliderect(next_x_position, next_y_position, self.hitbox.width, self.hitbox.height):
                 return True
+        
+        return False
     
     def predict_void(self, dx, dy, world) -> bool:
         """Vérifie si l'ennemi va tomber dans le vide
@@ -392,7 +408,9 @@ class IntelligentDummy(IntelligentEnemy):
         Args:
             world (World): _description_
         """
-        move_right = world.player.rect.x > self.rect.right + 3 * self.size_factor
-        move_left = world.player.rect.right < self.rect.x - 3 * self.size_factor
-        
-        self.move(world, move_right, move_left)
+        if self.can_see_player(world):
+            move_right = world.player.rect.x > (self.rect.right + 3 * self.size_factor)
+            move_left = world.player.rect.right < (self.rect.x - 3 * self.size_factor)
+            self.move(world, move_right, move_left)
+        else:
+            self.move(world)
