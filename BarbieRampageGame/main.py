@@ -115,7 +115,7 @@ while run:
             else:
                 # Gestion du menu pause
                 menu_buttons = pause_menu.draw(screen)
-                if menu_buttons['quit']:
+                if menu_buttons['quit'] or settings_menu.do_restart:
                     run = False
                 elif menu_buttons['settings']:
                     settings_choice = True
