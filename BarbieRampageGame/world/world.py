@@ -2,7 +2,7 @@ import pygame
 import json
 
 from constants import *
-from sprites import Player
+import sprites
 import utils
 
 # Classe qui permet de gérer le scrolling de l'écran
@@ -67,7 +67,25 @@ class World():
         self.world_data = []
         self.obstacle_list = []
         
+        self.player = None
         self.scroll = None
+        
+        self.load_sprite_groups()
+    
+    def load_sprite_groups(self):
+        """Charge les groupes de sprites
+
+        Args:
+            enemy_group (pygame.sprite.Group): groupe d'ennemis
+        """
+        self.enemy_group = pygame.sprite.Group()
+        self.bullet_group = pygame.sprite.Group()
+    
+    def empty_sprite_groups(self):
+        """Vide les groupes de sprites
+        """
+        self.enemy_group.empty()
+        self.bullet_group.empty()
     
     def load_tiles_images(self, tile_size):
         # Charge toutes les images
@@ -120,12 +138,14 @@ class World():
             self.world_data[tile['x']][tile['y']] = tile['type']
 
 
-    def process_data(self) -> Player:
+    def process_data(self, assets: utils.Assets) -> sprites.Player:
         """Méthode qui génére le monde en fonction des données données
 
         Returns:
             Player: joueur créé dans le monde
         """
+        self.empty_sprite_groups()
+        
         self.scroll.bg_scroll = 0
         self.obstacle_list = []
         
@@ -146,9 +166,12 @@ class World():
                 elif tile in PLAYER_AND_ENEMIES_TILE_TYPES:
                     # Si c'est le point de spawn du joueur
                     if tile == PLAYER_AND_ENEMIES_TILE_TYPES[0]:
-                        player = Player(x * self.tile_size, y * self.tile_size, self.tile_size)
+                        self.player = sprites.Player(x * self.tile_size, y * self.tile_size, self.tile_size, assets)
+                    if tile == PLAYER_AND_ENEMIES_TILE_TYPES[1]:
+                        dummy = sprites.IntelligentDummy(x * self.tile_size, y * self.tile_size, self.tile_size, 2, assets, 2)
+                        self.enemy_group.add(dummy)
         
-        return player
+        return self.player
     
     def draw(self, screen: pygame.Surface):
         """Méthode qui permet d'afficher le monde
