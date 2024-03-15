@@ -78,11 +78,25 @@ class SettingsMenu(gui.Menu):
         super().__init__(COLOR_DARK)
         self.settings = settings
         self.do_restart = False
+        self.default_font = assets.default_font
+        self.bigger_font = assets.default_font_bigger
+        self.initial_resolution = (settings.screen_width, settings.screen_height)
         
+        self.set_initial_state(assets, settings)
+        
+    def set_initial_state(self, assets: utils.Assets, settings: utils.Settings):
+        """Remet les paramètres par défaut à l'état initial
+        
+        Args:
+            assets (Assets): classe qui contient les assets du jeu
+            settings (Settings): classe qui contient les paramètres du jeu
+        """
         self.add_text("resolution :", assets.default_font, COLOR_WHITE_AZURE, settings.screen_width / 4, settings.screen_height / 8, True)
         self.add_drop_down("resolution", settings.screen_width * 5/8, settings.screen_height / 8, [COLOR_WHITE_AZURE, COLOR_GRAY], [COLOR_WHITE_AZURE, COLOR_GRAY], 200, 50, assets.default_font, self.settings.resolution_name, list(RESOLUTION_OPTIONS.keys()), True)
-        self.add_text("/!\\ Attention, le jeu doit être redémarré", assets.default_font, COLOR_WHITE_AZURE, settings.screen_width / 2, settings.screen_height * 3/16, True)
-        self.add_text("après avoir changé cette option", assets.default_font, COLOR_WHITE_AZURE, settings.screen_width / 2, settings.screen_height * 7/32, True)
+        self.add_text("/!\\ Attention, le jeu doit être redémarré", assets.default_font, COLOR_WHITE_AZURE, settings.screen_width / 2, settings.screen_height * 3/16, do_place_center=True, name='do_restart_line1')
+        self.add_text("si cette option est changée", assets.default_font, COLOR_WHITE_AZURE, settings.screen_width / 2, settings.screen_height * 7/32, do_place_center=True, name='do_restart_line2')
+        
+        self.set_back_button(False)
         
     def draw(self, screen: pygame.Surface) -> dict[str, any]:
         """Affiche le menu pause
@@ -104,11 +118,36 @@ class SettingsMenu(gui.Menu):
             resolution_str_value (str): nom de la résolution
         """
         if self.settings.resolution_name != resolution_str_value:
+            # Change la résolution
             new_width, new_height = RESOLUTION_OPTIONS[resolution_str_value]
             self.settings.screen_width = new_width
             self.settings.screen_height = new_height
             self.settings.resolution_name = resolution_str_value
-            self.do_restart = True
+            # Change la valeur de la variable qui indique si le jeu doit être redémarré
+            self.do_restart = (self.initial_resolution[0] != new_width) or (self.initial_resolution[1] != new_height)
+        
+        # Change le texte pour indiquer si le jeu doit être redémarré
+        if self.do_restart:
+            self.add_text("/!\\ Attention, le jeu va être redémarré", self.default_font, COLOR_ORANGE, self.initial_resolution[0] / 2, self.initial_resolution[1] * 3/16, do_place_center=True, name='do_restart_line1')
+            self.add_text("pour appliquer les changements", self.default_font, COLOR_ORANGE, self.initial_resolution[0] / 2, self.initial_resolution[1] * 7/32, do_place_center=True, name='do_restart_line2')
+        else:
+            self.add_text("/!\\ Attention, le jeu doit être redémarré", self.default_font, COLOR_WHITE_AZURE, self.initial_resolution[0] / 2, self.initial_resolution[1] * 3/16, do_place_center=True, name='do_restart_line1')
+            self.add_text("si cette option est changée", self.default_font, COLOR_WHITE_AZURE, self.initial_resolution[0] / 2, self.initial_resolution[1] * 7/32, do_place_center=True, name='do_restart_line2')
+        
+        self.set_back_button(self.do_restart)
+
+    def set_back_button(self, do_restart: bool):
+        """Change le bouton de retour pour qu'il redémarre le jeu
+
+        Args:
+            do_restart (bool): si le bouton doit redémarrer le jeu
+        """
+        if do_restart:
+            self.add_text_button("back", "restart game", self.bigger_font, COLOR_WHITE_AZURE, self.initial_resolution[0] / 2, self.initial_resolution[1] * 0.9, 1, True)
+        else:
+            self.add_text_button("back", "back to game", self.bigger_font, COLOR_WHITE_AZURE, self.initial_resolution[0] / 2, self.initial_resolution[1] * 0.9, 1, True)
+
+
 
 # Classe du menu de mort et de réapparition
 class DeathMenu(gui.Menu):

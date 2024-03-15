@@ -15,11 +15,11 @@ class Menu():
             background_color (ColorValue): couleur de l'arrière-plan
         """
         self.background_color = background_color
-        self.images_to_draw = []
+        self.images_to_draw = {}
         self.buttons_to_draw = {}
         self.drop_downs_to_draw = {}
         
-    def add_image(self, image: pygame.Surface, x: int, y: int, do_place_center: bool = False):
+    def add_image(self, image: pygame.Surface, x: int, y: int, do_place_center: bool = False, name: bool = None):
         """Ajoute une image au menu
 
         Args:
@@ -34,9 +34,12 @@ class Menu():
         else:
             img_rect.topleft = (x, y)
         
-        self.images_to_draw.append((image, img_rect))
+        if name == None:
+            name = "image:" + str(len(self.images_to_draw))
+        
+        self.images_to_draw[name] = (image, img_rect)
     
-    def add_text(self, text: str, font: pygame.font.Font, text_col: ColorValue, x: int, y: int, do_place_center: bool = False):
+    def add_text(self, text: str, font: pygame.font.Font, text_col: ColorValue, x: int, y: int, do_place_center: bool = False, name: str = None):
         """Ajoute du texte au menu
 
         Args:
@@ -54,7 +57,10 @@ class Menu():
         else:
             img_rect = text_img.get_rect(topleft = (x, y))
         
-        self.images_to_draw.append((text_img, img_rect))
+        if name == None:
+            name = text
+        
+        self.images_to_draw[name] = (text_img, img_rect)
     
     def add_text_button(self, button_name: str, text_to_draw: str, font: pygame.font.Font, text_col: ColorValue, x: int, y: int, scale, do_place_center: bool = False):
         """Ajoute un bouton sous forme de texte au menu
@@ -106,7 +112,7 @@ class Menu():
         if do_draw_background:
             screen.fill(self.background_color)
         
-        for image, img_rect in self.images_to_draw:
+        for image, img_rect in self.images_to_draw.values():
             screen.blit(image, img_rect)
         
         self.gui_values = {}
