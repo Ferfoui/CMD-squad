@@ -71,6 +71,12 @@ death_menu = menus.DeathMenu(assets, game_settings)
 pause_menu = menus.PauseMenu(assets, game_settings)
 settings_menu = menus.SettingsMenu(assets, game_settings)
 
+# Initialisation du monde et du joueur
+world = World()
+
+player = spawn_player()
+
+
 # debug
 bullet_group = pygame.sprite.Group()
 
