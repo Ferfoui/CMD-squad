@@ -1,10 +1,10 @@
 # Codé par la CMD-squad
 
-import pygame
+import pygame, os, sys
 
 from constants import *
 from world import World
-import utils, menus, interface, sprites
+import utils, menus, interface, weapon
 
 print(f"Bienvenue dans le jeu Barbie Rampage!\nVersion: {GAME_VERSION}\nPar la CMD-squad\n")
 
@@ -112,11 +112,12 @@ while run:
         
         if pause:
             if settings_choice:
-                settings_menu.draw(screen)
+                settings_buttons = settings_menu.draw(screen)
+                settings_choice = not settings_buttons['back']
             else:
                 # Gestion du menu pause
                 menu_buttons = pause_menu.draw(screen)
-                if menu_buttons['quit']:
+                if menu_buttons['quit'] or settings_menu.do_restart:
                     run = False
                 elif menu_buttons['settings']:
                     settings_choice = True
@@ -164,6 +165,8 @@ while run:
                     else:
                         # Activer ou désactiver le menu pause
                         pause = not pause
+            if event.key == pygame.K_TAB:
+                ar_weapon.shoot(1,bullet_group)
 
     # Mise à jour de l'écran à chaque tour de boucle
     pygame.display.update()
@@ -172,3 +175,7 @@ while run:
 game_settings.save_settings()
 # Fermeture du programme
 pygame.quit()
+
+if settings_menu.do_restart:
+    # Redémarrer le jeu si l'utilisateur a choisi de redémarrer
+    os.execl(sys.executable, sys.executable, *sys.argv)

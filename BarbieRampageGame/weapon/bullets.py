@@ -4,7 +4,7 @@ from constants import *
 
 # Classe pour les balles
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, scale, x: int, y: int, direction: int, bullet_group: pygame.sprite.Group):
+    def __init__(self, scale, x: int, y: int, direction: int):
         """Crée une nouvelle balle
 
         Args:
@@ -21,8 +21,8 @@ class Bullet(pygame.sprite.Sprite):
         
         self.ANIMATION_TYPES = ["bullet_start", "bullet_end"]
         
-        self.animation = self.load_animation(self.ANIMATION_TYPES, TEXTURES_ROOT + "weapons/bullets", scale)
-        self.index = 0
+        self.animation = self.load_animation(self.ANIMATION_TYPES, TEXTURES_ROOT + "bullets", scale)
+        self.frame_index = 0
         
         # Valeur du temps pour l'animation de la balle
         self.update_time = pygame.time.get_ticks()
@@ -30,9 +30,9 @@ class Bullet(pygame.sprite.Sprite):
         self.continue_move = True
     
         # Met la balle en position start
-        self.action = self.ANIMATION_TYPES[self.index]
+        self.action = self.ANIMATION_TYPES[self.frame_index]
         # Met l'image correspondant à son action
-        self.image = self.animation_dict[self.action][self.frame_index]
+        self.image = self.animation[self.action][self.frame_index]
         # Crée le rectangle de la balle
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
@@ -44,7 +44,7 @@ class Bullet(pygame.sprite.Sprite):
         
         # Ajoute la balle dans le groupe donné
         # Ici pour plus d'info sur les groupes : https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Group
-        bullet_group.add(self)
+        #bullet_group.add(self)
         
         
     def load_animation(self, animation_types: list[str], texture_location: str, scale) -> dict[str, list[pygame.Surface]]:
@@ -77,6 +77,9 @@ class Bullet(pygame.sprite.Sprite):
         """
         #TODO: Faire bouger la balle
         # on peut faire bouger la balle ajoutant une valeur à self.rect.x
+        self.speed = 10
+        self.rect.x += self.speed * self.direction
+        print(self.rect.x)
     
     def check_collides(self, player: pygame.sprite.Sprite, enemy_group: pygame.sprite.Group):
         """Vérifie les collisions entre la balle et le joueur ou un ennemi
@@ -92,14 +95,15 @@ class Bullet(pygame.sprite.Sprite):
     def update(self):
         """Met à jour la balle
         """
-        self.update_animation
+        self.update_animation()
+        self.move()
     
     def update_animation(self):
         """Met à jour l'animation de la balle en fonction du temps
         """
         ANIMATION_COOLDOWN = 50
         # Met à jour l'image en fonction de la frame actuelle
-        self.image = self.animation_dict[self.action][self.frame_index]
+        self.image = self.animation[self.action][self.frame_index]
         
         # Vérifie si assez de temps est passé depuis la dernière mise à jour
         if pygame.time.get_ticks() - self.update_time > ANIMATION_COOLDOWN:
@@ -107,9 +111,9 @@ class Bullet(pygame.sprite.Sprite):
             self.frame_index += 1
 
 	    # Si l'animation est terminée, remise de la première image
-        if self.frame_index >= len(self.animation_dict[self.action]):
+        if self.frame_index >= len(self.animation[self.action]):
             if self.action == self.ANIMATION_TYPES[1]:
-                self.frame_index = len(self.animation_dict[self.action]) - 1
+                self.frame_index = len(self.animation[self.action]) - 1
                 self.continue_move = False
             else:
                 self.frame_index = 0
@@ -120,5 +124,5 @@ class Bullet(pygame.sprite.Sprite):
         Args:
             screen (pygame.Surface): écran sur lequel la balle va être affichée
         """
-        self.update_animation()
         screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
+        

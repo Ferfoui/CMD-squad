@@ -73,12 +73,33 @@ class Player(pygame.sprite.Sprite):
     
 
     def create_health_bar(self, x: int, y: int, assets: utils.Assets):
+        """Crée la barre de vie du joueur
+
+        Args:
+            x (int): position en abscisses où la barre de vie va être créée
+            y (int): position en ordonnées où la barre de vie va être créée
+            assets (utils.Assets): classe qui contient les assets du jeu
+        """
         self.health_bar = gui.HealthBar(x, y, 256, self.health, assets)
 
     def create_kill_counter(self, x: int, y: int, assets: utils.Assets):
+        """Crée le compteur de kills du joueur
+
+        Args:
+            x (int): position en abscisses où le compteur de kills va être créé
+            y (int): position en ordonnées où le compteur de kills va être créé
+            assets (utils.Assets): classe qui contient les assets du jeu
+        """
         self.kill_counter = gui.KillCounter(x, y, 256, self.kills, assets)
     
     def create_bullet_counter(self, x: int, y: int, assets: utils.Assets):
+        """Crée le compteur de balles du joueur
+
+        Args:
+            x (int): position en abscisses où le compteur de balles va être créé
+            y (int): position en ordonnées où le compteur de balles va être créé
+            assets (utils.Assets): classe qui contient les assets du jeu
+        """
         self.bullet_counter = gui.BulletCounter(x, y, 64, self.bullets, assets)
     
     
@@ -186,7 +207,16 @@ class Player(pygame.sprite.Sprite):
         self.update_scrolling(world, delta_x, settings)
     
     def check_collides(self, dx: int, dy: int, world) -> tuple[int, int]:
+        """Vérifie les collisions du joueur avec les obstacles du monde
+
+        Args:
+            dx (int): distance de déplacement sur l'axe horizontal
+            dy (int): distance de déplacement sur l'axe vertical
+            world (World): monde dans lequel le joueur se déplace
         
+        Returns:
+            tuple[int, int]: les distances de déplacement ajustées en fonction des collisions
+        """
         for tile in world.obstacle_list:
             next_x_position = self.hitbox.x + dx
             next_y_position = self.hitbox.y + dy + 1

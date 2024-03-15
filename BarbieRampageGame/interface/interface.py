@@ -15,11 +15,11 @@ class Menu():
             background_color (ColorValue): couleur de l'arrière-plan
         """
         self.background_color = background_color
-        self.images_to_draw = []
+        self.images_to_draw = {}
         self.buttons_to_draw = {}
         self.drop_downs_to_draw = {}
         
-    def add_image(self, image: pygame.Surface, x: int, y: int, do_place_center: bool = False):
+    def add_image(self, image: pygame.Surface, x: int, y: int, do_place_center: bool = False, name: bool = None):
         """Ajoute une image au menu
 
         Args:
@@ -34,9 +34,12 @@ class Menu():
         else:
             img_rect.topleft = (x, y)
         
-        self.images_to_draw.append((image, img_rect))
+        if name == None:
+            name = "image:" + str(len(self.images_to_draw))
+        
+        self.images_to_draw[name] = (image, img_rect)
     
-    def add_text(self, text: str, font: pygame.font.Font, text_col: ColorValue, x: int, y: int, do_place_center: bool = False):
+    def add_text(self, text: str, font: pygame.font.Font, text_col: ColorValue, x: int, y: int, do_place_center: bool = False, name: str = None):
         """Ajoute du texte au menu
 
         Args:
@@ -54,7 +57,10 @@ class Menu():
         else:
             img_rect = text_img.get_rect(topleft = (x, y))
         
-        self.images_to_draw.append((text_img, img_rect))
+        if name == None:
+            name = text
+        
+        self.images_to_draw[name] = (text_img, img_rect)
     
     def add_text_button(self, button_name: str, text_to_draw: str, font: pygame.font.Font, text_col: ColorValue, x: int, y: int, scale, do_place_center: bool = False):
         """Ajoute un bouton sous forme de texte au menu
@@ -106,7 +112,7 @@ class Menu():
         if do_draw_background:
             screen.fill(self.background_color)
         
-        for image, img_rect in self.images_to_draw:
+        for image, img_rect in self.images_to_draw.values():
             screen.blit(image, img_rect)
         
         self.gui_values = {}
@@ -119,13 +125,14 @@ class Menu():
         return self.gui_values
 
 class HealthBar():
-    def __init__(self, x, y, width: int, max_hp: int, assets: Assets):
+    def __init__(self, x: int, y: int, width: int, max_hp: int, assets: Assets):
         """Initialise la barre de vie
 
         Args: 
             x (int): position en abscisses où la barre de vie va être créee
             y (int): position en ordonnées où la barre de vie va être créee
             width (int): largeur de la barre de vie 
+            max_hp (int): valeur maximale des points de vie
             assets (Assets): classe des assets
         """
         self.x = x
@@ -137,15 +144,28 @@ class HealthBar():
         self.height = self.image.get_height()
         
     def draw(self, screen: pygame.Surface):
+        """Affiche la barre de vie sur l'écran
+
+        Args:
+            screen (pygame.Surface): surface de l'écran sur laquelle dessiner la barre de vie
+        """
         # Calcul du ratio de vie
         ratio = self.hp / self.max_hp
-        #pygame.draw.rect(screen, "red", (self.x + 10, self.y + 10, self.width - 20, self.height - 20))
         pygame.draw.rect(screen, COLOR_HEALTH_PINK, (self.x + 5, self.y + 5, (self.width - 10) * ratio, self.height - 10))
         screen.blit(self.image, (self.x, self.y))
 
 class BulletCounter():
     #a delete + 30 munis 
     def __init__(self, x, y, width: int, max_bullet: int, assets: Assets):
+        """Initialise le compteur de munitions
+        
+        Args:
+            x (int): position en abscisses où le compteur de munitions va être créé
+            y (int): position en ordonnées où le compteur de munitions va être créé
+            width (int): largeur du compteur de munitions
+            max_bullet (int): nombre maximal de munitions
+            assets (Assets): classe des assets
+        """
         self.x = x
         self.y = y
         self.width = width
@@ -157,13 +177,27 @@ class BulletCounter():
         self.font = assets.default_font
 
 
-    def draw(self, screen):
+    def draw(self, screen: pygame.Surface):
+        """Affiche le compteur de munitions sur l'écran
+        
+        Args:
+            screen (pygame.Surface): surface de l'écran sur laquelle afficher le compteur de munitions
+        """
         screen.blit(self.image, (self.x, self.y))
         draw_text(screen, "Bullets: ",self.font, COLOR_DARK, self.x+50, self.y, False)
         
 
 class KillCounter():
-    def __init__(self, x, y, width: int, max_kl: int, assets: Assets):
+    def __init__(self, x: int, y: int, width: int, max_kl: int, assets: Assets):
+        """Initialise le compteur de kills
+        
+        Args:
+            x (int): Position en abscisses où le compteur de kills va être créé
+            y (int): Position en ordonnées où le compteur de kills va être créé
+            width (int): Largeur du compteur de kills
+            max_kl (int): Nombre maximal de kills
+            assets (Assets): Classe des assets
+        """
         self.x = x
         self.y = y
         self.width = width
@@ -173,26 +207,29 @@ class KillCounter():
         self.height = self.image.get_height()
         
     def draw(self, screen: pygame.Surface):
+        """Affiche le compteur de kills sur l'écran
+        
+        Args:
+            screen (pygame.Surface): écran sur laquelle afficher le compteur de kills
+        """
         # Calcul du ratio de kills
         ratio = self.kl / self.max_kl
-        #pygame.draw.rect(screen, "red", (self.x + 10, self.y + 10, self.width - 20, self.height - 20))
-        pygame.draw.rect(screen, COLOR_RED, (self.x + 5, self.y + 5, (self.width -10) * ratio, self.height - 10))
+        pygame.draw.rect(screen, COLOR_RED, (self.x + 5, self.y + 5, (self.width - 10) * ratio, self.height - 10))
         screen.blit(self.image, (self.x, self.y))
 
 
 ### Fonctions ###
-
 def draw_text(screen: pygame.Surface, text: str, font: pygame.font.Font, text_col: ColorValue, x: int, y: int, do_place_center: bool = False):
-    """Fonction qui affiche du texte
+    """Fonction fiche du texte
 
     Args:
-        screen (pygame.Surface): écran sur lequel le texte doit être affiché
+        screen (pygame.pygame.Surface): écran sur lequel le texte doe doit être aff
         text (str): texte qui doit être affiché
         font (pygame.font.Font): police à utiliser
         text_col (tuple[int, int, int]): couleur du texte (racismo no)
-        x (int): position en abscisses où le texte va être affiché
-        y (int): position en ordonnées où le texte va être affiché
-        do_place_center (bool, optional): si les coordonnées données sont celles du centre du texte. False par défaut
+        x (int): position n abscisses où le texte va être affiché
+        y (int): position s où le text ordonnées où lere afe va 
+        do_place_center (bool, optional): si les coordonsies scellesonn centonnées sont celles dutexte. False xtefaut
     """
     img = font.render(text, True, text_col)
     if do_place_center:
