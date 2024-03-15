@@ -168,7 +168,7 @@ class World():
                     if tile == PLAYER_AND_ENEMIES_TILE_TYPES[0]:
                         self.player = sprites.Player(x * self.tile_size, y * self.tile_size, self.tile_size, assets)
                     if tile == PLAYER_AND_ENEMIES_TILE_TYPES[1]:
-                        dummy = sprites.Dummy(x * self.tile_size, y * self.tile_size, self.tile_size, 2, assets)
+                        dummy = sprites.IntelligentDummy(x * self.tile_size, y * self.tile_size, self.tile_size, 2, assets, 2)
                         self.enemy_group.add(dummy)
         
         return self.player
