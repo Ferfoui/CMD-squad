@@ -77,6 +77,8 @@ player = spawn_player()
 
 # Debug
 
+ar_weapon = weapon.Arb4rb13(assets, 128, 400, 500)
+
 # Variables pour la boucle
 run = True
 game_loading = True
@@ -99,11 +101,13 @@ while run:
         # Affiche les éléments à afficher à l'écran
         world.draw(screen)
         player.draw(screen)
-        world.enemy_group.draw(screen)
+        world.draw_sprite_groups(screen)
+        
+        ar_weapon.draw(screen)
         
         # Met à jour le joueur
         player.update()
-        world.enemy_group.update()
+        world.update_groups()
         
         # Affiche les éléments de l'interface
         player.health_bar.draw(screen)
@@ -166,8 +170,7 @@ while run:
                         # Activer ou désactiver le menu pause
                         pause = not pause
             if event.key == pygame.K_TAB:
-                pass
-                #ar_weapon.shoot(1,bullet_group)
+                ar_weapon.shoot(1, world.bullet_group)
 
     # Mise à jour de l'écran à chaque tour de boucle
     pygame.display.update()

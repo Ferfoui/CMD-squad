@@ -195,3 +195,18 @@ class World():
         width = self.background_images[0].get_width()
         for x in range(5):
             screen.blit(self.background_images[0], ((x * width) - self.scroll.bg_scroll * 0.2, 0))
+    
+    def draw_sprite_groups(self, screen: pygame.Surface):
+        """Méthode qui permet d'afficher les groupes de sprites
+
+        Args:
+            screen (Surface): fenêtre sur laquelle le premier plan doit être affiché
+        """
+        self.bullet_group.draw(screen)
+        self.enemy_group.draw(screen)
+
+    def update_groups(self):
+        """Met à jour les groupes de sprites
+        """
+        self.bullet_group.update()
+        self.enemy_group.update()

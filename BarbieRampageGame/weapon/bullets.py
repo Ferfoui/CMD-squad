@@ -4,11 +4,11 @@ from constants import *
 
 # Classe pour les balles
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, scale, x: int, y: int, direction: int):
+    def __init__(self, scale: float, x: int, y: int, direction: int):
         """Crée une nouvelle balle
 
         Args:
-            scale (int or float): nombre par lequel la taille de la texture va être multiplié
+            scale (float): nombre par lequel la taille de la texture va être multiplié
             x (int): position sur l'axe horizontal
             y (int): postion sur l'axe vertical
             direction (int): direction dans laquelle la balle va, 1 si c'est vers la droite et -1 si c'est vers la gauche
@@ -28,6 +28,8 @@ class Bullet(pygame.sprite.Sprite):
         self.update_time = pygame.time.get_ticks()
         
         self.continue_move = True
+        
+        self.initial_x = x
     
         # Met la balle en position start
         self.action = self.ANIMATION_TYPES[self.frame_index]
@@ -41,10 +43,6 @@ class Bullet(pygame.sprite.Sprite):
         
         self.width = self.image.get_width()
         self.height = self.image.get_height()
-        
-        # Ajoute la balle dans le groupe donné
-        # Ici pour plus d'info sur les groupes : https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Group
-        #bullet_group.add(self)
         
         
     def load_animation(self, animation_types: list[str], texture_location: str, scale) -> dict[str, list[pygame.Surface]]:
@@ -79,13 +77,12 @@ class Bullet(pygame.sprite.Sprite):
         # on peut faire bouger la balle ajoutant une valeur à self.rect.x
         self.speed = 10
         self.rect.x += self.speed * self.direction
-        print(self.rect.x)
     
-    def check_collides(self, player: pygame.sprite.Sprite, enemy_group: pygame.sprite.Group):
+    def check_collides(self, world, enemy_group: pygame.sprite.Group):
         """Vérifie les collisions entre la balle et le joueur ou un ennemi
 
         Args:
-            player (pygame.sprite.Sprite): joueur
+            world (World): monde dans lequel la balle se trouve
             enemy_group (pygame.sprite.Group): groupe des ennemis
         """
         #TODO: Vérifier les collisions
