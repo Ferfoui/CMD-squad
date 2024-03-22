@@ -10,7 +10,7 @@ print(f"Bienvenue dans le jeu Barbie Rampage!\nVersion: {GAME_VERSION}\nPar la C
 
 # Initialisation du moteur graphique
 pygame.init()
-
+pygame.mixer.init()
 # Tous les paramètres que le joueur peut modifier comme les touches, etc.
 game_settings = utils.Settings()
 
