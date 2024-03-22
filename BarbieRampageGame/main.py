@@ -1,11 +1,10 @@
 # Codé par la CMD-squad
 
-import pygame
+import pygame, os, sys
 
 from constants import *
 from world import World
-import weapon
-import utils, menus, interface, sprites
+import utils, menus, interface, weapon
 
 print(f"Bienvenue dans le jeu Barbie Rampage!\nVersion: {GAME_VERSION}\nPar la CMD-squad\n")
 
@@ -52,8 +51,13 @@ def spawn_player():
         Player: joueur recréé
     """
     death_menu.reset_animation(game_settings.screen_width)
-    world.init_data("foret_data.json", assets, game_settings)
+<<<<<<< HEAD
+    world.init_data("level0_data.json", assets, game_settings)
     player = world.process_data()
+=======
+    world.init_data("level0_data.json", assets, game_settings)
+    player = world.process_data(assets)
+>>>>>>> f629e93eab061df60a5dd9cb4c0692daa9f113f8
     
     # Création des éléments de l'interface
     player.create_health_bar(10, game_settings.screen_width // 18, assets)
@@ -76,11 +80,7 @@ world = World()
 
 player = spawn_player()
 
-
-# debug
-bullet_group = pygame.sprite.Group()
-
-ar_weapon = weapon.Arb4rb13(assets, 50, 400, 300)
+# Debug
 
 # Variables pour la boucle
 run = True
@@ -104,24 +104,25 @@ while run:
         # Affiche les éléments à afficher à l'écran
         world.draw(screen)
         player.draw(screen)
-        ar_weapon.draw(screen)
-        bullet_group.draw(screen)
+        world.enemy_group.draw(screen)
         
         # Met à jour le joueur
         player.update()
-        bullet_group.update()
+        world.enemy_group.update()
         
+        # Affiche les éléments de l'interface
         player.health_bar.draw(screen)
         player.kill_counter.draw(screen)
         player.bullet_counter.draw(screen)
         
         if pause:
             if settings_choice:
-                settings_menu.draw(screen)
+                settings_buttons = settings_menu.draw(screen)
+                settings_choice = not settings_buttons['back']
             else:
                 # Gestion du menu pause
                 menu_buttons = pause_menu.draw(screen)
-                if menu_buttons['quit']:
+                if menu_buttons['quit'] or settings_menu.do_restart:
                     run = False
                 elif menu_buttons['settings']:
                     settings_choice = True
@@ -129,10 +130,15 @@ while run:
                     pause = False
         else:
             player.move(world, game_settings)
+            
+            # Faire bouger les ennemis
+            for enemy in world.enemy_group:
+                enemy.ai(world)
         
         if not player.is_alive:
             if death_menu.draw(screen, True)['respawn']:
                 player = spawn_player()
+    
     
     if game_settings.do_draw_game_time:
         # Afficher le temps actuel à l'écran
@@ -165,7 +171,8 @@ while run:
                         # Activer ou désactiver le menu pause
                         pause = not pause
             if event.key == pygame.K_TAB:
-                ar_weapon.shoot(1,bullet_group)
+                pass
+                #ar_weapon.shoot(1,bullet_group)
 
     # Mise à jour de l'écran à chaque tour de boucle
     pygame.display.update()
@@ -174,3 +181,7 @@ while run:
 game_settings.save_settings()
 # Fermeture du programme
 pygame.quit()
+
+if settings_menu.do_restart:
+    # Redémarrer le jeu si l'utilisateur a choisi de redémarrer
+    os.execl(sys.executable, sys.executable, *sys.argv)

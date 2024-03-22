@@ -6,40 +6,37 @@ import interface as gui
 
 # Classe qui permet de créer le joueur
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x: int, y: int, tile_size: int):
+    def __init__(self, x: int, y: int, tile_size: int, assets: utils.Assets):
         """Initialise la classe Player
 
         Args:
             x (int): position en abscisses où le joueur va être créé
             y (int): position en ordonnées où le joueur va être créé
             tile_size (int): taille d'une tuile en pixel
+            assets (utils.Assets): classe qui contient les assets du jeu
         """
         super().__init__()
         
-        self.size_factor = tile_size / 35
+        self.size_factor = tile_size * SPRITE_SCALING
         
-        self.is_alive = True
-        self.speed = 5 * self.size_factor
-        
-        # Start value 
+        # Valeurs de départ pour la santé, les kills et les balles
         self.health = 100
         self.kills = 100
         self.bullets = 30
-
-        # Variable qui permet de faire tourner le sprite du joueur quand il bouge dans l'autre sens
-        self.flip = False
-        self.move_left = False
-        self.move_right = False
-        # Direction du joueur (1 s'il est tourné vers la droite et -1 s'il est vers la gauche)
-        self.direction = 1
-        # Vitesse du joueur sur l'axe vertical
-        self.vel_y = 0
-        # Si le joueur saute
-        self.jump = False
-        # Si le joueur est dans les airs
-        self.in_air = True
-        # Si le joueur est en train de courir
-        self.is_running = False
+        
+        # Variables pour l'état du joueur
+        self.is_alive = True
+        self.speed = 5 * self.size_factor
+        
+        self.flip = False # Variable qui permet de faire tourner le sprite du joueur quand il bouge dans l'autre sens
+        self.direction = 1 # Direction du joueur (1 s'il est tourné vers la droite et -1 s'il est vers la gauche)
+        self.vel_y = 0 # Vitesse du joueur sur l'axe vertical
+        
+        self.jump = False # Si le joueur saute
+        
+        self.in_air = True # Si le joueur est dans les airs
+        
+        self.is_running = False # Si le joueur est en train de courir
 
         # Valeur du temps pour l'animation du joueur
         self.update_time = pygame.time.get_ticks()
@@ -47,9 +44,9 @@ class Player(pygame.sprite.Sprite):
         #self.ANIMATION_TYPES = ['Idle', 'Run', 'Jump', 'Death']
         self.ANIMATION_TYPES = ['Idle', 'Run']
         
-        scale = 2 * self.size_factor
+        scale = 1.5 * self.size_factor
         # Dictionnaire dans lequel il y a les frames des différentes animations du joueur
-        self.animation_dict = self.load_animation(self.ANIMATION_TYPES, f"{PLAYER_TEXTURES_LOCATION}default", scale)
+        self.animation_dict = self.load_animation(assets, self.ANIMATION_TYPES, f"{PLAYER_TEXTURES_LOCATION}default", scale)
         # Index de la frame actuelle du joueur
         self.frame_index = 0
         
@@ -106,10 +103,11 @@ class Player(pygame.sprite.Sprite):
         self.bullet_counter = gui.BulletCounter(x, y, 64, self.bullets, assets)
     
     
-    def load_animation(self, animation_types: list[str], texture_location: str, scale) -> dict[str, list[pygame.Surface]]:
+    def load_animation(self, assets: utils.Assets, animation_types: list[str], texture_location: str, scale) -> dict[str, list[pygame.Surface]]:
         """Méthode qui permet de charger les animations du joueur
 
         Args:
+            assets (utils.Assets): classe qui contient les assets du jeu
             animation_types (list[str]): liste qui contient les noms des animations
             texture_location (str): chemin vers les textures
             scale (int or float): nombre par lequel on multiplie la taille du Sprite pour obtenir la taille du joueur
@@ -124,13 +122,16 @@ class Player(pygame.sprite.Sprite):
 			# Compte le nombre d'image qu'il y a dans le dossier
             number_of_frames = len(os.listdir(f"{texture_location}/{animation}"))
             for i in range(number_of_frames):
-                # Charge l'image dans la mémoire
-                img = pygame.image.load(f"{texture_location}/{animation}/{i:02}.png").convert_alpha()
-                # Converti l'image pour qu'elle soit de la taille voulue
-                img = pygame.transform.scale(img, (int(img.get_width() * scale), int(img.get_height() * scale)))
+                # Charge l'image et la redimensionne
+                img = assets.load_scaled_image(f"{texture_location}/{animation}/{i:02}.png", scale)
+                # Ajoute l'image à la liste des images de l'animation
                 animation_dict[animation].append(img)
         
         return animation_dict
+    
+    def get_head_y(self) -> int:
+        """Renvoie la position en ordonnées de la tête du joueur"""
+        return self.rect.top + self.rect.height // 6
 
     def move(self, world, settings: utils.Settings):
         """Méthode qui permet de mettre à jour la position du joueur
@@ -171,7 +172,7 @@ class Player(pygame.sprite.Sprite):
             # Application de la gravité
             self.vel_y += GRAVITY * self.size_factor
             if self.vel_y > 10:
-                self.vel_y
+                self.vel_y = 10
             dy += self.vel_y
             
             # Vérifie les colisions
