@@ -52,7 +52,7 @@ def spawn_player():
         Player: joueur recréé
     """
     death_menu.reset_animation(game_settings.screen_width)
-    world.init_data("level0_data.json", assets, game_settings)
+    world.init_data("foret_data.json", assets, game_settings)
     player = world.process_data()
     
     # Création des éléments de l'interface
