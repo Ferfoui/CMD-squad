@@ -167,7 +167,7 @@ while run:
                         # Activer ou désactiver le menu pause
                         pause = not pause
             if event.key == pygame.K_TAB:
-                pygame.mixer.play(Son_test)
+                pygame.mixer.Sound.play(Son_test)
                 ar_weapon.shoot(1,bullet_group)
 
     # Mise à jour de l'écran à chaque tour de boucle

@@ -83,4 +83,4 @@ WORLDS_DATA_LOCATION = path.join(DATA_ROOT, "worlds/")
 SAVE_ROOT = path.join(GAME_WORKING_DIR, "..\\GAMESAVE/")
 
 ### L'endroit où stocker des musiques
-Son_test = pygame.mixer.Sound("son_test.wav")
+Son_test = pygame.mixer.Sound("son_test")
