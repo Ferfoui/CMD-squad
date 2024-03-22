@@ -1,5 +1,6 @@
 # Codé par la CMD-squad
 
+
 import pygame, os, sys
 
 from constants import *
@@ -166,8 +167,8 @@ while run:
                         # Activer ou désactiver le menu pause
                         pause = not pause
             if event.key == pygame.K_TAB:
-                pass
-                #ar_weapon.shoot(1,bullet_group)
+                pygame.mixer.play(Son_test)
+                ar_weapon.shoot(1,bullet_group)
 
     # Mise à jour de l'écran à chaque tour de boucle
     pygame.display.update()
