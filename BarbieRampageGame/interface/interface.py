@@ -4,6 +4,7 @@ from _common import ColorValue
 from constants import *
 from utils import Assets
 
+
 from .buttons import Button, DropDown
 
 # Classe qui gère les menus
@@ -184,7 +185,7 @@ class BulletCounter():
             screen (pygame.Surface): surface de l'écran sur laquelle afficher le compteur de munitions
         """
         screen.blit(self.image, (self.x, self.y))
-        draw_text(screen, "Bullets: ",self.font, COLOR_DARK, self.x+50, self.y, False)
+        draw_text(screen, f"Bullets: {self.bullet} ", self.font, COLOR_DARK, self.x+50, self.y, False)
         
 
 class KillCounter():
