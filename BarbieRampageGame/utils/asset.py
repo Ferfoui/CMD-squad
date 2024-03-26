@@ -18,6 +18,9 @@ class Assets():
         self.default_font = pygame.font.Font(PS2P_FONT_LOCATION, 15)
         self.default_font_bigger = pygame.font.Font(PS2P_FONT_LOCATION, 22)
 
+        ### Les sons ###
+        self.weapon_cross_sound = pygame.mixer.Sound(WEAPON_CROSS_SOUND_LOCATION)
+
     def load_image(self, texture_location: str, width: int, height: int) -> pygame.Surface:
         """Charge une image
         

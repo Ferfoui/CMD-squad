@@ -11,7 +11,10 @@ print(f"Bienvenue dans le jeu Barbie Rampage!\nVersion: {GAME_VERSION}\nPar la C
 
 # Initialisation du moteur graphique
 pygame.init()
+
+#Initiallisation du mixer
 pygame.mixer.init()
+
 # Tous les paramètres que le joueur peut modifier comme les touches, etc.
 game_settings = utils.Settings()
 
@@ -167,8 +170,8 @@ while run:
                         # Activer ou désactiver le menu pause
                         pause = not pause
             if event.key == pygame.K_TAB:
-                pygame.mixer.Sound.play(Son_test)
-                ar_weapon.shoot(1,bullet_group)
+                pygame.mixer.Sound.play(assets.weapon_cross_sound)
+                #ar_weapon.shoot(1,bullet_group)
 
     # Mise à jour de l'écran à chaque tour de boucle
     pygame.display.update()

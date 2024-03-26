@@ -1,9 +1,5 @@
 import os
 from os import path
-import pygame
-from utils import Assets
-
-pygame.mixer.init()
 
 ###### Les constantes sont définies dans ce fichier ######
 
@@ -63,6 +59,7 @@ TEXTURES_ROOT = path.join(ASSETS_ROOT, "textures/") # Le chemin des textures
 SOUNDS_ROOT = path.join(ASSETS_ROOT, "sounds/") # Le chemin des effets sonores
 FONTS_ROOT = path.join(ASSETS_ROOT, "fonts/") # Le chemin vers les polices d'écriture
 
+# Les textures
 PLAYER_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "player/")
 ENEMIES_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "enemies/")
 
@@ -72,6 +69,8 @@ BACKGROUND_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "background/")
 
 PS2P_FONT_LOCATION = path.join(FONTS_ROOT, "Press_Start_2P/PressStart2P-REGULAR.ttf")
 
+# Les sons
+WEAPON_CROSS_SOUND_LOCATION = path.join(SOUNDS_ROOT, "son_test.wav")
 
 ### Les données utilisées (les data)
 DATA_ROOT = path.join(RESOURCES_ROOT, "data/")
@@ -81,6 +80,3 @@ WORLDS_DATA_LOCATION = path.join(DATA_ROOT, "worlds/")
 
 ### L'endroit où se trouvera les fichiers de sauvegarde
 SAVE_ROOT = path.join(GAME_WORKING_DIR, "..\\GAMESAVE/")
-
-### L'endroit où stocker des musiques
-Son_test = pygame.mixer.Sound("son_test")
