@@ -15,6 +15,10 @@ pygame.init()
 #Initiallisation du mixer
 pygame.mixer.init()
 
+#Musique du Jeu
+pygame.mixer.music.load(PLAYBACK_MUSIC)
+pygame.mixer.music.play(loops=-1, start=0.0, fade_ms=0)   
+
 # Tous les paramètres que le joueur peut modifier comme les touches, etc.
 game_settings = utils.Settings()
 
@@ -91,6 +95,8 @@ current_time = pygame.time.get_ticks()
 # Boucle qui va permettre de faire tourner le jeu
 while run:
 
+     
+
     # Fait en sorte que le jeu tourne à un nombre limité de FPS
     clock.tick(FPS)
     
@@ -137,7 +143,6 @@ while run:
         if not player.is_alive:
             if death_menu.draw(screen, True)['respawn']:
                 player = spawn_player()
-    
     
     if game_settings.do_draw_game_time:
         # Afficher le temps actuel à l'écran
