@@ -451,14 +451,27 @@ class IntelligentDummy(IntelligentEnemy):
             self.move_around(world)
 
 class KenEnemy(IntelligentEnemy):
-    def __init__(self, x: int, y: int, tile_size: int, scale: float, assets: utils.Assets, texture_location: str, speed: int):
-        super().__init__(x, y, tile_size, scale, assets, texture_location, speed)
+    def __init__(self, x: int, y: int, tile_size: int, scale: float, assets: utils.Assets):
+        """Crée un ennemi Ken
+
+        Args:
+            x (int): position de Ken sur l'axe des abscisses
+            y (int): position de Ken sur l'axe des ordonnées
+            tile_size (int): taille des tuiles
+            scale (float): facteur de redimensionnement
+            assets (utils.Assets): classe qui contient les assets du jeu
+        """
+        super().__init__(x, y, tile_size, scale, assets, ENEMIES_TEXTURES_LOCATION + "ken.png", 2)
     
     def ai(self, world):
-
+        """Méthode qui permet de déplacer Ken vers le joueur
+        
+        Args:
+            world (World): monde dans lequel Ken se déplace
+        """
         if self.can_see_player(world):
             move_right = world.player.rect.x > (self.rect.right + 2 * self.size_factor)
             move_left = world.player.rect.right < (self.rect.x - 2 * self.size_factor)
             self.move(world,move_right,move_left)
         else:
-            self.move(world)
+            self.move_around(world)
