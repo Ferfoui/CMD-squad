@@ -449,3 +449,16 @@ class IntelligentDummy(IntelligentEnemy):
             self.move(world, move_right, move_left)
         else:
             self.move_around(world)
+
+class KenEnemy(IntelligentEnemy):
+    def __init__(self, x: int, y: int, tile_size: int, scale: float, assets: utils.Assets, texture_location: str, speed: int):
+        super().__init__(x, y, tile_size, scale, assets, texture_location, speed)
+    
+    def ai(self, world):
+
+        if self.can_see_player(world):
+            move_right = world.player.rect.x > (self.rect.right + 2 * self.size_factor)
+            move_left = world.player.rect.right < (self.rect.x - 2 * self.size_factor)
+            self.move(world,move_right,move_left)
+        else:
+            self.move(world)
