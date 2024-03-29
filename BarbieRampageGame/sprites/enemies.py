@@ -1,4 +1,4 @@
-import pygame, math
+import pygame, math, random
 
 from constants import *
 import utils
@@ -35,6 +35,8 @@ class Enemy(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
+        
+        self.relative_initial_x = x
         
         # Variable pour la hitbox
         self.hitbox = self.set_hitbox()
@@ -167,6 +169,8 @@ class Enemy(pygame.sprite.Sprite):
         """
         self.rect.x += dx + world.scroll.screen_scroll
         self.rect.y += dy
+        
+        self.relative_initial_x += world.scroll.screen_scroll
     
     def ai(self, world):
         """Méthode qui permet de déplacer l'ennemi de manière autonome
@@ -256,6 +260,12 @@ class IntelligentEnemy(MovingEnemy):
         """
         super().__init__(x, y, tile_size, scale, assets, texture_location, speed)
         self.viewline = ((self.rect.centerx, self.rect.top), (self.rect.centerx, self.rect.top))
+        
+        self.moving_around_direction = 1
+        
+        self.moving_time = pygame.time.get_ticks()
+        
+        self.MOVEMENT_CHANGING_DELAY = 3000
     
     def ai(self, world):
         return super().ai(world)
@@ -283,9 +293,34 @@ class IntelligentEnemy(MovingEnemy):
             return True
         
         return False
+        
+    def move_around(self, world, distance: int = 400):
+        """Méthode qui permet de faire déplacer l'ennemi autour d'un point
+
+        Args:
+            world (World): monde dans lequel l'ennemi se déplace
+            distance (int, optional): distance autour du point. 100 par défaut.
+        """
+        last_moving_around_direction = self.moving_around_direction
     
-    def draw(self, screen: pygame.Surface):
-        super().draw(screen)
+        scaled_distance = distance * self.size_factor
+        
+        # Vérifie si l'ennemi est à la bonne distance
+        if self.rect.x < (self.relative_initial_x - scaled_distance):
+            self.moving_around_direction = 1
+        elif self.rect.x > (self.relative_initial_x + scaled_distance):
+            self.moving_around_direction = -1
+
+        # Vérifie si l'ennemi doit changer de direction de manière aléatoire
+        elif pygame.time.get_ticks() - self.moving_time > self.MOVEMENT_CHANGING_DELAY:
+            random_list = [self.moving_around_direction] * 30 + [-self.moving_around_direction]
+            self.moving_around_direction = random.choice(random_list)
+        
+        # Vérifie si la direction de l'ennemi a changé
+        if last_moving_around_direction != self.moving_around_direction:
+            self.moving_time = pygame.time.get_ticks()
+        
+        self.move(world, self.moving_around_direction == 1, self.moving_around_direction == -1)
     
     def move(self, world, move_right: bool = False, move_left: bool = False):
         """Méthode qui permet de déplacer l'ennemi
@@ -413,4 +448,4 @@ class IntelligentDummy(IntelligentEnemy):
             move_left = world.player.rect.right < (self.rect.x - 3 * self.size_factor)
             self.move(world, move_right, move_left)
         else:
-            self.move(world)
+            self.move_around(world)
