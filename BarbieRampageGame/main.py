@@ -168,6 +168,8 @@ while run:
             if event.key == pygame.K_TAB:
                 pass
                 #ar_weapon.shoot(1,bullet_group)
+            if event.key == pygame.K_i:
+                
 
     # Mise à jour de l'écran à chaque tour de boucle
     pygame.display.update()
