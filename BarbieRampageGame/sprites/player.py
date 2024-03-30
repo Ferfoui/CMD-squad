@@ -61,6 +61,9 @@ class Player(Entity):
         rect = self.image.get_rect()
         rect.center = (x, y)
         
+        # Crée la hitbox exacte du joueur
+        self.mask = pygame.mask.from_surface(self.image)
+        
         return rect
 
     def define_entity_hitbox(self, entity_rect: pygame.Rect) -> pygame.Rect:

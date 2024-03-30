@@ -78,12 +78,16 @@ class World():
         Args:
             enemy_group (pygame.sprite.Group): groupe d'ennemis
         """
+        self.player_group = pygame.sprite.Group()
+        
         self.enemy_group = pygame.sprite.Group()
         self.bullet_group = pygame.sprite.Group()
     
     def empty_sprite_groups(self):
         """Vide les groupes de sprites
         """
+        self.player_group.empty()
+        
         self.enemy_group.empty()
         self.bullet_group.empty()
     
@@ -167,9 +171,13 @@ class World():
                     # Si c'est le point de spawn du joueur
                     if tile == PLAYER_AND_ENEMIES_TILE_TYPES[0]:
                         self.player = sprites.Player(x * self.tile_size, y * self.tile_size, self.tile_size, assets)
+                        self.player_group.add(self.player)
                     if tile == PLAYER_AND_ENEMIES_TILE_TYPES[1]:
                         dummy = sprites.IntelligentDummy(x * self.tile_size, y * self.tile_size, self.tile_size, 2, assets, 2)
                         self.enemy_group.add(dummy)
+                    if tile == PLAYER_AND_ENEMIES_TILE_TYPES[2]:
+                        ken = sprites.KenEnemy(x * self.tile_size, y * self.tile_size, self.tile_size, 2, assets)
+                        self.enemy_group.add(ken)
         
         return self.player
     
@@ -208,5 +216,5 @@ class World():
     def update_groups(self):
         """Met à jour les groupes de sprites
         """
-        self.bullet_group.update()
+        self.bullet_group.update(self)
         self.enemy_group.update()

@@ -45,6 +45,9 @@ class Enemy(Entity):
         rect = self.image.get_rect()
         rect.center = (x, y)
         
+        # Crée la hitbox exacte de l'ennemi
+        self.mask = pygame.mask.from_surface(self.image)
+        
         return rect
     
     def get_head_y(self) -> int:

@@ -4,7 +4,7 @@ from constants import *
 
 # Classe pour les balles
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, size_factor: float, scale: float, x: int, y: int, direction: int):
+    def __init__(self, size_factor: float, scale: float, x: int, y: int, direction: int, speed: int = 10, range: int = 400, damage: int = 20):
         """Crée une nouvelle balle
 
         Args:
@@ -13,7 +13,9 @@ class Bullet(pygame.sprite.Sprite):
             x (int): position sur l'axe horizontal
             y (int): postion sur l'axe vertical
             direction (int): direction dans laquelle la balle va, 1 si c'est vers la droite et -1 si c'est vers la gauche
-            bullet_group (pygame.sprite.Group): groupe dans lequel la balle va être ajouté
+            speed (int, optional): vitesse de la balle. 10 par défaut.
+            range (int, optional): distance maximale que la balle peut parcourir. 400 par défaut.
+            damage (int, optional): dégâts infligés par la balle. 20 par défaut.
         """
         super().__init__()
         
@@ -21,6 +23,10 @@ class Bullet(pygame.sprite.Sprite):
         
         self.direction = direction
         self.flip = direction < 0
+        
+        self.speed = speed * self.size_factor
+        self.range = abs(range) * self.size_factor
+        self.damage = damage
         
         self.ANIMATION_TYPES = ["bullet_start", "bullet_end"]
         
@@ -30,6 +36,7 @@ class Bullet(pygame.sprite.Sprite):
         # Valeur du temps pour l'animation de la balle
         self.update_time = pygame.time.get_ticks()
         
+        self.is_stopping = False
         self.continue_move = True
         
         self.relative_initial_x = x
@@ -73,28 +80,117 @@ class Bullet(pygame.sprite.Sprite):
                 animation_dict[animation].append(img)
         return animation_dict
     
-    def move(self):
+    def move(self, world):
         """Fais bouger la balle
-        """
-        #TODO: Faire bouger la balle
-        self.speed = 10
-        self.rect.x += self.speed * self.direction
-    
-    def check_collides(self, world):
-        """Vérifie les collisions entre la balle et le joueur ou un ennemi
-
+        
         Args:
             world (World): monde dans lequel la balle se trouve
         """
-        #TODO: Vérifier les collisions
-        # ici on peut faire une boucle for pour vérifier les collisions avec chaques ennemis
-        # https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.spritecollide
+        dx = 0
+        if self.continue_move and (not self.is_stopping):
+            dx += self.speed * self.direction + world.scroll.screen_scroll
+            dx = self.check_collides(dx, world)
+        
+        self.rect.x += dx
+    
+    def check_collides(self, dx: int, world) -> int:
+        """Vérifie les collisions entre la balle et le joueur ou un ennemi
 
-    def update(self):
-        """Met à jour la balle
+        Args:
+            dx (int): distance de déplacement sur l'axe horizontal
+            world (World): monde dans lequel la balle se trouve
+        
+        Returns:
+            int: distance de déplacement sur l'axe horizontal ajustée en fonction des collisions
         """
-        self.update_animation()
-        self.move()
+        dx = self.check_collides_with_world(dx, world)
+        dx = self.check_collides_with_entities(dx, world)
+        
+        return dx
+    
+    def check_collides_with_world(self, dx: int, world) -> int:
+        """Vérifie les collisions entre la balle et les tuiles du monde
+
+        Args:
+            dx (int): distance de déplacement sur l'axe horizontal
+            world (World): monde dans lequel la balle se trouve
+        
+        Returns:
+            int: distance de déplacement sur l'axe horizontal ajustée en fonction des collisions avec les tuiles
+        """
+        for tile in world.obstacle_list:
+            next_x_position = self.rect.x + dx
+            
+            # Vérifie les collisions sur l'axe horizontal
+            if tile.rect.colliderect(next_x_position, self.rect.y, self.rect.width, self.rect.height):
+                self.finish_animation()
+                dx = next_x_position - tile.rect.x
+            
+        return dx
+    
+    def check_collides_with_entities(self, dx: int, world) -> int:
+        """Vérifie les collisions entre la balle et les entités du monde
+
+        Args:
+            world (World): monde dans lequel la balle se trouve
+        
+        Returns:
+            int: distance de déplacement sur l'axe horizontal ajustée en fonction des collisions avec les entités
+        """
+        # Cette méthode vérifie d'abord si la balle touche le rectangle du sprite puis si elle touche son masque pour éviter les faux positifs
+        # On ne vérifie pas directement les masques car cela peut être très coûteux en ressources
+        
+        # Vérifie si la balle touche le rectangle de l'ennemi
+        possibly_collided_enemies_list = pygame.sprite.spritecollide(self, world.enemy_group, False)
+        
+        # Si la balle touche le rectangle ennemi, on vérifie si elle touche le masque de l'ennemi
+        if possibly_collided_enemies_list:
+            possibly_collided_enemies_group = pygame.sprite.Group(possibly_collided_enemies_list)
+            
+            touched_enemies = pygame.sprite.spritecollide(self, possibly_collided_enemies_group, False, pygame.sprite.collide_mask)
+        
+            for enemy in touched_enemies:
+                enemy.health -= self.damage
+                self.finish_animation()
+                dx = 0
+        
+        # Vérifie si la balle touche le rectangle du joueur
+        if pygame.sprite.spritecollide(self, world.player_group, False):
+            # Vérifie si la balle touche le masque du joueur
+            if pygame.sprite.spritecollide(self, world.player_group, False, pygame.sprite.collide_mask):
+                world.player.health -= self.damage
+                self.finish_animation()
+        
+        return dx
+
+    def finish_animation(self):
+        """Met la balle en position end
+        """
+        #self.action = self.ANIMATION_TYPES[1]
+        #self.frame_index = 0
+        #self.image = self.animation[self.action][self.frame_index]
+        #self.is_stopping = True
+        self.continue_move = False
+    
+    def check_disappear(self) -> bool:
+        """Vérifie si la balle doit disparaître
+        
+        Returns:
+            bool: True si la balle doit disparaître, False sinon
+        """
+        return (self.rect.x < self.relative_initial_x - self.range) or (self.rect.x > self.relative_initial_x + self.range)
+
+    def update(self, world):
+        """Met à jour la balle
+        
+        Args:
+            world (World): monde dans lequel la balle se trouve
+        """
+        if self.check_disappear() or (not self.continue_move):
+            self.kill()
+        else:
+            self.update_animation()
+            self.move(world)
     
     def update_animation(self):
         """Met à jour l'animation de la balle en fonction du temps
