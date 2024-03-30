@@ -77,7 +77,7 @@ player = spawn_player()
 
 # Debug
 
-ar_weapon = weapon.Arb4rb13(assets, 128, 400, 500)
+ar_weapon = weapon.Arb4rb13(assets, world.tile_size, 1, 400, 500)
 
 # Variables pour la boucle
 run = True

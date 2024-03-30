@@ -171,8 +171,6 @@ class Player(pygame.sprite.Sprite):
             
             # Application de la gravité
             self.vel_y += GRAVITY * self.size_factor
-            if self.vel_y > 10:
-                self.vel_y = 10
             dy += self.vel_y
             
             # Vérifie les colisions

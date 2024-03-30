@@ -140,8 +140,6 @@ class Enemy(pygame.sprite.Sprite):
             gravity_factor (int, optional): facteur de gravité. 1 par défaut.
         """
         y_velocity += GRAVITY * gravity_factor * self.size_factor
-        if y_velocity > 10:
-            y_velocity = 10
         
         return y_velocity
     

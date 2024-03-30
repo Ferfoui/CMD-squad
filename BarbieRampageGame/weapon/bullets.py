@@ -4,10 +4,11 @@ from constants import *
 
 # Classe pour les balles
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, scale: float, x: int, y: int, direction: int):
+    def __init__(self, size_factor: float, scale: float, x: int, y: int, direction: int):
         """Crée une nouvelle balle
 
         Args:
+            size_factor (float): facteur de redimensionnement de la balle
             scale (float): nombre par lequel la taille de la texture va être multiplié
             x (int): position sur l'axe horizontal
             y (int): postion sur l'axe vertical
@@ -15,6 +16,8 @@ class Bullet(pygame.sprite.Sprite):
             bullet_group (pygame.sprite.Group): groupe dans lequel la balle va être ajouté
         """
         super().__init__()
+        
+        self.size_factor = size_factor
         
         self.direction = direction
         self.flip = direction < 0
@@ -29,7 +32,7 @@ class Bullet(pygame.sprite.Sprite):
         
         self.continue_move = True
         
-        self.initial_x = x
+        self.relative_initial_x = x
     
         # Met la balle en position start
         self.action = self.ANIMATION_TYPES[self.frame_index]
@@ -45,13 +48,13 @@ class Bullet(pygame.sprite.Sprite):
         self.height = self.image.get_height()
         
         
-    def load_animation(self, animation_types: list[str], texture_location: str, scale) -> dict[str, list[pygame.Surface]]:
+    def load_animation(self, animation_types: list[str], texture_location: str, scale: float) -> dict[str, list[pygame.Surface]]:
         """Charge l'animation de la balle
 
         Args:
             animation_types (list[str]): noms des animations
             texture_location (str): position des textures
-            scale (int or float): nombre par lequel la taille de la texture va être multiplié
+            scale (float): nombre par lequel la taille de la texture va être multiplié
 
         Returns:
             dict[str, list[pygame.Surface]]: dictionnaire de listes de frames
@@ -66,7 +69,7 @@ class Bullet(pygame.sprite.Sprite):
                 # Charge l'image dans la mémoire
                 img = pygame.image.load(f"{texture_location}/{animation}/{i:02}.png").convert_alpha()
                 # Converti l'image pour qu'elle soit de la taille voulue
-                img = pygame.transform.scale(img, (int(img.get_width() * scale), int(img.get_height() * scale)))
+                img = pygame.transform.scale(img, (int(img.get_width() * scale * self.size_factor), int(img.get_height() * scale * self.size_factor)))
                 animation_dict[animation].append(img)
         return animation_dict
     
@@ -74,16 +77,14 @@ class Bullet(pygame.sprite.Sprite):
         """Fais bouger la balle
         """
         #TODO: Faire bouger la balle
-        # on peut faire bouger la balle ajoutant une valeur à self.rect.x
         self.speed = 10
         self.rect.x += self.speed * self.direction
     
-    def check_collides(self, world, enemy_group: pygame.sprite.Group):
+    def check_collides(self, world):
         """Vérifie les collisions entre la balle et le joueur ou un ennemi
 
         Args:
             world (World): monde dans lequel la balle se trouve
-            enemy_group (pygame.sprite.Group): groupe des ennemis
         """
         #TODO: Vérifier les collisions
         # ici on peut faire une boucle for pour vérifier les collisions avec chaques ennemis
