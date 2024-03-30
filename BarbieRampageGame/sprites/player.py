@@ -1,11 +1,12 @@
 import pygame, os
 
 from constants import *
+from . import Entity
 import utils
 import interface as gui
 
 # Classe qui permet de créer le joueur
-class Player(pygame.sprite.Sprite):
+class Player(Entity):
     def __init__(self, x: int, y: int, tile_size: int, assets: utils.Assets):
         """Initialise la classe Player
 
@@ -15,38 +16,40 @@ class Player(pygame.sprite.Sprite):
             tile_size (int): taille d'une tuile en pixel
             assets (utils.Assets): classe qui contient les assets du jeu
         """
-        super().__init__()
+        #self.ANIMATION_TYPES = ['Idle', 'Run', 'Jump', 'Death']
+        self.ANIMATION_TYPES = ['Idle', 'Run']
+        super().__init__(x, y, 100, tile_size, assets, speed = 5, scale = 1.5)
         
-        self.size_factor = tile_size * SPRITE_SCALING
-        
-        # Valeurs de départ pour la santé, les kills et les balles
-        self.health = 100
+        # Valeurs de départ pour les kills et les balles
         self.kills = 100
         self.bullets = 30
         
         # Variables pour l'état du joueur
-        self.is_alive = True
-        self.speed = 5 * self.size_factor
-        
-        self.flip = False # Variable qui permet de faire tourner le sprite du joueur quand il bouge dans l'autre sens
-        self.direction = 1 # Direction du joueur (1 s'il est tourné vers la droite et -1 s'il est vers la gauche)
-        self.vel_y = 0 # Vitesse du joueur sur l'axe vertical
-        
-        self.jump = False # Si le joueur saute
-        
-        self.in_air = True # Si le joueur est dans les airs
-        
         self.is_running = False # Si le joueur est en train de courir
 
         # Valeur du temps pour l'animation du joueur
         self.update_time = pygame.time.get_ticks()
         
-        #self.ANIMATION_TYPES = ['Idle', 'Run', 'Jump', 'Death']
-        self.ANIMATION_TYPES = ['Idle', 'Run']
+        # Crée la hitbox exacte du joueur
+        self.mask = pygame.mask.from_surface(self.image)
         
-        scale = 1.5 * self.size_factor
+        self.width = self.image.get_width()
+        self.height = self.image.get_height()
+    
+    def define_entity_rect(self, x: int, y: int, assets: utils.Assets, scale) -> pygame.Rect:
+        """Méthode qui crée le rectangle et qui charge les animations du joueur
+
+        Args:
+            x (int): position en x
+            y (int): position en y
+            assets (utils.asset): classe contenant les assets
+            scale (float, optional): facteur de redimensionnement
+
+        Returns:
+            pygame.Rect: rectangle de l'entité
+        """
         # Dictionnaire dans lequel il y a les frames des différentes animations du joueur
-        self.animation_dict = self.load_animation(assets, self.ANIMATION_TYPES, f"{PLAYER_TEXTURES_LOCATION}default", scale)
+        self.animation_dict = self.load_animation(assets, self.ANIMATION_TYPES, f"{PLAYER_TEXTURES_LOCATION}default", scale * self.size_factor)
         # Index de la frame actuelle du joueur
         self.frame_index = 0
         
@@ -55,22 +58,28 @@ class Player(pygame.sprite.Sprite):
         # Met l'image correspondant à son action
         self.image = self.animation_dict[self.action][self.frame_index]
         # Crée le rectangle du joueur
-        self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
+        rect = self.image.get_rect()
+        rect.center = (x, y)
         
-        # Crée une hitbox approximative du joueur
-        self.hitbox = self.rect.copy()
-        self.hitbox.width = self.rect.width * 1/2
-        self.hitbox.height = self.rect.height * 31/32
-        self.hitbox.centerx = self.rect.centerx
-        self.hitbox.bottom = self.rect.bottom
+        return rect
+
+    def define_entity_hitbox(self, entity_rect: pygame.Rect) -> pygame.Rect:
+        """Méthode qui crée la hitbox de l'entité
+
+        Args:
+            entity_rect (pygame.Rect): rectangle de l'entité
+
+        Returns:
+            pygame.Rect: hitbox de l'entité
+        """
+        hitbox = entity_rect.copy()
+        # Redimensionne la hitbox pour qu'elle colle à la taille du joueur
+        hitbox.width = entity_rect.width * 1/2
+        hitbox.height = entity_rect.height * 31/32
+        hitbox.centerx = entity_rect.centerx
+        hitbox.bottom = entity_rect.bottom
         
-        # Crée la hitbox exacte du joueur
-        self.mask = pygame.mask.from_surface(self.image)
-        
-        self.width = self.image.get_width()
-        self.height = self.image.get_height()
-    
+        return hitbox
 
     def create_health_bar(self, x: int, y: int, assets: utils.Assets):
         """Crée la barre de vie du joueur
@@ -101,7 +110,6 @@ class Player(pygame.sprite.Sprite):
             assets (utils.Assets): classe qui contient les assets du jeu
         """
         self.bullet_counter = gui.BulletCounter(x, y, 64, self.bullets, assets)
-    
     
     def load_animation(self, assets: utils.Assets, animation_types: list[str], texture_location: str, scale) -> dict[str, list[pygame.Surface]]:
         """Méthode qui permet de charger les animations du joueur
@@ -170,7 +178,7 @@ class Player(pygame.sprite.Sprite):
                 self.in_air = True
             
             # Application de la gravité
-            self.vel_y += GRAVITY * self.size_factor
+            self.vel_y = super().apply_gravity(self.vel_y)
             dy += self.vel_y
             
             # Vérifie les colisions
@@ -186,9 +194,9 @@ class Player(pygame.sprite.Sprite):
                 self.vel_y = 0
 
         # Met à jour la position du joueur
-        self.move_player_position(dx, dy, world, settings)
+        self.move_entity_position(dx, dy, world, settings)
     
-    def move_player_position(self, delta_x: int, delta_y: int, world, settings: utils.Settings):
+    def move_entity_position(self, delta_x: int, delta_y: int, world, settings: utils.Settings):
         """Change la position du joueur
 
         Args:
@@ -200,43 +208,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += delta_x
         self.rect.y += delta_y
         
-        #self.hitbox.center = self.rect.center
-        
         self.update_scrolling(world, delta_x, settings)
-    
-    def check_collides(self, dx: int, dy: int, world) -> tuple[int, int]:
-        """Vérifie les collisions du joueur avec les obstacles du monde
-
-        Args:
-            dx (int): distance de déplacement sur l'axe horizontal
-            dy (int): distance de déplacement sur l'axe vertical
-            world (World): monde dans lequel le joueur se déplace
-        
-        Returns:
-            tuple[int, int]: les distances de déplacement ajustées en fonction des collisions
-        """
-        for tile in world.obstacle_list:
-            next_x_position = self.hitbox.x + dx
-            next_y_position = self.hitbox.y + dy + 1
-            
-            # Vérifie les collisions sur l'axe horizontal
-            if tile.rect.colliderect(next_x_position, self.hitbox.y, self.hitbox.width, self.hitbox.height):
-                dx = 0
-            # Vérifie les collisions sur l'axe vertical
-            if tile.rect.colliderect(self.hitbox.x, next_y_position, self.hitbox.width, self.hitbox.height):
-                # Vérifie la hitbox des deux masks en cas de collision entre rectangle
-                # Vérifie si le joueur est en dessous d'une platforme
-                if self.vel_y < 0:
-                    self.vel_y = 0
-                    dy = tile.rect.bottom - self.rect.top
-                # Vérifie si le joueur touche le sol
-                elif self.vel_y >= 0:
-                    self.vel_y = 0
-                    self.in_air = False
-                    self.jump = False
-                    dy = tile.rect.top - self.rect.bottom
-        
-        return dx, dy
     
     def update_scrolling(self, world, dx: int, settings: utils.Settings):
         """Met à jour le scrolling en fonction de la position du joueur par rapport à l'écran
@@ -294,7 +266,6 @@ class Player(pygame.sprite.Sprite):
             #else:
                 self.frame_index = 0
 
-
     def update_action(self, new_action: str):
         """Met à jour l'action que le joueur est en train d'effectuer
 
@@ -308,21 +279,9 @@ class Player(pygame.sprite.Sprite):
             self.frame_index = 0
             self.update_time = pygame.time.get_ticks()
 
-
-    def check_if_alive(self):
-        """Vérifie si le joueur est vivant"""
-        if self.health <= 0:
-            self.health = 0
-            self.speed = 0
-            self.is_alive = False
-
     def update(self):
         """Méthode qui doit être appelée à chaque frame pour mettre à jour les caractéristiques du joueur"""
-        
-        self.check_if_alive()
-        
-        self.hitbox.bottom = self.rect.bottom
-        self.hitbox.centerx = self.rect.centerx
+        super().update()
 
         self.health_bar.hp = self.health
         self.kill_counter.kl = self.kills
