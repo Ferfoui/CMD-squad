@@ -1,5 +1,6 @@
 # Codé par la CMD-squad
 
+
 import pygame, os, sys
 
 from constants import *
@@ -10,6 +11,13 @@ print(f"Bienvenue dans le jeu Barbie Rampage!\nVersion: {GAME_VERSION}\nPar la C
 
 # Initialisation du moteur graphique
 pygame.init()
+
+#Initiallisation du mixer
+pygame.mixer.init()
+
+#Musique du Jeu
+pygame.mixer.music.load(PLAYBACK_MUSIC)
+pygame.mixer.music.play(loops=-1, start=0.0, fade_ms=0)   
 
 # Tous les paramètres que le joueur peut modifier comme les touches, etc.
 game_settings = utils.Settings()
@@ -87,6 +95,8 @@ current_time = pygame.time.get_ticks()
 # Boucle qui va permettre de faire tourner le jeu
 while run:
 
+     
+
     # Fait en sorte que le jeu tourne à un nombre limité de FPS
     clock.tick(FPS)
     
@@ -134,7 +144,6 @@ while run:
             if death_menu.draw(screen, True)['respawn']:
                 player = spawn_player()
     
-    
     if game_settings.do_draw_game_time:
         # Afficher le temps actuel à l'écran
         interface.draw_text(screen, "game time: ", assets.default_font, COLOR_DARK, 5, 5, False)
@@ -166,7 +175,7 @@ while run:
                         # Activer ou désactiver le menu pause
                         pause = not pause
             if event.key == pygame.K_TAB:
-                pass
+                pygame.mixer.Sound.play(assets.weapon_cross_sound)
                 #ar_weapon.shoot(1,bullet_group)
 
     # Mise à jour de l'écran à chaque tour de boucle
