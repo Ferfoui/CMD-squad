@@ -38,6 +38,8 @@ class Entity(pygame.sprite.Sprite, abstract.ABC):
         self.rect = self.define_entity_rect(x, y, assets, scale)
         
         self.hitbox = self.define_entity_hitbox(self.rect)
+        
+        self.display_debug = False
 
     @abstract.abstractmethod
     def define_entity_rect(self, x: int, y: int, assets: utils.asset, scale) -> pygame.Rect:
@@ -76,62 +78,62 @@ class Entity(pygame.sprite.Sprite, abstract.ABC):
         
         return y_velocity
     
-    def check_collides_with_world(self, dx: int, dy: int, world) -> tuple[int, int]:
+    def check_collides_with_world(self, delta_x: int, delta_y: int, world) -> tuple[int, int]:
         """Vérifie les collisions de l'entité avec les obstacles du monde
 
         Args:
-            dx (int): distance de déplacement sur l'axe horizontal
-            dy (int): distance de déplacement sur l'axe vertical
+            delta_x (int): distance de déplacement sur l'axe horizontal
+            delta_y (int): distance de déplacement sur l'axe vertical
             world (World): monde dans lequel l'entité se déplace
         
         Returns:
             tuple[int, int]: les distances de déplacement ajustées en fonction des collisions
         """
         for tile in world.obstacle_list:
-            next_x_position = self.hitbox.x + dx
-            next_y_position = self.hitbox.y + dy + 1
+            next_x_position = self.hitbox.x + delta_x
+            next_y_position = self.hitbox.y + delta_y + 1
             
             # Vérifie les collisions sur l'axe horizontal
             if tile.rect.colliderect(next_x_position, self.hitbox.y, self.hitbox.width, self.hitbox.height):
-                dx = 0
+                delta_x = 0
             # Vérifie les collisions sur l'axe vertical
             if tile.rect.colliderect(self.hitbox.x, next_y_position, self.hitbox.width, self.hitbox.height):
                 # Vérifie si l'entité est en dessous d'une platforme
                 if self.vel_y < 0:
                     self.vel_y = 0
-                    dy = tile.rect.bottom - self.rect.top
+                    delta_y = tile.rect.bottom - self.rect.top
                 # Vérifie si l'entité touche le sol
                 elif self.vel_y >= 0:
                     self.vel_y = 0
                     self.in_air = False
                     self.jump = False
-                    dy = tile.rect.top - self.rect.bottom
+                    delta_y = tile.rect.top - self.rect.bottom
         
-        return dx, dy
+        return delta_x, delta_y
     
-    def check_collides(self, dx: int, dy: int, world) -> tuple[int, int]:
+    def check_collides(self, delta_x: int, delta_y: int, world) -> tuple[int, int]:
         """Vérifie les collisions de l'entité
 
         Args:
-            dx (int): distance de déplacement sur l'axe horizontal
-            dy (int): distance de déplacement sur l'axe vertical
+            delta_x (int): distance de déplacement sur l'axe horizontal
+            delta_y (int): distance de déplacement sur l'axe vertical
             world (World): monde dans lequel l'entité se déplace
         
         Returns:
             tuple[int, int]: les distances de déplacement ajustées en fonction des collisions
         """
-        dx, dy = self.check_collides_with_world(dx, dy, world)
-        return dx, dy
+        delta_x, delta_y = self.check_collides_with_world(delta_x, delta_y, world)
+        return delta_x, delta_y
     
-    def move_entity_position(self, dx: int, dy: int, world):
+    def move_entity_position(self, delta_x: int, delta_y: int, world):
         """Méthode qui permet de déplacer la position de l'entité
 
         Args:
-            dx (int): distance de déplacement sur l'axe horizontal
-            dy (int): distance de déplacement sur l'axe vertical
+            delta_x (int): distance de déplacement sur l'axe horizontal
+            delta_y (int): distance de déplacement sur l'axe vertical
         """
-        self.rect.x += dx + world.scroll.screen_scroll
-        self.rect.y += dy
+        self.rect.x += delta_x + world.scroll.screen_scroll
+        self.rect.y += delta_y
     
     def check_if_alive(self) -> bool:
         """Vérifie si l'entité est vivante"""

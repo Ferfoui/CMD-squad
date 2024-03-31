@@ -71,6 +71,8 @@ class World():
         self.scroll = None
         
         self.load_sprite_groups()
+        
+        self.display_debug = False
     
     def load_sprite_groups(self):
         """Charge les groupes de sprites
@@ -211,10 +213,28 @@ class World():
             screen (Surface): fenêtre sur laquelle le premier plan doit être affiché
         """
         self.bullet_group.draw(screen)
-        self.enemy_group.draw(screen)
+        
+        if self.display_debug:
+            for enemy in self.enemy_group:
+                enemy.draw(screen)
+        else:
+            self.enemy_group.draw(screen)
 
     def update_groups(self):
         """Met à jour les groupes de sprites
         """
         self.bullet_group.update(self)
         self.enemy_group.update()
+        
+    def set_debug_display(self, display: bool):
+        """Méthode qui permet d'afficher les hitboxes et les lignes de vision des ennemis
+
+        Args:
+            display (bool): affiche les collisions si True
+        """
+        self.display_debug = display
+        
+        for enemy in self.enemy_group:
+            enemy.display_debug = display
+        
+        self.player.display_debug = display

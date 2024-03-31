@@ -166,6 +166,10 @@ class Enemy(Entity):
             screen (Surface): fenêtre sur laquelle l'ennemi doit être affiché
         """
         screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
+        
+        if self.display_debug:
+            pygame.draw.rect(screen, (255, 0, 0), self.hitbox, 1)
+            pygame.draw.rect(screen, (0, 0, 255), self.rect, 1)
 
 class MovingEnemy(Enemy):
     def __init__(self, x: int, y: int, tile_size: int, assets: utils.Assets, texture_location: str, max_health = 100, speed: int = 1, scale: float = 1):
@@ -234,7 +238,7 @@ class IntelligentEnemy(MovingEnemy):
             scale (float, optional): facteur de redimensionnement. 1 par défaut.
         """
         super().__init__(x, y, tile_size, assets, texture_location, max_health, speed, scale)
-        self.viewline = ((self.rect.centerx, self.rect.top), (self.rect.centerx, self.rect.top))
+        self.viewline = None
         
         self.moving_around_direction = 1
         
@@ -254,18 +258,20 @@ class IntelligentEnemy(MovingEnemy):
         Returns:
             bool: si l'ennemi peut voir le joueur
         """
-        line = ((self.rect.centerx, self.get_head_y()), (world.player.rect.centerx, world.player.get_head_y()))
-        
         sight_distance = 500 * self.size_factor
         dx = self.rect.x - world.player.rect.x
         dy = self.rect.y - world.player.rect.y
         distance = math.sqrt(dx**2 + dy**2)
         
         if distance <= sight_distance:
+            self.viewline = ((self.rect.centerx, self.get_head_y()), (world.player.rect.centerx, world.player.get_head_y()))
+            
             for tile in world.obstacle_list:
-                if tile.rect.clipline(line[0], line[1]):
+                if tile.rect.clipline(self.viewline[0], self.viewline[1]):
                     return False
             return True
+        
+        self.viewline = None
         
         return False
         
@@ -384,6 +390,12 @@ class IntelligentEnemy(MovingEnemy):
                 break
         
         return tile_collide
+    
+    def draw(self, screen: pygame.Surface):
+        super().draw(screen)
+        
+        if self.display_debug and self.viewline:
+            pygame.draw.line(screen, (255, 0, 0), self.viewline[0], self.viewline[1])
 
 class Dummy(Enemy):
     def __init__(self, x: int, y: int, tile_size: int, scale: float, assets: utils.Assets):

@@ -53,6 +53,7 @@ def spawn_player():
     death_menu.reset_animation(game_settings.screen_width)
     world.init_data("level0_data.json", assets, game_settings)
     player = world.process_data(assets)
+    world.set_debug_display(game_settings.do_draw_hitboxes)
     
     # Création des éléments de l'interface
     player.create_health_bar(10, game_settings.screen_width // 18, assets)

@@ -306,8 +306,9 @@ class Player(Entity):
         screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
         self.weapon_holder.draw(screen)
         
-        #pygame.draw.rect(screen, COLOR_ORANGE, self.rect, 2)
-        #pygame.draw.rect(screen, COLOR_RED, self.hitbox, 2)
+        if self.display_debug:
+            pygame.draw.rect(screen, COLOR_ORANGE, self.rect, 2)
+            pygame.draw.rect(screen, COLOR_RED, self.hitbox, 2)
 
 class WeaponHolder():
     def __init__(self):
