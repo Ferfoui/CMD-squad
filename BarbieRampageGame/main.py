@@ -80,6 +80,8 @@ player = spawn_player()
 
 ar_weapon = weapon.Arb4rb13(assets, world.tile_size, 1, 400, 500)
 
+player.weapon_holder.set_weapon(ar_weapon, (150, 550))
+
 # Variables pour la boucle
 run = True
 game_loading = True
@@ -171,7 +173,7 @@ while run:
                         # Activer ou désactiver le menu pause
                         pause = not pause
             if event.key == pygame.K_TAB:
-                ar_weapon.shoot(1, world.bullet_group)
+                player.weapon_holder.shoot(world.bullet_group, 1)
 
     # Mise à jour de l'écran à chaque tour de boucle
     pygame.display.update()

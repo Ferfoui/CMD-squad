@@ -326,10 +326,10 @@ class WeaponHolder():
             weapon (weapon.Weapon): arme à équiper
             coordinates (tuple[int, int]): coordonnées de l'arme
         """
-        self.x = coordinates[0]
-        self.y = coordinates[1]
-        
         self.weapon = weapon
+        
+        self.weapon.rect.x = coordinates[0]
+        self.weapon.rect.y = coordinates[1]
     
     def move(self, delta_x: int, delta_y: int, direction: int):
         """Fait bouger l'arme que le joueur a équipé
@@ -345,7 +345,7 @@ class WeaponHolder():
             self.weapon.rect.x += delta_x
             self.weapon.rect.y += delta_y
             
-            self.weapon.flip = self.direction != 1
+            self.weapon.flip = self.direction < 0
     
     def shoot(self, bullet_group: pygame.sprite.Group, bullet_count: int) -> int:
         """Fait tirer l'arme que le joueur a équipé

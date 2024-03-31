@@ -212,13 +212,11 @@ class World():
         Args:
             screen (Surface): fenêtre sur laquelle le premier plan doit être affiché
         """
-        self.bullet_group.draw(screen)
+        for bullet in self.bullet_group:
+            bullet.draw(screen)
         
-        if self.display_debug:
-            for enemy in self.enemy_group:
-                enemy.draw(screen)
-        else:
-            self.enemy_group.draw(screen)
+        for enemy in self.enemy_group:
+            enemy.draw(screen)
 
     def update_groups(self):
         """Met à jour les groupes de sprites

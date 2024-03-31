@@ -10,7 +10,7 @@ import utils
 # La classe qui crée les armes
 class Weapon(abstract.ABC):
     #TODO: Rendre l'arme obtensible, faire fonctionner les balles, faire en sorte que les armes fassent des dégâts
-    def __init__(self, weapon_name: str, texture_path: str, assets: utils.Assets, tile_size: int, scale: float, x: int, y: int):
+    def __init__(self, weapon_name: str, texture_path: str, assets: utils.Assets, tile_size: int, scale: float, x: int = 0, y: int = 0):
         """Créé une nouvelle arme
 
         Args:
@@ -30,7 +30,7 @@ class Weapon(abstract.ABC):
         self.flip = False
         self.weapon_texture = self.init_texture(weapon_name, texture_path, assets, scale)
         self.rect = self.weapon_texture.get_rect()
-        self.rect.center = (x, y)
+        #self.rect.center = (x, y)
         
         self.shoot_position_right, self.shoot_position_left = self.get_shoot_coordinates()
     
@@ -87,7 +87,7 @@ class Weapon(abstract.ABC):
         
 
 class Arb4rb13(Weapon):
-    def __init__(self, assets: utils.Assets, tile_size: int, scale: float, x: int, y: int):
+    def __init__(self, assets: utils.Assets, tile_size: int, scale: float, x: int = 0, y: int = 0):
         """Crée une nouvelle arme de type AR-BARB13
 
         Args:
