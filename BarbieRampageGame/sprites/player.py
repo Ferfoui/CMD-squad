@@ -2,7 +2,7 @@ import pygame, os
 
 from constants import *
 from . import Entity
-import utils
+import utils, weapon
 import interface as gui
 
 # Classe qui permet de créer le joueur
@@ -23,6 +23,9 @@ class Player(Entity):
         # Valeurs de départ pour les kills et les balles
         self.kills = 100
         self.bullets = 30
+        
+        # Classe contenant l'arme du joueur
+        self.weapon_holder = WeaponHolder()
         
         # Variables pour l'état du joueur
         self.is_running = False # Si le joueur est en train de courir
@@ -212,6 +215,8 @@ class Player(Entity):
         self.rect.y += delta_y
         
         self.update_scrolling(world, delta_x, settings)
+        
+        self.weapon_holder.move(delta_x + world.scroll.screen_scroll, delta_y, self.direction)
     
     def update_scrolling(self, world, dx: int, settings: utils.Settings):
         """Met à jour le scrolling en fonction de la position du joueur par rapport à l'écran
@@ -299,5 +304,72 @@ class Player(Entity):
             screen (Surface): fenêtre sur laquelle le joueur doit être affiché
         """
         screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
+        self.weapon_holder.draw(screen)
+        
         #pygame.draw.rect(screen, COLOR_ORANGE, self.rect, 2)
         #pygame.draw.rect(screen, COLOR_RED, self.hitbox, 2)
+
+class WeaponHolder():
+    def __init__(self):
+        """Classe qui permet de gérer l'arme que le joueur a équipé
+        """
+
+        self.weapon = None
+        
+        self.direction = 1
+    
+    def set_weapon(self, weapon: weapon.Weapon, coordinates: tuple[int, int]):
+        """Équipe une nouvelle arme au joueur
+
+        Args:
+            weapon (weapon.Weapon): arme à équiper
+            coordinates (tuple[int, int]): coordonnées de l'arme
+        """
+        self.x = coordinates[0]
+        self.y = coordinates[1]
+        
+        self.weapon = weapon
+    
+    def move(self, delta_x: int, delta_y: int, direction: int):
+        """Fait bouger l'arme que le joueur a équipé
+
+        Args:
+            delta_x (int): distance de laquelle l'arme doit être déplacée sur l'axe horizontal
+            delta_y (int): distance de laquelle l'arme doit être déplacée sur l'axe vertical
+            direction (int): direction dans laquelle le joueur regarde, 1 si c'est vers la droite et -1 si c'est vers la gauche
+        """
+        self.direction = direction
+        
+        if self.weapon != None:
+            self.weapon.rect.x += delta_x
+            self.weapon.rect.y += delta_y
+            
+            self.weapon.flip = self.direction != 1
+    
+    def shoot(self, bullet_group: pygame.sprite.Group, bullet_count: int) -> int:
+        """Fait tirer l'arme que le joueur a équipé
+
+        Args:
+            bullet_group (pygame.sprite.Group): groupe de sprites dans lequel les balles vont être ajoutées
+            bullet_count (int): nombre de balles que le joueur a
+
+        Returns:
+            int: nouveau nombre de balles après le tir
+        """
+        if self.weapon != None and bullet_count > 0:
+            bullets_consuming = self.weapon.shoot(self.direction, bullet_group)
+            bullet_count -= bullets_consuming
+        
+        if bullet_count < 0:
+            bullet_count = 0
+        
+        return bullet_count
+    
+    def draw(self, screen: pygame.Surface):
+        """Affiche l'arme que le joueur a équipé
+
+        Args:
+            screen (pygame.Surface): écran sur lequel l'arme doit être affichée
+        """
+        if self.weapon != None:
+            self.weapon.draw(screen)

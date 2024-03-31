@@ -24,6 +24,8 @@ class Weapon(abstract.ABC):
         """
         self.size_factor = tile_size * SPRITE_SCALING
         
+        self.bullets_consuming = 1
+        
         self.is_grab = False
         self.flip = False
         self.weapon_texture = self.init_texture(weapon_name, texture_path, assets, scale)
@@ -34,7 +36,7 @@ class Weapon(abstract.ABC):
     
     @abstract.abstractmethod
     def get_shoot_coordinates(self) -> tuple[tuple[int, int], tuple[int, int]]:
-        """Récupère les coordonnées du canon de l'arme, cette méthode doit être implémentée dans les classes filles de Weapon
+        """Récupère les coordonnées relatives du canon de l'arme, cette méthode doit être implémentée dans les classes filles de Weapon
 
         Returns:
             tuple[int, int]: coordonnées du canon de l'arme quand il est tourné vers la droite
@@ -64,17 +66,24 @@ class Weapon(abstract.ABC):
         """
         screen.blit(pygame.transform.flip(self.weapon_texture, self.flip, False), self.rect) 
     
-    def shoot(self, direction: int, bullet_group: pygame.sprite.Group):
+    def shoot(self, direction: int, bullet_group: pygame.sprite.Group) -> int:
         """Tire une munition
 
         Args:
             direction (int): direction dans laquelle la balle va, 1 si c'est vers la droite et -1 si c'est vers la gauche
             bullet_group (pygame.sprite.Group): groupe dans lequel la balle va être ajoutée
-        """
-        shoot_position = self.shoot_position_right if direction == 1 else self.shoot_position_left
         
-        bullet = Bullet(self.size_factor, 1, shoot_position[0], shoot_position[1], direction)
+        Returns:
+            int: nombre de munitions consommées
+        """
+        relative_shoot_position = self.shoot_position_right if direction == 1 else self.shoot_position_left
+        
+        absolute_shoot_position = (self.rect.x + relative_shoot_position[0], self.rect.y + relative_shoot_position[1])
+        
+        bullet = Bullet(self.size_factor, 1, absolute_shoot_position[0], absolute_shoot_position[1], direction)
         bullet_group.add(bullet)
+        
+        return self.bullets_consuming
         
 
 class Arb4rb13(Weapon):
@@ -91,7 +100,7 @@ class Arb4rb13(Weapon):
         super().__init__("AR-B4RB13", WEAPONS_TEXTURES_LOCATION + "AR_B4RB13.png", assets, tile_size, scale, x, y)
     
     def get_shoot_coordinates(self) -> tuple[tuple[int, int], tuple[int, int]]:
-        """Récupère les coordonnées du canon de l'arme
+        """Récupère les coordonnées relatives du canon de l'arme
 
         Returns:
             tuple[int, int]: coordonnées du canon de l'arme quand il est tourné vers la droite
@@ -99,7 +108,7 @@ class Arb4rb13(Weapon):
         """
         position_factor = 0.343
         
-        right_shoot = self.rect.right, int(self.rect.y + self.rect.height * position_factor)
-        left_shoot = self.rect.x, int(self.rect.y + self.rect.height * position_factor)
+        right_shoot = self.rect.width, int(self.rect.height * position_factor)
+        left_shoot = 0, int(self.rect.height * position_factor)
         
         return right_shoot, left_shoot
