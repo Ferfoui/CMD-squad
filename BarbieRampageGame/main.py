@@ -78,9 +78,10 @@ player = spawn_player()
 
 # Debug
 
-ar_weapon = weapon.Arb4rb13(assets, world.tile_size, 1, 400, 500)
+ar_weapon = weapon.Arb4rb13(assets, world.tile_size, 1)
 
-player.weapon_holder.set_weapon(ar_weapon, (150, 550))
+right_coordinates, left_coordinates = player.get_holding_weapon_coordinates()
+player.weapon_holder.set_weapon(ar_weapon, right_coordinates)
 
 # Variables pour la boucle
 run = True
@@ -105,8 +106,6 @@ while run:
         world.draw(screen)
         player.draw(screen)
         world.draw_sprite_groups(screen)
-        
-        ar_weapon.draw(screen)
         
         # Met à jour le joueur
         player.update()

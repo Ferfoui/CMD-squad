@@ -9,7 +9,7 @@ import utils
 
 # La classe qui crée les armes
 class Weapon(abstract.ABC):
-    #TODO: Rendre l'arme obtensible, faire fonctionner les balles, faire en sorte que les armes fassent des dégâts
+    #TODO: Rendre l'arme obtensible
     def __init__(self, weapon_name: str, texture_path: str, assets: utils.Assets, tile_size: int, scale: float, x: int = 0, y: int = 0):
         """Créé une nouvelle arme
 
@@ -33,6 +33,8 @@ class Weapon(abstract.ABC):
         #self.rect.center = (x, y)
         
         self.shoot_position_right, self.shoot_position_left = self.get_shoot_coordinates()
+        
+        self.handle_position_right, self.handle_position_left = self.get_handle_position()
     
     @abstract.abstractmethod
     def get_shoot_coordinates(self) -> tuple[tuple[int, int], tuple[int, int]]:
@@ -43,6 +45,16 @@ class Weapon(abstract.ABC):
             tuple[int, int]: coordonnées du canon de l'arme quand il est tourné vers la gauche
         """
         return (self.rect.x, self.rect.y), (self.rect.right, self.rect.y)
+    
+    @abstract.abstractmethod
+    def get_handle_position(self) -> tuple[tuple[int, int], tuple[int, int]]:
+        """Récupère les coordonnées relatives de la poignée de l'arme, cette méthode doit être implémentée dans les classes filles de Weapon
+
+        Returns:
+            tuple[int, int]: coordonnées de la poignée de l'arme quand elle est tournée vers la droite
+            tuple[int, int]: coordonnées de la poignée de l'arme quand elle est tournée vers la gauche
+        """
+        return self.rect.center, self.rect.center
     
     def init_texture(self, name: str, texture_path: str, assets: utils.Assets, scale: float) -> pygame.Surface:
         """Initialise la texture de l'arme
@@ -57,6 +69,19 @@ class Weapon(abstract.ABC):
             pygame.Surface: image de l'arme
         """
         return assets.get_scaled_image(name, texture_path, scale * self.size_factor)
+
+    def place_weapon(self, direction: int, x: int, y: int = None):
+        """Place l'arme à une position donnée en prenant en compte la position de la poignée
+
+        Args:
+            direction (int): direction dans laquelle l'arme est tournée, 1 si c'est vers la droite et -1 si c'est vers la gauche
+            x (int): position sur l'axe horizontal de l'endroit où la poignée de l'arme doit être
+            y (int): position sur l'axe vertical de l'endroit où la poignée de l'arme doit être. None par défaut
+        """
+        self.rect.x = x - self.handle_position_right[0] if direction == 1 else x - self.handle_position_left[0]
+        
+        if y is not None:
+            self.rect.y = y - self.handle_position_right[1] if direction == 1 else y - self.handle_position_left[1]
 
     def draw(self, screen: pygame.Surface):
         """Affiche l'arme sur l'écran
@@ -112,3 +137,17 @@ class Arb4rb13(Weapon):
         left_shoot = 0, int(self.rect.height * position_factor)
         
         return right_shoot, left_shoot
+    
+    def get_handle_position(self) -> tuple[tuple[int, int], tuple[int, int]]:
+        """Récupère les coordonnées relatives de la poignée de l'arme
+
+        Returns:
+            tuple[int, int]: coordonnées de la poignée de l'arme quand elle est tournée vers la droite
+            tuple[int, int]: coordonnées de la poignée de l'arme quand elle est tournée vers la gauche
+        """
+        position_factor = 0.8
+        
+        right_handle = self.rect.width * 0.2, int(self.rect.height * position_factor)
+        left_handle = self.rect.width * 0.8, int(self.rect.height * position_factor)
+        
+        return right_handle, left_handle

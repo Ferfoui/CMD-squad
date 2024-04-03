@@ -146,6 +146,25 @@ class Player(Entity):
     def get_head_y(self) -> int:
         """Renvoie la position en ordonnées de la tête du joueur"""
         return self.rect.top + self.rect.height // 6
+    
+    def get_holding_weapon_coordinates(self) -> tuple[tuple[int, int], tuple[int, int]]:
+        """Renvoie les coordonnées où le joueur doit tenir son arme
+        
+        Returns:
+            tuple[int, int]: coordonnées où le joueur doit tenir son arme quand il l'a tient à droite
+            tuple[int, int]: coordonnées où le joueur doit tenir son arme quand il l'a tient à gauche
+        """
+        
+        x_factor = 5/10
+        y_factor = 2/20
+        
+        x_right = int(self.rect.centerx + (self.rect.width / 2) * x_factor)
+        
+        x_left = int(self.rect.centerx - (self.rect.width / 2) * x_factor)
+        
+        y = int(self.rect.centery - (self.rect.height / 2) * y_factor)
+        
+        return (x_right, y), (x_left, y)
 
     def move(self, world, settings: utils.Settings):
         """Méthode qui permet de mettre à jour la position du joueur
@@ -216,7 +235,14 @@ class Player(Entity):
         
         self.update_scrolling(world, delta_x, settings)
         
-        self.weapon_holder.move(delta_x + world.scroll.screen_scroll, delta_y, self.direction)
+        right_coordinates, left_coordinates = self.get_holding_weapon_coordinates()
+        
+        if self.direction > 0:
+            holding_coordinates = right_coordinates
+        else:
+            holding_coordinates = left_coordinates
+        
+        self.weapon_holder.move(holding_coordinates, self.direction)
     
     def update_scrolling(self, world, dx: int, settings: utils.Settings):
         """Met à jour le scrolling en fonction de la position du joueur par rapport à l'écran
@@ -309,6 +335,10 @@ class Player(Entity):
         if self.display_debug:
             pygame.draw.rect(screen, COLOR_ORANGE, self.rect, 2)
             pygame.draw.rect(screen, COLOR_RED, self.hitbox, 2)
+    
+    def kill(self) -> None:
+        self.weapon_holder.kill()
+        super().kill()
 
 class WeaponHolder():
     def __init__(self):
@@ -319,33 +349,45 @@ class WeaponHolder():
         
         self.direction = 1
     
-    def set_weapon(self, weapon: weapon.Weapon, coordinates: tuple[int, int]):
+    def set_weapon(self, weapon: weapon.Weapon, right_coordinates: tuple[int, int]):
         """Équipe une nouvelle arme au joueur
 
         Args:
             weapon (weapon.Weapon): arme à équiper
-            coordinates (tuple[int, int]): coordonnées de l'arme
         """
         self.weapon = weapon
         
-        self.weapon.rect.x = coordinates[0]
-        self.weapon.rect.y = coordinates[1]
+        self.weapon.place_weapon(1, right_coordinates[0], right_coordinates[1])
     
-    def move(self, delta_x: int, delta_y: int, direction: int):
+    def move(self, holding_coordinates: tuple[int, int], direction: int):
         """Fait bouger l'arme que le joueur a équipé
 
         Args:
-            delta_x (int): distance de laquelle l'arme doit être déplacée sur l'axe horizontal
-            delta_y (int): distance de laquelle l'arme doit être déplacée sur l'axe vertical
+            holding_coordinates (tuple[int, int]): coordonnées où le joueur doit tenir son arme
             direction (int): direction dans laquelle le joueur regarde, 1 si c'est vers la droite et -1 si c'est vers la gauche
         """
-        self.direction = direction
-        
         if self.weapon != None:
-            self.weapon.rect.x += delta_x
-            self.weapon.rect.y += delta_y
             
-            self.weapon.flip = self.direction < 0
+            self.replace_weapon(direction, holding_coordinates)
+    
+    def replace_weapon(self, direction: int, holding_coordinates: tuple[int, int]):
+        """Replace l'arme que le joueur a équipé
+
+        Args:
+            direction (int): direction dans laquelle le joueur regarde, 1 si c'est vers la droite et -1 si c'est vers la gauche
+            holding_coordinates (tuple[int, int]): coordonnées où le joueur doit tenir son arme
+        """
+        
+        if self.direction != direction:
+            self.direction = direction
+          
+            
+        # Change les coordonnées de l'arme pour qu'elle reste à la même position par rapport au joueur
+        # Par exemple si le joueur change de sens, l'arme doit toujours rester devant lui
+        
+        self.weapon.place_weapon(direction, holding_coordinates[0], holding_coordinates[1])
+            
+        self.weapon.flip = self.direction < 0
     
     def shoot(self, bullet_group: pygame.sprite.Group, bullet_count: int) -> int:
         """Fait tirer l'arme que le joueur a équipé
@@ -374,3 +416,7 @@ class WeaponHolder():
         """
         if self.weapon != None:
             self.weapon.draw(screen)
+    
+    def kill(self):
+        """Enlève l'arme que le joueur a équipé"""
+        self.weapon = None
