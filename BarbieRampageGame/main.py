@@ -68,7 +68,12 @@ def spawn_player():
 start_menu = menus.StartMenu(assets, game_settings)
 death_menu = menus.DeathMenu(assets, game_settings)
 pause_menu = menus.PauseMenu(assets, game_settings)
+inventory_menu = menus.InventoryMenu(assets, game_settings)
 settings_menu = menus.SettingsMenu(assets, game_settings)
+skilltree_menu = menus.SkillMenu(assets, game_settings)
+weapon_menu = menus.WeaponMenu(assets, game_settings)
+outfit_menu = menus.OutfitMenu(assets, game_settings)
+trophy_menu = menus.TrophyMenu(assets, game_settings)
 
 # Initialisation du monde et du joueur
 world = World()
@@ -82,6 +87,9 @@ run = True
 game_loading = True
 pause = False
 settings_choice = False
+inventory_choice = False
+inventory = False
+
 current_time = pygame.time.get_ticks()
 
 # Boucle qui va permettre de faire tourner le jeu
@@ -110,6 +118,20 @@ while run:
         player.kill_counter.draw(screen)
         player.bullet_counter.draw(screen)
         
+        # Gestion de certains menus
+        if inventory :
+            if settings_choice:
+                inventory_buttons = _menu.draw(screen)
+                inventory_choice = not inventory_buttons['back']
+            else:
+                # Gestion du menu pause
+                menu_buttons = inventory_menu.draw(screen)
+                if menu_buttons['quit'] or settings_menu.do_restart:
+                    run = False
+                elif menu_buttons['inventory']:
+                    settings_choice = True
+                elif menu_buttons['back']:
+                    pause = False 
         if pause:
             if settings_choice:
                 settings_buttons = settings_menu.draw(screen)
@@ -169,7 +191,8 @@ while run:
                 pass
                 #ar_weapon.shoot(1,bullet_group)
             if event.key == pygame.K_i:
-                pass
+                if (not game_loading) and player.is_alive:
+                    pass
 
     # Mise à jour de l'écran à chaque tour de boucle
     pygame.display.update()
