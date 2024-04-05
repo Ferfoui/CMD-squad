@@ -462,3 +462,25 @@ class KenEnemy(IntelligentEnemy):
             self.move(world,move_right,move_left)
         else:
             self.move_around(world)
+
+    def attackRect(self):
+        """Méthode qui permet de définir la zone d'attaque de Ken
+        """
+        width = int(self.rect.width * 0.8)
+        height = int(self.rect.height * 0.23)
+        
+        if not self.flip:
+            x = self.rect.right
+        else:
+            x = self.rect.left - width
+        
+        y = self.rect.y + self.rect.height * 0.4
+        
+        attack_rect = pygame.Rect(x, y, width, height)
+        
+        return attack_rect
+    
+    def draw(self, screen: pygame.Surface):
+        super().draw(screen)
+        
+        #pygame.draw.rect(screen, COLOR_ORANGE, self.attackRect(), 2)
