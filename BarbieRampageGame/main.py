@@ -108,8 +108,6 @@ while run:
         player.draw(screen)
         world.draw_sprite_groups(screen)
         
-        screen.set_at(player.get_holding_weapon_coordinates()[0], (0, 255, 0))
-        
         # Met à jour le joueur
         player.update()
         world.update_groups()
