@@ -307,7 +307,7 @@ class InventoryMenu(gui.Menu):
         Args:
             settings (Settings): classe qui contient les paramètres du jeu
         """
-        self.add_text_button("weapon_menu", "Armes", assets.default_font_bigger, COLOR_HOT_PINK, settings.screen_width//1.5, settings.screen_height * 0.1, 1, True)
+        self.add_button("Arbre des talents",f"{TEXTURES_ROOT}gui/talented_tree.png", assets.default_font_bigger, COLOR_HOT_PINK, settings.screen_width//1.5, settings.screen_height * 0.1, 1, True)
     
     def draw(self, screen: pygame.Surface) -> dict[str, bool]:
         """Affiche les images et les boutons à l'écran et renvoie les noms des boutons qui ont été cliqués
@@ -335,5 +335,6 @@ class InventoryMenu(gui.Menu):
             pygame.draw.rect(screen, COLOR_HOT_PINK, border_rect, 4, border_radius= 6)
         
         return clicked_buttons
+
 
    
