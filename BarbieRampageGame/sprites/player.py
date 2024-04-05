@@ -155,7 +155,7 @@ class Player(Entity):
             tuple[int, int]: coordonnées où le joueur doit tenir son arme quand il l'a tient à gauche
         """
         
-        x_factor = 5/10
+        x_factor = 4/10
         y_factor = 2/20
         
         x_right = int(self.rect.centerx + (self.rect.width / 2) * x_factor)
