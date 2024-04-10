@@ -274,6 +274,19 @@ class IntelligentEnemy(MovingEnemy):
         self.viewline = None
         
         return False
+    
+    def can_touch_player(self, world, attack_rect) -> bool:
+        """Méthode qui permet de vérifier si l'ennemi peut toucher le joueur
+
+        Args:
+            world (World): monde dans lequel l'ennemi se déplace
+            attack_rect (pygame.Rect): zone d'attaque de l'ennemi
+
+        Returns:
+            bool: si l'ennemi peut toucher le joueur
+        """
+        return attack_rect.colliderect(world.player.rect)
+        
         
     def move_around(self, world, distance: int = 400):
         """Méthode qui permet de faire déplacer l'ennemi autour d'un point
@@ -460,10 +473,23 @@ class KenEnemy(IntelligentEnemy):
             move_right = world.player.rect.x > (self.rect.right + 2 * self.size_factor)
             move_left = world.player.rect.right < (self.rect.x - 2 * self.size_factor)
             self.move(world,move_right,move_left)
+            
+            self.attack(world)
         else:
             self.move_around(world)
+        
+    def attack(self, world):
+        """Méthode qui permet à Ken d'attaquer le joueur
+        
+        Args:
+            world (World): monde dans lequel Ken se déplace
+        """
+        if self.can_see_player(world):
+            attack_rect = self.attack_rect()
+            if attack_rect.colliderect(world.player.rect):
+                world.player.health -= 10
 
-    def attackRect(self):
+    def attack_rect(self):
         """Méthode qui permet de définir la zone d'attaque de Ken
         """
         width = int(self.rect.width * 0.8)
@@ -483,4 +509,4 @@ class KenEnemy(IntelligentEnemy):
     def draw(self, screen: pygame.Surface):
         super().draw(screen)
         
-        #pygame.draw.rect(screen, COLOR_ORANGE, self.attackRect(), 2)
+        pygame.draw.rect(screen, COLOR_ORANGE, self.attack_rect(), 2)
