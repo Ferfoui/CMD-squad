@@ -301,6 +301,7 @@ class DeathMenu(gui.Menu):
 #Classe du menu de l'inventaire
 
 class InventoryMenu(gui.Menu):
+    # TODO: Régler les problèmes et faire les autres sous-menus
     def __init__(self, assets: utils.Assets, settings: utils.Settings):
         """Initialise le menu de l'inventaire
 

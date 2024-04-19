@@ -70,10 +70,10 @@ death_menu = menus.DeathMenu(assets, game_settings)
 pause_menu = menus.PauseMenu(assets, game_settings)
 inventory_menu = menus.InventoryMenu(assets, game_settings)
 settings_menu = menus.SettingsMenu(assets, game_settings)
-skilltree_menu = menus.SkillMenu(assets, game_settings)
-weapon_menu = menus.WeaponMenu(assets, game_settings)
-outfit_menu = menus.OutfitMenu(assets, game_settings)
-trophy_menu = menus.TrophyMenu(assets, game_settings)
+#skilltree_menu = menus.SkillMenu(assets, game_settings)
+#weapon_menu = menus.WeaponMenu(assets, game_settings)
+#outfit_menu = menus.OutfitMenu(assets, game_settings)
+#trophy_menu = menus.TrophyMenu(assets, game_settings)
 
 # Initialisation du monde et du joueur
 world = World()
@@ -121,7 +121,7 @@ while run:
         # Gestion de certains menus
         if inventory :
             if settings_choice:
-                inventory_buttons = _menu.draw(screen)
+                inventory_buttons = inventory_menu.draw(screen)
                 inventory_choice = not inventory_buttons['back']
             else:
                 # Gestion du menu pause
@@ -192,7 +192,7 @@ while run:
                 #ar_weapon.shoot(1,bullet_group)
             if event.key == pygame.K_i:
                 if (not game_loading) and player.is_alive:
-                    pass
+                    inventory = not inventory
 
     # Mise à jour de l'écran à chaque tour de boucle
     pygame.display.update()
