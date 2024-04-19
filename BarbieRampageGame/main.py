@@ -84,6 +84,12 @@ world = World()
 player = spawn_player()
 
 # Debug
+ar_weapon = weapon.Arb4rb13(assets, world.tile_size, 1)
+p450_weapon = weapon.GunP450(assets, world.tile_size, 0.8)
+
+right_coordinates, left_coordinates = player.get_holding_weapon_coordinates()
+player.weapon_holder.set_weapon(ar_weapon, right_coordinates)
+
 
 # Variables pour la boucle
 run = True
@@ -94,8 +100,6 @@ current_time = pygame.time.get_ticks()
 
 # Boucle qui va permettre de faire tourner le jeu
 while run:
-
-     
 
     # Fait en sorte que le jeu tourne à un nombre limité de FPS
     clock.tick(FPS)
