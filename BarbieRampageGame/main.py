@@ -192,7 +192,8 @@ while run:
                 #ar_weapon.shoot(1,bullet_group)
             if event.key == pygame.K_i:
                 if (not game_loading) and player.is_alive:
-                    inventory = not inventory
+                    #inventory = not inventory
+                    pass
 
     # Mise à jour de l'écran à chaque tour de boucle
     pygame.display.update()
