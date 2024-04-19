@@ -19,7 +19,9 @@ class Settings():
         """Initialise les paramètres par défaut
         """
         self.do_draw_game_time = False
-        self.screen_width = 700 
+        self.do_draw_hitboxes = False
+        
+        self.screen_width = 700
         self.screen_height = int(self.screen_width * 0.8)
         
         self.set_default_keybinds()
@@ -43,17 +45,24 @@ class Settings():
             with open(self.SETTINGS_LOCATION, 'r') as settingsfile:
                 settings_json = json.load(settingsfile)
             
-            # L'écran
-            self.screen_width = settings_json['screensize']['width']
-            self.screen_height = settings_json['screensize']['height']
+            try:
+                # L'écran
+                self.screen_width = settings_json['screensize']['width']
+                self.screen_height = settings_json['screensize']['height']
+                
+                # Les touches
+                self.keybinds = settings_json['keybinds']
+                
+                # Pour debug
+                self.do_draw_game_time = settings_json['debug']['do_draw_game_time']
+                self.do_draw_hitboxes = settings_json['debug']['do_draw_hitboxes']
+                print("Settings have been loaded")
             
-            # Les touches
-            self.keybinds = settings_json['keybinds']
-            
-            # Pour debug
-            self.do_draw_game_time = settings_json['debug']['do_draw_game_time']
-            print("Settings have been loaded")
+            except KeyError:
+                print("Error while loading settings, using default settings for unknown keys")
         
+        # Définit le nom de la résolution à partir de la largeur de l'écran
+        # Cela permet de savoir quelle résolution est utilisée pour le menu des options
         self.resolution_name = list(RESOLUTION_OPTIONS.keys())[1]
         for name, resolution in RESOLUTION_OPTIONS.items():
             if self.screen_width == resolution[0]:
@@ -77,6 +86,7 @@ class Settings():
         
         settings_dict['debug'] = {}
         settings_dict['debug']['do_draw_game_time'] = self.do_draw_game_time
+        settings_dict['debug']['do_draw_hitboxes'] = self.do_draw_hitboxes
         
         # Transformation du dictionnaire en json
         settings_json = json.dumps(settings_dict, indent=4)

@@ -183,11 +183,6 @@
             "y": 15
         },
         {
-            "type": "dummy_spawn",
-            "x": 18,
-            "y": 13
-        },
-        {
             "type": "grass_default",
             "x": 18,
             "y": 15
@@ -201,6 +196,11 @@
             "type": "grass_default",
             "x": 20,
             "y": 15
+        },
+        {
+            "type": "ken_spawn",
+            "x": 21,
+            "y": 13
         },
         {
             "type": "grass_default_right_border",

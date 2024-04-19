@@ -71,6 +71,8 @@ class World():
         self.scroll = None
         
         self.load_sprite_groups()
+        
+        self.display_debug = False
     
     def load_sprite_groups(self):
         """Charge les groupes de sprites
@@ -78,12 +80,16 @@ class World():
         Args:
             enemy_group (pygame.sprite.Group): groupe d'ennemis
         """
+        self.player_group = pygame.sprite.Group()
+        
         self.enemy_group = pygame.sprite.Group()
         self.bullet_group = pygame.sprite.Group()
     
     def empty_sprite_groups(self):
         """Vide les groupes de sprites
         """
+        self.player_group.empty()
+        
         self.enemy_group.empty()
         self.bullet_group.empty()
     
@@ -167,9 +173,13 @@ class World():
                     # Si c'est le point de spawn du joueur
                     if tile == PLAYER_AND_ENEMIES_TILE_TYPES[0]:
                         self.player = sprites.Player(x * self.tile_size, y * self.tile_size, self.tile_size, assets)
+                        self.player_group.add(self.player)
                     if tile == PLAYER_AND_ENEMIES_TILE_TYPES[1]:
                         dummy = sprites.IntelligentDummy(x * self.tile_size, y * self.tile_size, self.tile_size, 2, assets, 2)
                         self.enemy_group.add(dummy)
+                    if tile == PLAYER_AND_ENEMIES_TILE_TYPES[2]:
+                        ken = sprites.KenEnemy(x * self.tile_size, y * self.tile_size, self.tile_size, 2, assets)
+                        self.enemy_group.add(ken)
         
         return self.player
     
@@ -195,3 +205,34 @@ class World():
         width = self.background_images[0].get_width()
         for x in range(5):
             screen.blit(self.background_images[0], ((x * width) - self.scroll.bg_scroll * 0.2, 0))
+    
+    def draw_sprite_groups(self, screen: pygame.Surface):
+        """Méthode qui permet d'afficher les groupes de sprites
+
+        Args:
+            screen (Surface): fenêtre sur laquelle le premier plan doit être affiché
+        """
+        for bullet in self.bullet_group:
+            bullet.draw(screen)
+        
+        for enemy in self.enemy_group:
+            enemy.draw(screen)
+
+    def update_groups(self):
+        """Met à jour les groupes de sprites
+        """
+        self.bullet_group.update(self)
+        self.enemy_group.update()
+        
+    def set_debug_display(self, display: bool):
+        """Méthode qui permet d'afficher les hitboxes et les lignes de vision des ennemis
+
+        Args:
+            display (bool): affiche les collisions si True
+        """
+        self.display_debug = display
+        
+        for enemy in self.enemy_group:
+            enemy.display_debug = display
+        
+        self.player.display_debug = display

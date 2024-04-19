@@ -60,6 +60,7 @@ def spawn_player():
     death_menu.reset_animation(game_settings.screen_width)
     world.init_data("level0_data.json", assets, game_settings)
     player = world.process_data(assets)
+    world.set_debug_display(game_settings.do_draw_hitboxes)
     
     # Création des éléments de l'interface
     player.create_health_bar(10, game_settings.screen_width // 18, assets)
@@ -108,11 +109,11 @@ while run:
         # Affiche les éléments à afficher à l'écran
         world.draw(screen)
         player.draw(screen)
-        world.enemy_group.draw(screen)
+        world.draw_sprite_groups(screen)
         
         # Met à jour le joueur
         player.update()
-        world.enemy_group.update()
+        world.update_groups()
         
         # Affiche les éléments de l'interface
         player.health_bar.draw(screen)
@@ -174,8 +175,9 @@ while run:
                         # Activer ou désactiver le menu pause
                         pause = not pause
             if event.key == pygame.K_TAB:
+                player.weapon_holder.shoot(world.bullet_group, 1)
+
                 pygame.mixer.Sound.play(assets.weapon_cross_sound)
-                #ar_weapon.shoot(1,bullet_group)
 
     # Mise à jour de l'écran à chaque tour de boucle
     pygame.display.update()
