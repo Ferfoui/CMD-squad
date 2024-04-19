@@ -11,6 +11,13 @@ print(f"Bienvenue dans le jeu Barbie Rampage!\nVersion: {GAME_VERSION}\nPar la C
 # Initialisation du moteur graphique
 pygame.init()
 
+#Initiallisation du mixer
+pygame.mixer.init()
+
+#Musique du Jeu
+pygame.mixer.music.load(PLAYBACK_MUSIC)
+pygame.mixer.music.play(loops=-1, start=0.0, fade_ms=0)   
+
 # Tous les paramètres que le joueur peut modifier comme les touches, etc.
 game_settings = utils.Settings()
 
@@ -57,8 +64,8 @@ def spawn_player():
     
     # Création des éléments de l'interface
     player.create_health_bar(10, game_settings.screen_width // 18, assets)
-    player.create_kill_counter(10, game_settings.screen_width * 5/45, assets)
-    player.create_bullet_counter(10, game_settings.screen_width * 40/45, assets)
+    player.create_kill_counter(10, int(game_settings.screen_width * 5/45), assets)
+    player.create_bullet_counter(10, int(game_settings.screen_width * 33/45), assets)
     
     return player
 
@@ -78,12 +85,6 @@ player = spawn_player()
 
 # Debug
 
-ar_weapon = weapon.Arb4rb13(assets, world.tile_size, 1)
-p450_weapon = weapon.GunP450(assets, world.tile_size, 0.8)
-
-right_coordinates, left_coordinates = player.get_holding_weapon_coordinates()
-player.weapon_holder.set_weapon(ar_weapon, right_coordinates)
-
 # Variables pour la boucle
 run = True
 game_loading = True
@@ -93,6 +94,8 @@ current_time = pygame.time.get_ticks()
 
 # Boucle qui va permettre de faire tourner le jeu
 while run:
+
+     
 
     # Fait en sorte que le jeu tourne à un nombre limité de FPS
     clock.tick(FPS)
@@ -141,7 +144,6 @@ while run:
             if death_menu.draw(screen, True)['respawn']:
                 player = spawn_player()
     
-    
     if game_settings.do_draw_game_time:
         # Afficher le temps actuel à l'écran
         interface.draw_text(screen, "game time: ", assets.default_font, COLOR_DARK, 5, 5, False)
@@ -174,6 +176,8 @@ while run:
                         pause = not pause
             if event.key == pygame.K_TAB:
                 player.weapon_holder.shoot(world.bullet_group, 1)
+
+                pygame.mixer.Sound.play(assets.weapon_cross_sound)
 
     # Mise à jour de l'écran à chaque tour de boucle
     pygame.display.update()

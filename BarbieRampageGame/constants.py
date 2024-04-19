@@ -59,6 +59,7 @@ TEXTURES_ROOT = path.join(ASSETS_ROOT, "textures/") # Le chemin des textures
 SOUNDS_ROOT = path.join(ASSETS_ROOT, "sounds/") # Le chemin des effets sonores
 FONTS_ROOT = path.join(ASSETS_ROOT, "fonts/") # Le chemin vers les polices d'écriture
 
+# Les textures
 PLAYER_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "player/")
 ENEMIES_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "enemies/")
 WEAPONS_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "weapons/")
@@ -69,6 +70,9 @@ BACKGROUND_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "background/")
 
 PS2P_FONT_LOCATION = path.join(FONTS_ROOT, "Press_Start_2P/PressStart2P-REGULAR.ttf")
 
+# Les sons
+WEAPON_CROSS_SOUND_LOCATION = path.join(SOUNDS_ROOT, "son_test.wav")
+PLAYBACK_MUSIC = path.join(SOUNDS_ROOT, "nj_supershy.wav" )
 
 ### Les données utilisées (les data)
 DATA_ROOT = path.join(RESOURCES_ROOT, "data/")

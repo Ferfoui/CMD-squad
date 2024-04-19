@@ -319,7 +319,7 @@ class Player(Entity):
 
         self.health_bar.hp = self.health
         self.kill_counter.kl = self.kills
-        self.bullet_counter.bl = self.bullets
+        self.bullet_counter.bullets = self.bullets
 
         self.update_animation()
 
