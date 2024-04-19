@@ -61,6 +61,7 @@ FONTS_ROOT = path.join(ASSETS_ROOT, "fonts/") # Le chemin vers les polices d'éc
 
 PLAYER_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "player/")
 ENEMIES_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "enemies/")
+COLLECTIBLES_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "collectibles/")
 
 TILES_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "tiles/")
 

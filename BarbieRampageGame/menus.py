@@ -329,7 +329,7 @@ class InventoryMenu(gui.Menu):
         # Affiche une bordure autour de chaque boutons
         for button in self.buttons_to_draw.values():
             
-            # Positionnement du rectangle pour la bourdure
+            # Positionnement du rectangle pour la bordure
             border_rect.center = button.rect.center
             
             pygame.draw.rect(screen, COLOR_HOT_PINK, border_rect, 4, border_radius= 6)
