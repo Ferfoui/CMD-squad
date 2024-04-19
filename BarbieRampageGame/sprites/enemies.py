@@ -275,6 +275,17 @@ class IntelligentEnemy(MovingEnemy):
         
         return False
     
+    def player_in_attack_range(self, world) -> bool:
+        """Méthode qui permet de vérifier si le joueur est dans la zone d'attaque de l'ennemi
+
+        Args:
+            world (World): monde dans lequel l'ennemi se déplace
+
+        Returns:
+            bool: si le joueur est dans la zone d'attaque de l'ennemi
+        """
+        return self.rect.colliderect(world.player.rect)
+    
     def can_touch_player(self, world, attack_rect) -> bool:
         """Méthode qui permet de vérifier si l'ennemi peut toucher le joueur
 
@@ -462,6 +473,9 @@ class KenEnemy(IntelligentEnemy):
             assets (utils.Assets): classe qui contient les assets du jeu
         """
         super().__init__(x, y, tile_size, assets, ENEMIES_TEXTURES_LOCATION + "ken.png", speed = 2, scale = scale)
+        
+        self.last_attack_time = pygame.time.get_ticks()
+        self.ken_could_attack = False
     
     def ai(self, world):
         """Méthode qui permet de déplacer Ken vers le joueur
@@ -474,9 +488,23 @@ class KenEnemy(IntelligentEnemy):
             move_left = world.player.rect.right < (self.rect.x - 2 * self.size_factor)
             self.move(world,move_right,move_left)
             
-            self.attack(world)
+            if self.player_in_attack_range(world):
+                self.attack(world)
         else:
             self.move_around(world)
+    
+    def player_in_attack_range(self, world) -> bool:
+        """Méthode qui permet de vérifier si le joueur est dans la zone d'attaque de Ken
+        
+        Args:
+            world (World): monde dans lequel Ken se déplace
+        
+        Returns:
+            bool: si le joueur est dans la zone d'attaque de Ken
+        """
+        attack_rect = self.attack_rect()
+
+        return attack_rect.colliderect(world.player.rect)
         
     def attack(self, world):
         """Méthode qui permet à Ken d'attaquer le joueur
@@ -484,9 +512,15 @@ class KenEnemy(IntelligentEnemy):
         Args:
             world (World): monde dans lequel Ken se déplace
         """
-        if self.can_see_player(world):
-            attack_rect = self.attack_rect()
-            if attack_rect.colliderect(world.player.rect):
+        
+        ATTACK_COOLDOWN = 1000
+        
+        ken_could_attack = (pygame.time.get_ticks() - self.last_attack_time) > ATTACK_COOLDOWN
+
+        if ken_could_attack and self.is_alive:
+            
+            if self.player_in_attack_range(world):
+                self.last_attack_time = pygame.time.get_ticks()
                 world.player.health -= 10
 
     def attack_rect(self):
@@ -508,5 +542,3 @@ class KenEnemy(IntelligentEnemy):
     
     def draw(self, screen: pygame.Surface):
         super().draw(screen)
-        
-        pygame.draw.rect(screen, COLOR_ORANGE, self.attack_rect(), 2)
