@@ -57,54 +57,25 @@ class Collectible(pygame.sprite.Sprite, abstract.ABC):
 class ItemBox(Collectible):
     def __init__(self, x, y, image_path: str, assets: utils.Assets, tile_size: int, scale: float = 1):
         super().__init__(x, y, image_path, assets.Assets, tile_size, scale)
-        self.image = assets.get_image("Box", f"{TEXTURES_ROOT}gui/debug.png", width)
 
-        #TO DO: finir animation genre changer "joueur" etc et finir les  on_collect_action
-        # Valeur du temps pour l'animation du joueur
+        # TODO: finir animation genre changer "joueur" etc et finir les on_collect_action
+        # Valeur du temps pour l'animation de la box
         self.update_time = pygame.time.get_ticks()
-        
-        #self.ANIMATION_TYPES = 
-        self.ANIMATION_TYPES = ['Boxes']
-        
+
+        self.ANIMATION_TYPES = ['Open']
+
         scale = 1.5 * self.size_factor
-        # Dictionnaire dans lequel il y a les frames des différentes animations du joueur
-        self.animation_dict = self.load_animation(assets, self.ANIMATION_TYPES, f"{COLLECTIBLES_TEXTURES_LOCATION}boxes", scale)
-        # Index de la frame actuelle du joueur
+        # Dictionnaire dans lequel il y a les frames des différentes animations
+        self.animation_dict = assets.load_animation(self.ANIMATION_TYPES, f"{COLLECTIBLES_TEXTURES_LOCATION}chest", scale)
+        # Index de la frame actuelle de l'animation
         self.frame_index = 0
-        
-        # Met le joueur en position Idle
+
+        # Met la box en position Open
         self.action = self.ANIMATION_TYPES[0]
         # Met l'image correspondant à son action
         self.image = self.animation_dict[self.action][self.frame_index]
-        
-    
-    def load_animation(self, assets: utils.Assets, animation_types: list[str], texture_location: str, scale) -> dict[str, list[pygame.Surface]]:
-        """Méthode qui permet de charger les animations du joueur
 
-        Args:
-            assets (utils.Assets): classe qui contient les assets du jeu
-            animation_types (list[str]): liste qui contient les noms des animations
-            texture_location (str): chemin vers les textures
-            scale (int or float): nombre par lequel on multiplie la taille du Sprite pour obtenir la taille du joueur
-
-        Returns:
-            dict[str, list[Surface]]: dictionnaire qui contient les listes d'images à afficher pour animer le joueur
-        """
-        animation_dict = {}
-        
-        for animation in animation_types:
-            animation_dict[animation] = []
-			# Compte le nombre d'image qu'il y a dans le dossier
-            number_of_frames = len(os.listdir(f"{texture_location}/{animation}"))
-            for i in range(number_of_frames):
-                # Charge l'image et la redimensionne
-                img = assets.load_scaled_image(f"{texture_location}/{animation}/{i:02}.png", scale)
-                # Ajoute l'image à la liste des images de l'animation
-                animation_dict[animation].append(img)
-        
-        return animation_dict
-
-        def update_animation(self):
+    def update_animation(self):
         """Met à jour l'animation du joueur"""
         
         if self.is_running == True:

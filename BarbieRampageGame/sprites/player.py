@@ -46,7 +46,7 @@ class Player(pygame.sprite.Sprite):
         
         scale = 1.5 * self.size_factor
         # Dictionnaire dans lequel il y a les frames des différentes animations du joueur
-        self.animation_dict = self.load_animation(assets, self.ANIMATION_TYPES, f"{PLAYER_TEXTURES_LOCATION}default", scale)
+        self.animation_dict = assets.load_animation(self.ANIMATION_TYPES, f"{PLAYER_TEXTURES_LOCATION}default", scale)
         # Index de la frame actuelle du joueur
         self.frame_index = 0
         
@@ -101,33 +101,6 @@ class Player(pygame.sprite.Sprite):
             assets (utils.Assets): classe qui contient les assets du jeu
         """
         self.bullet_counter = gui.BulletCounter(x, y, 64, self.bullets, assets)
-    
-    
-    def load_animation(self, assets: utils.Assets, animation_types: list[str], texture_location: str, scale) -> dict[str, list[pygame.Surface]]:
-        """Méthode qui permet de charger les animations du joueur
-
-        Args:
-            assets (utils.Assets): classe qui contient les assets du jeu
-            animation_types (list[str]): liste qui contient les noms des animations
-            texture_location (str): chemin vers les textures
-            scale (int or float): nombre par lequel on multiplie la taille du Sprite pour obtenir la taille du joueur
-
-        Returns:
-            dict[str, list[Surface]]: dictionnaire qui contient les listes d'images à afficher pour animer le joueur
-        """
-        animation_dict = {}
-        
-        for animation in animation_types:
-            animation_dict[animation] = []
-			# Compte le nombre d'image qu'il y a dans le dossier
-            number_of_frames = len(os.listdir(f"{texture_location}/{animation}"))
-            for i in range(number_of_frames):
-                # Charge l'image et la redimensionne
-                img = assets.load_scaled_image(f"{texture_location}/{animation}/{i:02}.png", scale)
-                # Ajoute l'image à la liste des images de l'animation
-                animation_dict[animation].append(img)
-        
-        return animation_dict
     
     def get_head_y(self) -> int:
         """Renvoie la position en ordonnées de la tête du joueur"""
