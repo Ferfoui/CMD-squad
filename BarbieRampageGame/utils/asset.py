@@ -107,3 +107,28 @@ class Assets():
         self.saved_external_images[name] = self.load_scaled_image(texture_location, scale)
         
         return self.saved_external_images[name]
+    
+    def load_animation(self, animation_types: list[str], texture_location: str, scale: float) -> dict[str, list[pygame.Surface]]:
+        """Charge une animation, les images doivent être nommées de 00, 01, 02, etc...
+
+        Args:
+            animation_types (list[str]): liste qui contient les noms des animations
+            texture_location (str): chemin vers les textures
+            scale (int or float): facteur de redimensionnement
+
+        Returns:
+            dict[str, list[Surface]]: dictionnaire qui contient les listes d'images à afficher pour animer
+        """
+        animation_dict = {}
+        
+        for animation in animation_types:
+            animation_dict[animation] = []
+            # Compte le nombre d'image qu'il y a dans le dossier
+            number_of_frames = len(os.listdir(f"{texture_location}/{animation}"))
+            for i in range(number_of_frames):
+                # Charge l'image et la redimensionne
+                img = self.load_scaled_image(f"{texture_location}/{animation}/{i:02}.png", scale)
+                # Ajoute l'image à la liste des images de l'animation
+                animation_dict[animation].append(img)
+        
+        return animation_dict
