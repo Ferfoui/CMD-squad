@@ -11,10 +11,10 @@ print(f"Bienvenue dans le jeu Barbie Rampage!\nVersion: {GAME_VERSION}\nPar la C
 # Initialisation du moteur graphique
 pygame.init()
 
-#Initiallisation du mixer
+# Initiallisation du mixer
 pygame.mixer.init()
 
-#Musique du Jeu
+# Musique du Jeu
 pygame.mixer.music.load(PLAYBACK_MUSIC)
 pygame.mixer.music.play(loops=-1, start=0.0, fade_ms=0)   
 

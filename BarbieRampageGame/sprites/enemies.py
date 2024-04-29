@@ -523,6 +523,8 @@ class KenEnemy(IntelligentEnemy):
                 self.last_attack_time = pygame.time.get_ticks()
                 world.player.health -= 10
 
+            #TODO: Ajouter l'animation d'attaque de Ken
+
     def attack_rect(self):
         """Méthode qui permet de définir la zone d'attaque de Ken
         """
