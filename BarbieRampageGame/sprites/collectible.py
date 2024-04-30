@@ -62,6 +62,9 @@ class Collectible(pygame.sprite.Sprite, abstract.ABC):
     @abstract.abstractmethod
     def on_collect_action(self, player) -> any:
         """Action à effectuer lors de la collecte de l'objet
+        
+        Args:
+            player (Player): joueur qui collecte l'objet
         """
         pass
 
@@ -79,7 +82,6 @@ class ItemBox(Collectible):
         image_path = f"{COLLECTIBLES_TEXTURES_LOCATION}chest/"
         super().__init__(x, y, image_path, assets, tile_size, scale, False)
 
-        # TODO: finir animation genre changer "joueur" etc et finir les on_collect_action
         # Valeur du temps pour l'animation de la box
         self.update_time = pygame.time.get_ticks()
 
@@ -125,6 +127,12 @@ class ItemBox(Collectible):
         self.update_animation()
 
     def on_collect_action(self, player):
+        """Méthode qui permet au joueur d'interagir avec la box
+
+        Args:
+            player (Player): Joueur qui interagit avec la box
+        """
+        # TODO: finir les on_collect_action
         if pygame.sprite.collide_rect(player.rect, self.rect):
             self.action = self.ANIMATION_TYPES[1]
 
