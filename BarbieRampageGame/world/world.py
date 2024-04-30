@@ -78,12 +78,14 @@ class World():
         Args:
             enemy_group (pygame.sprite.Group): groupe d'ennemis
         """
+        self.collectible_group = pygame.sprite.Group()
         self.enemy_group = pygame.sprite.Group()
         self.bullet_group = pygame.sprite.Group()
     
     def empty_sprite_groups(self):
         """Vide les groupes de sprites
         """
+        self.collectible_group.empty()
         self.enemy_group.empty()
         self.bullet_group.empty()
     
