@@ -219,12 +219,16 @@ class World():
         
         for enemy in self.enemy_group:
             enemy.draw(screen)
+            
+        for collectible in self.collectible_group:
+            collectible.draw(screen)
 
     def update_groups(self):
         """Met à jour les groupes de sprites
         """
         self.bullet_group.update(self)
         self.enemy_group.update()
+        self.collectible_group.update(self)
         
     def set_debug_display(self, display: bool):
         """Méthode qui permet d'afficher les hitboxes et les lignes de vision des ennemis
