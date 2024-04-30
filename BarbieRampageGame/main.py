@@ -87,10 +87,7 @@ player = spawn_player()
 ar_weapon = weapon.Arb4rb13(assets, world.tile_size, 1)
 p450_weapon = weapon.GunP450(assets, world.tile_size, 0.8)
 
-right_coordinates, left_coordinates = player.get_holding_weapon_coordinates()
-player.weapon_holder.set_weapon(p450_weapon, right_coordinates)
-
-co_rect = pygame.rect.Rect(0, 0, 10, 10)
+player.set_weapon(ar_weapon)
 
 # Variables pour la boucle
 run = True
@@ -115,12 +112,6 @@ while run:
         world.draw(screen)
         player.draw(screen)
         world.draw_sprite_groups(screen)
-        
-        # Debug
-        co_rect.center = player.get_holding_weapon_coordinates()[0]
-        semi_transparent_co = pygame.Surface((10, 10), pygame.SRCALPHA)
-        semi_transparent_co.fill(COLOR_DARK + (128,))
-        screen.blit(semi_transparent_co, co_rect)
         
         # Met à jour le joueur
         player.update()

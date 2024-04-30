@@ -17,7 +17,7 @@ class Player(Entity):
             assets (utils.Assets): classe qui contient les assets du jeu
         """
         #self.ANIMATION_TYPES = ['Idle', 'Run', 'Jump', 'Death']
-        self.ANIMATION_TYPES = ['Idle', 'Idle_has_weapon', 'Run']
+        self.ANIMATION_TYPES = ['Idle', 'Idle_has_weapon', 'Run', 'Run_has_weapon']
         super().__init__(x, y, 100, tile_size, assets, speed = 5, scale = 1.5)
         
         # Valeurs de départ pour les kills et les balles
@@ -259,8 +259,13 @@ class Player(Entity):
         #elif self.jump == True:
         #    self.update_action(self.ANIMATION_TYPES[2]) # "Jump"
         if self.is_running == True:
-            self.update_action('Run') # "Run"
+            if has_weapon:
+                self.update_action(self.ANIMATION_TYPES[3]) # "Run_has_weapon"
+            else:
+                self.update_action(self.ANIMATION_TYPES[2]) # "Run"
+            
             animation_cooldown = NORMAL_ANIMATION_COOLDOWN // 2
+        
         else:
             if has_weapon:
                 self.update_action(self.ANIMATION_TYPES[1]) # "Idle_has_weapon"
@@ -304,6 +309,18 @@ class Player(Entity):
         self.bullet_counter.bullets = self.bullets
 
         self.update_animation()
+    
+    def set_weapon(self, weapon: weapon.Weapon):
+        """Équipe une nouvelle arme au joueur
+
+        Args:
+            weapon (weapon.Weapon): arme à équiper
+        """
+        right_coordinates, left_coordinates = self.get_holding_weapon_coordinates()
+        if self.direction > 0:
+            self.weapon_holder.set_weapon(weapon, right_coordinates)
+        else:
+            self.weapon_holder.set_weapon(weapon, left_coordinates)
 
     def draw(self, screen: pygame.Surface):
         """Méthode qui permet d'afficher le joueur
@@ -317,6 +334,15 @@ class Player(Entity):
         if self.display_debug:
             pygame.draw.rect(screen, COLOR_ORANGE, self.rect, 2)
             pygame.draw.rect(screen, COLOR_RED, self.hitbox, 2)
+            
+            hand_rect = pygame.Rect(0, 0, 10, 10)
+            right_coordinates, left_coordinates = self.get_holding_weapon_coordinates()
+            if self.direction > 0:
+                hand_rect.center = right_coordinates
+            else:
+                hand_rect.center = left_coordinates
+            
+            pygame.draw.rect(screen, COLOR_GREEN, hand_rect, 2)
     
     def kill(self) -> None:
         self.weapon_holder.kill()
