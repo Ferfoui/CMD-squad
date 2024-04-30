@@ -82,6 +82,7 @@ class World():
         """
         self.player_group = pygame.sprite.Group()
         
+        self.collectible_group = pygame.sprite.Group()
         self.enemy_group = pygame.sprite.Group()
         self.bullet_group = pygame.sprite.Group()
     
@@ -90,6 +91,7 @@ class World():
         """
         self.player_group.empty()
         
+        self.collectible_group.empty()
         self.enemy_group.empty()
         self.bullet_group.empty()
     
