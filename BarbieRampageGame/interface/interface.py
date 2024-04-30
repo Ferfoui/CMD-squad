@@ -5,7 +5,7 @@ from constants import *
 from utils import Assets
 
 
-from .buttons import Button, DropDown
+from .buttons import Button, DropDown, Cursor
 
 # Classe qui gère les menus
 class Menu():
@@ -19,6 +19,7 @@ class Menu():
         self.images_to_draw = {}
         self.buttons_to_draw = {}
         self.drop_downs_to_draw = {}
+        self.cursors_to_draw = {}
         
     def add_image(self, image: pygame.Surface, x: int, y: int, do_place_center: bool = False, name: bool = None):
         """Ajoute une image au menu
@@ -100,6 +101,27 @@ class Menu():
         drop_down = DropDown(x, y, menu_colors, options_colors, width, height, font, main_option, options, do_place_center)
         self.drop_downs_to_draw[drop_down_name] = drop_down
     
+    def add_cursor(self, cursor_name: str, x: int, y: int, width: int, height: int, line_color: ColorValue, cursor_color: ColorValue, min_value: int, max_value: int,
+                   default_value: int, do_place_center: bool = False):
+        """Ajoute un curseur au menu
+
+        Args:
+            cursor_name (str): nom du curseur
+            x (int): position en abscisses où le curseur va être créé
+            y (int): position en ordonnées où le curseur va être créé
+            width (int): largeur du curseur
+            height (int): hauteur du curseur
+            line_color (ColorValue): couleur de la ligne sur laquelle le curseur se déplace
+            cursor_color (ColorValue): couleur du curseur
+            min_value (int): valeur minimale du curseur
+            max_value (int): valeur maximale du curseur
+            default_value (int): valeur par défaut du curseur
+            do_place_center (bool, optional): si les coordonnées données sont celles du centre du curseur. False par défaut
+        """
+        cursor = Cursor(x, y, width, height, line_color, cursor_color, min_value, max_value, do_place_center)
+        cursor.set_value(default_value)
+        self.cursors_to_draw[cursor_name] = cursor
+    
     def draw(self, screen: pygame.Surface, do_draw_background: bool) -> dict[str, any]:
         """Affiche les images et les boutons à l'écran et renvoie les noms des boutons qui ont été cliqués
 
@@ -122,8 +144,17 @@ class Menu():
 
         for drop_down_name, drop_down in self.drop_downs_to_draw.items():
             self.gui_values[drop_down_name] = drop_down.draw(screen)
+        
+        for cursor_name, cursor in self.cursors_to_draw.items():
+            self.gui_values[cursor_name] = cursor.draw(screen)
             
         return self.gui_values
+
+    def set_cursors_off(self):
+        """Désactive les curseurs
+        """
+        for cursor in self.cursors_to_draw.values():
+            cursor.set_off()
 
 class HealthBar():
     def __init__(self, x: int, y: int, width: int, max_hp: int, assets: Assets):
