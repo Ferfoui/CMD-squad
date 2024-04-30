@@ -108,10 +108,13 @@ while run:
         world.draw(screen)
         player.draw(screen)
         world.enemy_group.draw(screen)
+        for collectible in world.collectible_group:
+            collectible.draw(screen)
         
         # Met à jour le joueur
         player.update()
         world.enemy_group.update()
+        world.collectible_group.update(world)
         
         # Affiche les éléments de l'interface
         player.health_bar.draw(screen)

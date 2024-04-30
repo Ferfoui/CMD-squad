@@ -73,6 +73,11 @@
             "y": 15
         },
         {
+            "type": "item_box",
+            "x": 7,
+            "y": 7
+        },
+        {
             "type": "grass_default",
             "x": 7,
             "y": 15
