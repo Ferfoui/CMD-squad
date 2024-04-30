@@ -69,7 +69,7 @@ class KenEnemy(IntelligentEnemy):
         if self.can_see_player(world):
             move_right = world.player.rect.x > (self.rect.right + 2 * self.size_factor)
             move_left = world.player.rect.right < (self.rect.x - 2 * self.size_factor)
-            self.move(world,move_right,move_left)
+            self.move(world, move_right, move_left)
             
             if self.player_in_attack_range(world):
                 self.attack(world)
@@ -126,4 +126,9 @@ class KenEnemy(IntelligentEnemy):
         return attack_rect
     
     def draw(self, screen: pygame.Surface):
+        """Affiche Ken à l'écran
+
+        Args:
+            screen (pygame.Surface): écran sur lequel Ken est affiché
+        """
         super().draw(screen)

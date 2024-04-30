@@ -1,4 +1,5 @@
 import pygame, random, math
+import abc as abstract
 
 from constants import *
 import utils
@@ -246,7 +247,13 @@ class IntelligentEnemy(MovingEnemy):
         
         self.MOVEMENT_CHANGING_DELAY = 3000
     
+    @abstract.abstractmethod
     def ai(self, world):
+        """Méthode qui permet de déplacer l'ennemi de manière autonome
+        
+        Args:
+            world (World): monde dans lequel l'ennemi se déplace
+        """
         return super().ai(world)
     
     def can_see_player(self, world) -> bool:
