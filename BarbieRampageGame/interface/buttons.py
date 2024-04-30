@@ -92,6 +92,15 @@ class Button():
         
         return action
 
+class ActivableUI:
+    def __init__(self):
+        self.is_off = True
+    
+    def draw(self, screen: pygame.Surface):
+        self.is_off = False
+    
+    def set_off(self):
+        self.is_off = True
 
 # Classe qui permet de créer les menus déroulant
 class DropDown():
@@ -200,7 +209,7 @@ class DropDown():
 
         return -1
 
-class InputBox:
+class InputBox(ActivableUI):
     def __init__(self, x: int, y: int, width: int, height: int, font: pygame.font.Font,color_active: ColorValue,
                  color_inactive: ColorValue, text='', do_place_center: bool = False):
         """Crée une entrée de texte
@@ -216,6 +225,7 @@ class InputBox:
             text (str, optional): texte à afficher. '' par défaut
             do_place_center (bool, optional): si les coordonnées données sont celles du centre du menu. False par défaut
         """
+        super().__init__()
         self.rect = pygame.Rect(x, y, width, height)
         if do_place_center:
             self.rect.center = (x, y)
@@ -238,6 +248,9 @@ class InputBox:
         """
         self.clicked = False
         mpos = pygame.mouse.get_pos()
+        
+        if self.is_off:
+            return
         
         if self.input_states.mouse_single_pressed():
             # Si l'utilisateur a cliqué sur l'entrée de texte
@@ -274,8 +287,108 @@ class InputBox:
         Args:
             screen (pygame.Surface): écran sur lequel l'entrée de texte doit être affichée
         """
+        super().draw(screen)
         self.update()
         # Blit the text.
         screen.blit(self.txt_surface, (self.rect.x + 5, self.rect.y + 5))
         # Blit the rect.
         pygame.draw.rect(screen, self.current_color, self.rect, 2)
+
+class Cursor(ActivableUI):
+    def __init__(self, x: int, y: int, width: int, height: int, line_color: ColorValue, cursor_color: ColorValue,
+                 min_value: float, max_value: float, do_place_center: bool = False):
+        """Crée un curseur qui permet de sélectionner une valeur entre les deux extrémités
+
+        Args:
+            x (int): position sur l'axe horizontal
+            y (int): position sur l'axe vertical
+            width (int): largeur du curseur
+            height (int): hauteur du curseur
+            line_color (ColorValue): couleur de la ligne sur laquelle le curseur se déplace
+            cursor_color (ColorValue): couleur du curseur
+            min_value (float): valeur minimale que le curseur peut prendre
+            max_value (float): valeur maximale que le curseur peut prendre
+            do_place_center (bool, optional): si les coordonnées données sont celles du centre du menu. False par défaut
+        """
+        super().__init__()
+        self.line_color = line_color
+        self.cursor_color = cursor_color
+        self.min_value = min_value
+        self.max_value = max_value
+        self.value = min_value
+        self.dragging = False
+        
+        self.line_rect = pygame.Rect(x, y, width, height)
+        if do_place_center:
+            self.line_rect.center = (x, y)
+
+        self.cursor_rect = pygame.Rect(0, 0, width // 15, height * 2)
+        
+        self.cursor_rect.center = self.line_rect.left, self.line_rect.centery
+        
+        self.input_states = UserInputStates.get_instance()
+        self.input_states.add_method_to_be_processed(self.handle_event)
+
+    def handle_event(self, event: pygame.event.Event):
+        """Permet de faire bouger le curseur en fonction de la position de la souris
+
+        Args:
+            event (pygame.event.Event): évènement de pygame
+        """
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.cursor_rect.collidepoint(event.pos):
+                self.dragging = True
+        elif event.type == pygame.MOUSEBUTTONUP:
+            self.dragging = False
+        elif event.type == pygame.MOUSEMOTION and self.dragging and not self.is_off:
+            self.move(event.pos[0])
+
+    def move(self, mouse_x: int):
+        """Fait bouger le curseur
+
+        Args:
+            x (int): position de la souris en abscisses
+        """
+        if mouse_x < self.line_rect.left:
+            self.cursor_rect.x = self.line_rect.left
+        elif mouse_x > (self.line_rect.right - self.cursor_rect.width):
+            self.cursor_rect.x = self.line_rect.right - self.cursor_rect.width
+        else:
+            self.cursor_rect.x = mouse_x
+        
+        x_difference = self.cursor_rect.x - self.line_rect.left
+        x_ratio = x_difference / (self.line_rect.width - self.cursor_rect.width)
+        value_difference = self.max_value - self.min_value
+        self.value = self.min_value + x_ratio * value_difference
+    
+    def set_value(self, value: float):
+        """Change la valeur du curseur
+
+        Args:
+            value (float): nouvelle valeur du curseur
+        """
+        if value < self.min_value:
+            self.value = self.min_value
+        elif value > self.max_value:
+            self.value = self.max_value
+        else:
+            self.value = value
+        
+        value_difference = self.max_value - self.min_value
+        
+        self.cursor_rect.x = self.line_rect.left + (self.value - self.min_value) / value_difference * (self.line_rect.width - self.cursor_rect.width)
+
+    def draw(self, screen: pygame.Surface) -> float:
+        """Affiche le curseur
+
+        Args:
+            screen (pygame.Surface): écran sur lequel le curseur doit être affiché
+        
+        Returns:
+            float: valeur du curseur
+        """
+        super().draw(screen)
+        pygame.draw.rect(screen, self.line_color, self.line_rect)
+        pygame.draw.rect(screen, self.cursor_color, self.cursor_rect)
+        
+        return self.value
