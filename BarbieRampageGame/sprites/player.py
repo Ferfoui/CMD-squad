@@ -17,7 +17,7 @@ class Player(Entity):
             assets (utils.Assets): classe qui contient les assets du jeu
         """
         #self.ANIMATION_TYPES = ['Idle', 'Run', 'Jump', 'Death']
-        self.ANIMATION_TYPES = ['Idle', 'Run']
+        self.ANIMATION_TYPES = ['Idle', 'Idle_has_weapon', 'Run', 'Run_has_weapon']
         super().__init__(x, y, 100, tile_size, assets, speed = 5, scale = 1.5)
         
         # Valeurs de départ pour les kills et les balles
@@ -52,7 +52,7 @@ class Player(Entity):
             pygame.Rect: rectangle de l'entité
         """
         # Dictionnaire dans lequel il y a les frames des différentes animations du joueur
-        self.animation_dict = self.load_animation(assets, self.ANIMATION_TYPES, f"{PLAYER_TEXTURES_LOCATION}default", scale * self.size_factor)
+        self.animation_dict = assets.load_animation(self.ANIMATION_TYPES, f"{PLAYER_TEXTURES_LOCATION}default", scale * self.size_factor)
         # Index de la frame actuelle du joueur
         self.frame_index = 0
         
@@ -117,32 +117,6 @@ class Player(Entity):
         """
         self.bullet_counter = gui.BulletCounter(x, y, 64, self.bullets, assets)
     
-    def load_animation(self, assets: utils.Assets, animation_types: list[str], texture_location: str, scale) -> dict[str, list[pygame.Surface]]:
-        """Méthode qui permet de charger les animations du joueur
-
-        Args:
-            assets (utils.Assets): classe qui contient les assets du jeu
-            animation_types (list[str]): liste qui contient les noms des animations
-            texture_location (str): chemin vers les textures
-            scale (int or float): nombre par lequel on multiplie la taille du Sprite pour obtenir la taille du joueur
-
-        Returns:
-            dict[str, list[Surface]]: dictionnaire qui contient les listes d'images à afficher pour animer le joueur
-        """
-        animation_dict = {}
-        
-        for animation in animation_types:
-            animation_dict[animation] = []
-			# Compte le nombre d'image qu'il y a dans le dossier
-            number_of_frames = len(os.listdir(f"{texture_location}/{animation}"))
-            for i in range(number_of_frames):
-                # Charge l'image et la redimensionne
-                img = assets.load_scaled_image(f"{texture_location}/{animation}/{i:02}.png", scale)
-                # Ajoute l'image à la liste des images de l'animation
-                animation_dict[animation].append(img)
-        
-        return animation_dict
-    
     def get_head_y(self) -> int:
         """Renvoie la position en ordonnées de la tête du joueur"""
         return self.rect.top + self.rect.height // 6
@@ -155,7 +129,7 @@ class Player(Entity):
             tuple[int, int]: coordonnées où le joueur doit tenir son arme quand il l'a tient à gauche
         """
         
-        x_factor = 4/10
+        x_factor = 5/10
         y_factor = 2/20
         
         x_right = int(self.rect.centerx + (self.rect.width / 2) * x_factor)
@@ -274,31 +248,45 @@ class Player(Entity):
     def update_animation(self):
         """Met à jour l'animation du joueur"""
         
+        NORMAL_ANIMATION_COOLDOWN = 100
+        animation_cooldown = NORMAL_ANIMATION_COOLDOWN
+        
+        has_weapon = self.weapon_holder.has_weapon()
+        
         # Met l'animation qui correspond à ce que le joueur fait
         #if not self.is_alive:
         #    self.update_action(self.ANIMATION_TYPES[3]) # "Death"
         #elif self.jump == True:
         #    self.update_action(self.ANIMATION_TYPES[2]) # "Jump"
         if self.is_running == True:
-            self.update_action(self.ANIMATION_TYPES[1]) # "Run"
-        else:
-            self.update_action(self.ANIMATION_TYPES[0]) # "Idle"
+            if has_weapon:
+                self.update_action(self.ANIMATION_TYPES[3]) # "Run_has_weapon"
+            else:
+                self.update_action(self.ANIMATION_TYPES[2]) # "Run"
             
-        ANIMATION_COOLDOWN = 50
+            animation_cooldown = NORMAL_ANIMATION_COOLDOWN // 2
+        
+        else:
+            if has_weapon:
+                self.update_action(self.ANIMATION_TYPES[1]) # "Idle_has_weapon"
+            else:
+                self.update_action(self.ANIMATION_TYPES[0]) # "Idle"
+        
         # Met à jour l'image en fonction de la frame actuelle
         self.image = self.animation_dict[self.action][self.frame_index]
 
         # Vérifie si assez de temps est passé depuis la dernière mise à jour
-        if pygame.time.get_ticks() - self.update_time > ANIMATION_COOLDOWN:
-            self.update_time = pygame.time.get_ticks()
+        if (pygame.time.get_ticks() - self.update_time) > animation_cooldown:
             self.frame_index += 1
 
-	    # Si l'animation est terminée, remise de la première image
-        if self.frame_index >= len(self.animation_dict[self.action]):
-            #if self.action == self.ANIMATION_TYPES[3]:
-            #    self.frame_index = len(self.animation_dict[self.action]) - 1
-            #else:
-                self.frame_index = 0
+	        # Si l'animation est terminée, remise de la première image
+            if self.frame_index >= len(self.animation_dict[self.action]):
+                #if self.action == self.ANIMATION_TYPES[3]:
+                #    self.frame_index = len(self.animation_dict[self.action]) - 1
+                #else:
+                    self.frame_index = 0
+
+            self.update_time = pygame.time.get_ticks()
 
     def update_action(self, new_action: str):
         """Met à jour l'action que le joueur est en train d'effectuer
@@ -308,6 +296,7 @@ class Player(Entity):
         """
         # Vérifie si la nouvelle action est différente de celle d'avant
         if new_action != self.action:
+            assert new_action in self.ANIMATION_TYPES, f"Action {new_action} not in {self.ANIMATION_TYPES}"
             self.action = new_action
             # Remet à zéro les variables de l'animation
             self.frame_index = 0
@@ -322,6 +311,18 @@ class Player(Entity):
         self.bullet_counter.bullets = self.bullets
 
         self.update_animation()
+    
+    def set_weapon(self, weapon: weapon.Weapon):
+        """Équipe une nouvelle arme au joueur
+
+        Args:
+            weapon (weapon.Weapon): arme à équiper
+        """
+        right_coordinates, left_coordinates = self.get_holding_weapon_coordinates()
+        if self.direction > 0:
+            self.weapon_holder.set_weapon(weapon, right_coordinates)
+        else:
+            self.weapon_holder.set_weapon(weapon, left_coordinates)
 
     def draw(self, screen: pygame.Surface):
         """Méthode qui permet d'afficher le joueur
@@ -335,6 +336,15 @@ class Player(Entity):
         if self.display_debug:
             pygame.draw.rect(screen, COLOR_ORANGE, self.rect, 2)
             pygame.draw.rect(screen, COLOR_RED, self.hitbox, 2)
+            
+            hand_rect = pygame.Rect(0, 0, 10, 10)
+            right_coordinates, left_coordinates = self.get_holding_weapon_coordinates()
+            if self.direction > 0:
+                hand_rect.center = right_coordinates
+            else:
+                hand_rect.center = left_coordinates
+            
+            pygame.draw.rect(screen, COLOR_GREEN, hand_rect, 2)
     
     def kill(self) -> None:
         self.weapon_holder.kill()
@@ -359,6 +369,14 @@ class WeaponHolder():
         
         self.weapon.place_weapon(1, right_coordinates[0], right_coordinates[1])
     
+    def has_weapon(self) -> bool:
+        """Vérifie si le joueur a une arme équipée
+
+        Returns:
+            bool: si le joueur a une arme équipée
+        """
+        return self.weapon != None
+    
     def move(self, holding_coordinates: tuple[int, int], direction: int):
         """Fait bouger l'arme que le joueur a équipé
 
@@ -366,7 +384,7 @@ class WeaponHolder():
             holding_coordinates (tuple[int, int]): coordonnées où le joueur doit tenir son arme
             direction (int): direction dans laquelle le joueur regarde, 1 si c'est vers la droite et -1 si c'est vers la gauche
         """
-        if self.weapon != None:
+        if self.has_weapon():
             
             self.replace_weapon(direction, holding_coordinates)
     
@@ -380,8 +398,7 @@ class WeaponHolder():
         
         if self.direction != direction:
             self.direction = direction
-          
-            
+
         # Change les coordonnées de l'arme pour qu'elle reste à la même position par rapport au joueur
         # Par exemple si le joueur change de sens, l'arme doit toujours rester devant lui
         
@@ -399,7 +416,7 @@ class WeaponHolder():
         Returns:
             int: nouveau nombre de balles après le tir
         """
-        if self.weapon != None and bullet_count > 0:
+        if self.has_weapon() and bullet_count > 0:
             bullets_consuming = self.weapon.shoot(self.direction, bullet_group)
             bullet_count -= bullets_consuming
         
@@ -414,7 +431,7 @@ class WeaponHolder():
         Args:
             screen (pygame.Surface): écran sur lequel l'arme doit être affichée
         """
-        if self.weapon != None:
+        if self.has_weapon():
             self.weapon.draw(screen)
     
     def kill(self):

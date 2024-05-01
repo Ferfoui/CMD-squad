@@ -1,11 +1,12 @@
-import pygame, math, random
+import pygame, random, math
+import abc as abstract
 
 from constants import *
-from . import Entity
 import utils
+from ..entity import Entity
 
 class Enemy(Entity):
-    def __init__(self, x: int, y: int, tile_size: int, assets: utils.Assets, texture_location: str, max_health = 100, speed: int = 1, scale: float = 1):
+    def __init__(self, x: int, y: int, tile_size: int, assets: utils.Assets, texture_location: str, max_health = 100, speed: int = 1, scale: float = 1, animation_list: list[str] = None):
         """Crée un ennemi
 
         Args:
@@ -17,8 +18,10 @@ class Enemy(Entity):
             max_health (int, optional): vie maximale de l'ennemi. 100 par défaut.
             speed (int, optional): vitesse de l'ennemi. 1 par défaut.
             scale (float, optional): facteur de redimensionnement. 1 par défaut.
+            animation_list (list[str], optional): liste des animations de l'ennemi, si aucune n'est donnée, l'ennemi n'aura pas d'animation. None par défaut.
         """
         self.texture_location = texture_location
+        self.animation_list = animation_list
         super().__init__(x, y, max_health, tile_size, assets, speed, scale)
         
         self.size_factor = tile_size * SPRITE_SCALING
@@ -40,7 +43,16 @@ class Enemy(Entity):
         Returns:
             pygame.Rect: rectangle de l'ennemi
         """
-        self.image = assets.load_scaled_image(self.texture_location, scale * self.size_factor)
+        
+        if self.animation_list:
+            self.animation_dict = assets.load_animation(self.animation_list, self.texture_location, scale * self.size_factor)
+            self.animation_index = 0
+            self.animation_action = self.animation_list[0]
+            self.image = self.animation_dict[self.animation_action][self.animation_index]
+            self.animation_update_time = pygame.time.get_ticks()
+            
+        else:
+            self.image = assets.load_scaled_image(self.texture_location, scale * self.size_factor)
 
         rect = self.image.get_rect()
         rect.center = (x, y)
@@ -159,6 +171,41 @@ class Enemy(Entity):
         """
         self.move(world)
     
+    def update_action(self, new_action: str):
+        """Méthode qui permet de changer l'animation de l'ennemi
+
+        Args:
+            new_action (str): nouvelle action de l'ennemi
+        """
+        if self.animation_list and (new_action != self.animation_action):
+            assert new_action in self.animation_list, f"Action {new_action} not in {self.animation_list}"
+            self.animation_action = new_action
+            self.animation_index = 0
+            
+            self.animation_update_time = pygame.time.get_ticks()
+    
+    def update_animation(self):
+        """Méthode qui permet de mettre à jour l'animation de l'ennemi
+        """
+        if self.animation_list:
+            ANIMATION_COOLDOWN = 100
+            
+            self.image = self.animation_dict[self.animation_action][self.animation_index]
+            
+            if (pygame.time.get_ticks() - self.animation_update_time) > ANIMATION_COOLDOWN:
+                self.animation_index += 1
+
+                if self.animation_index >= len(self.animation_dict[self.animation_action]):
+                    self.animation_index = 0
+                
+                self.animation_update_time = pygame.time.get_ticks()
+    
+    def update(self):
+        """Méthode qui permet de mettre à jour l'ennemi
+        """
+        super().update()
+        self.update_animation()
+    
     def draw(self, screen: pygame.Surface):
         """Méthode qui permet d'afficher l'opps 
 
@@ -172,7 +219,7 @@ class Enemy(Entity):
             pygame.draw.rect(screen, (0, 0, 255), self.rect, 1)
 
 class MovingEnemy(Enemy):
-    def __init__(self, x: int, y: int, tile_size: int, assets: utils.Assets, texture_location: str, max_health = 100, speed: int = 1, scale: float = 1):
+    def __init__(self, x: int, y: int, tile_size: int, assets: utils.Assets, texture_location: str, max_health = 100, speed: int = 1, scale: float = 1, animation_list: list[str] = None):
         """Crée un ennemi qui peut se déplacer
 
         Args:
@@ -184,8 +231,9 @@ class MovingEnemy(Enemy):
             max_health (int, optional): vie maximale de l'ennemi. 100 par défaut.
             speed (int, optional): vitesse de l'ennemi. 1 par défaut.
             scale (float, optional): facteur de redimensionnement. 1 par défaut.
+            animation_list (list[str], optional): liste des animations de l'ennemi, si aucune n'est donnée, l'ennemi n'aura pas d'animation. None par défaut.
         """
-        super().__init__(x, y, tile_size, assets, texture_location, max_health, speed, scale)
+        super().__init__(x, y, tile_size, assets, texture_location, max_health, speed, scale, animation_list)
 
         self.is_running = False
     
@@ -224,7 +272,7 @@ class MovingEnemy(Enemy):
         self.move_entity_position(dx, dy, world)
 
 class IntelligentEnemy(MovingEnemy):
-    def __init__(self, x: int, y: int, tile_size: int, assets: utils.Assets, texture_location: str, max_health = 100, speed: int = 1, scale: float = 1):
+    def __init__(self, x: int, y: int, tile_size: int, assets: utils.Assets, texture_location: str, max_health = 100, speed: int = 1, scale: float = 1, animation_list: list[str] = None):
         """Crée un ennemi intelligent
 
         Args:
@@ -236,8 +284,9 @@ class IntelligentEnemy(MovingEnemy):
             max_health (int, optional): vie maximale de l'ennemi. 100 par défaut.
             speed (int, optional): vitesse de l'ennemi. 1 par défaut.
             scale (float, optional): facteur de redimensionnement. 1 par défaut.
+            animation_list (list[str], optional): liste des animations de l'ennemi, si aucune n'est donnée, l'ennemi n'aura pas d'animation. None par défaut.
         """
-        super().__init__(x, y, tile_size, assets, texture_location, max_health, speed, scale)
+        super().__init__(x, y, tile_size, assets, texture_location, max_health, speed, scale, animation_list)
         self.viewline = None
         
         self.moving_around_direction = 1
@@ -246,7 +295,13 @@ class IntelligentEnemy(MovingEnemy):
         
         self.MOVEMENT_CHANGING_DELAY = 3000
     
+    @abstract.abstractmethod
     def ai(self, world):
+        """Méthode qui permet de déplacer l'ennemi de manière autonome
+        
+        Args:
+            world (World): monde dans lequel l'ennemi se déplace
+        """
         return super().ai(world)
     
     def can_see_player(self, world) -> bool:
@@ -420,125 +475,3 @@ class IntelligentEnemy(MovingEnemy):
         
         if self.display_debug and self.viewline:
             pygame.draw.line(screen, (255, 0, 0), self.viewline[0], self.viewline[1])
-
-class Dummy(Enemy):
-    def __init__(self, x: int, y: int, tile_size: int, scale: float, assets: utils.Assets):
-        """Crée un mannenequin d'entraînement
-
-        Args:
-            x (int): position de l'ennemi sur l'axe des abscisses
-            y (int): position de l'ennemi sur l'axe des ordonnées
-            tile_size (int): taille des tuiles
-            scale (float): facteur de redimensionnement
-            assets (utils.Assets): classe qui contient les assets du jeu
-        """
-        super().__init__(x, y, tile_size, assets, ENEMIES_TEXTURES_LOCATION + "dummy.png", scale = scale)
-
-class IntelligentDummy(IntelligentEnemy):
-    def __init__(self, x: int, y: int, tile_size: int, scale: float, assets: utils.Assets, speed: int):
-        """Crée un mannequin d'entraînement intelligent
-        
-        Args:
-            x (int): position de l'ennemi sur l'axe des abscisses
-            y (int): position de l'ennemi sur l'axe des ordonnées
-            tile_size (int): taille des tuiles
-            scale (float): facteur de redimensionnement
-            assets (utils.Assets): classe qui contient les assets du jeu
-            speed (int): vitesse de l'ennemi
-        """
-        super().__init__(x, y, tile_size, assets, ENEMIES_TEXTURES_LOCATION + "dummy.png", speed = speed, scale = scale)
-
-    def ai(self, world):
-        """Méthode qui permet de déplacer l'ennemi vers le joueur
-
-        Args:
-            world (World): _description_
-        """
-        if self.can_see_player(world):
-            move_right = world.player.rect.x > (self.rect.right + 3 * self.size_factor)
-            move_left = world.player.rect.right < (self.rect.x - 3 * self.size_factor)
-            self.move(world, move_right, move_left)
-        else:
-            self.move_around(world)
-
-class KenEnemy(IntelligentEnemy):
-    def __init__(self, x: int, y: int, tile_size: int, scale: float, assets: utils.Assets):
-        """Crée un ennemi Ken
-
-        Args:
-            x (int): position de Ken sur l'axe des abscisses
-            y (int): position de Ken sur l'axe des ordonnées
-            tile_size (int): taille des tuiles
-            scale (float): facteur de redimensionnement
-            assets (utils.Assets): classe qui contient les assets du jeu
-        """
-        super().__init__(x, y, tile_size, assets, ENEMIES_TEXTURES_LOCATION + "ken.png", speed = 2, scale = scale)
-        
-        self.last_attack_time = pygame.time.get_ticks()
-        self.ken_could_attack = False
-    
-    def ai(self, world):
-        """Méthode qui permet de déplacer Ken vers le joueur
-        
-        Args:
-            world (World): monde dans lequel Ken se déplace
-        """
-        if self.can_see_player(world):
-            move_right = world.player.rect.x > (self.rect.right + 2 * self.size_factor)
-            move_left = world.player.rect.right < (self.rect.x - 2 * self.size_factor)
-            self.move(world,move_right,move_left)
-            
-            if self.player_in_attack_range(world):
-                self.attack(world)
-        else:
-            self.move_around(world)
-    
-    def player_in_attack_range(self, world) -> bool:
-        """Méthode qui permet de vérifier si le joueur est dans la zone d'attaque de Ken
-        
-        Args:
-            world (World): monde dans lequel Ken se déplace
-        
-        Returns:
-            bool: si le joueur est dans la zone d'attaque de Ken
-        """
-        attack_rect = self.attack_rect()
-
-        return attack_rect.colliderect(world.player.rect)
-        
-    def attack(self, world):
-        """Méthode qui permet à Ken d'attaquer le joueur
-        
-        Args:
-            world (World): monde dans lequel Ken se déplace
-        """
-        
-        ATTACK_COOLDOWN = 1000
-        
-        ken_could_attack = (pygame.time.get_ticks() - self.last_attack_time) > ATTACK_COOLDOWN
-
-        if ken_could_attack and self.is_alive:
-            
-            if self.player_in_attack_range(world):
-                self.last_attack_time = pygame.time.get_ticks()
-                world.player.health -= 10
-
-    def attack_rect(self):
-        """Méthode qui permet de définir la zone d'attaque de Ken
-        """
-        width = int(self.rect.width * 0.8)
-        height = int(self.rect.height * 0.23)
-        
-        if not self.flip:
-            x = self.rect.right
-        else:
-            x = self.rect.left - width
-        
-        y = self.rect.y + self.rect.height * 0.4
-        
-        attack_rect = pygame.Rect(x, y, width, height)
-        
-        return attack_rect
-    
-    def draw(self, screen: pygame.Surface):
-        super().draw(screen)
