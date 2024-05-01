@@ -14,12 +14,14 @@ pygame.init()
 # Initiallisation du mixer
 pygame.mixer.init()
 
-# Musique du Jeu
-pygame.mixer.music.load(PLAYBACK_MUSIC)
-#pygame.mixer.music.play(loops=-1, start=0.0, fade_ms=0)   
-
 # Tous les paramètres que le joueur peut modifier comme les touches, etc.
 game_settings = utils.Settings()
+
+# Musique du Jeu
+pygame.mixer.music.load(PLAYBACK_MUSIC)
+pygame.mixer.music.set_volume(game_settings.volume)
+pygame.mixer.music.play(loops = -1, start = 0.0, fade_ms = 0)   
+
 
 # Définition de la taille de l'écran
 screen = pygame.display.set_mode((game_settings.screen_width, game_settings.screen_height))
@@ -37,16 +39,16 @@ user_inputs_utils = utils.UserInputStates.get_instance()
 
 ### Fonctions ###
 
-def timer_minute(milisec: int) -> str:
+def timer_minute(time_milisec: int) -> str:
     """Transforme des milisecondes dans le format heures, minutes puis secondes
 
     Args:
         milisec (int): nombre de milisecondes
 
     Returns:
-        str: temps converti (et pas au bouddhisme hein ^^)
+        str: temps converti
     """
-    sec = milisec // 1000
+    sec = time_milisec // 1000
     min = sec // 60
     hour = min // 60
     return f"{hour:02}:{min - hour * 60:02}:{sec - min * 60:02}"
@@ -84,10 +86,6 @@ world = World()
 player = spawn_player()
 
 # Debug
-ar_weapon = weapon.Arb4rb13(assets, world.tile_size, 1)
-p450_weapon = weapon.GunP450(assets, world.tile_size, 0.8)
-
-player.set_weapon(ar_weapon)
 
 # Variables pour la boucle
 run = True
@@ -126,6 +124,8 @@ while run:
             if settings_choice:
                 settings_buttons = settings_menu.draw(screen)
                 settings_choice = not settings_buttons['back']
+                if not settings_choice:
+                    settings_menu.set_menu_off()
             else:
                 # Gestion du menu pause
                 menu_buttons = pause_menu.draw(screen)
