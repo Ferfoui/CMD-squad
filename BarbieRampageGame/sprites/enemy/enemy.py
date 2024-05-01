@@ -6,7 +6,7 @@ import utils
 from ..entity import Entity
 
 class Enemy(Entity):
-    def __init__(self, x: int, y: int, tile_size: int, assets: utils.Assets, texture_location: str, max_health = 100, speed: int = 1, scale: float = 1):
+    def __init__(self, x: int, y: int, tile_size: int, assets: utils.Assets, texture_location: str, max_health = 100, speed: int = 1, scale: float = 1, animation_list: list[str] = None):
         """Crée un ennemi
 
         Args:
@@ -18,8 +18,10 @@ class Enemy(Entity):
             max_health (int, optional): vie maximale de l'ennemi. 100 par défaut.
             speed (int, optional): vitesse de l'ennemi. 1 par défaut.
             scale (float, optional): facteur de redimensionnement. 1 par défaut.
+            animation_list (list[str], optional): liste des animations de l'ennemi, si aucune n'est donnée, l'ennemi n'aura pas d'animation. None par défaut.
         """
         self.texture_location = texture_location
+        self.animation_list = animation_list
         super().__init__(x, y, max_health, tile_size, assets, speed, scale)
         
         self.size_factor = tile_size * SPRITE_SCALING
@@ -41,7 +43,16 @@ class Enemy(Entity):
         Returns:
             pygame.Rect: rectangle de l'ennemi
         """
-        self.image = assets.load_scaled_image(self.texture_location, scale * self.size_factor)
+        
+        if self.animation_list:
+            self.animation_dict = assets.load_animation(self.animation_list, self.texture_location, scale * self.size_factor)
+            self.animation_index = 0
+            self.animation_action = self.animation_list[0]
+            self.image = self.animation_dict[self.animation_action][self.animation_index]
+            self.animation_update_time = pygame.time.get_ticks()
+            
+        else:
+            self.image = assets.load_scaled_image(self.texture_location, scale * self.size_factor)
 
         rect = self.image.get_rect()
         rect.center = (x, y)
@@ -160,6 +171,41 @@ class Enemy(Entity):
         """
         self.move(world)
     
+    def update_action(self, new_action: str):
+        """Méthode qui permet de changer l'animation de l'ennemi
+
+        Args:
+            new_action (str): nouvelle action de l'ennemi
+        """
+        if self.animation_list and (new_action != self.animation_action):
+            assert new_action in self.animation_list, f"Action {new_action} not in {self.animation_list}"
+            self.animation_action = new_action
+            self.animation_index = 0
+            
+            self.animation_update_time = pygame.time.get_ticks()
+    
+    def update_animation(self):
+        """Méthode qui permet de mettre à jour l'animation de l'ennemi
+        """
+        if self.animation_list:
+            ANIMATION_COOLDOWN = 100
+            
+            self.image = self.animation_dict[self.animation_action][self.animation_index]
+            
+            if (pygame.time.get_ticks() - self.animation_update_time) > ANIMATION_COOLDOWN:
+                self.animation_index += 1
+
+                if self.animation_index >= len(self.animation_dict[self.animation_action]):
+                    self.animation_index = 0
+                
+                self.animation_update_time = pygame.time.get_ticks()
+    
+    def update(self):
+        """Méthode qui permet de mettre à jour l'ennemi
+        """
+        super().update()
+        self.update_animation()
+    
     def draw(self, screen: pygame.Surface):
         """Méthode qui permet d'afficher l'opps 
 
@@ -173,7 +219,7 @@ class Enemy(Entity):
             pygame.draw.rect(screen, (0, 0, 255), self.rect, 1)
 
 class MovingEnemy(Enemy):
-    def __init__(self, x: int, y: int, tile_size: int, assets: utils.Assets, texture_location: str, max_health = 100, speed: int = 1, scale: float = 1):
+    def __init__(self, x: int, y: int, tile_size: int, assets: utils.Assets, texture_location: str, max_health = 100, speed: int = 1, scale: float = 1, animation_list: list[str] = None):
         """Crée un ennemi qui peut se déplacer
 
         Args:
@@ -185,8 +231,9 @@ class MovingEnemy(Enemy):
             max_health (int, optional): vie maximale de l'ennemi. 100 par défaut.
             speed (int, optional): vitesse de l'ennemi. 1 par défaut.
             scale (float, optional): facteur de redimensionnement. 1 par défaut.
+            animation_list (list[str], optional): liste des animations de l'ennemi, si aucune n'est donnée, l'ennemi n'aura pas d'animation. None par défaut.
         """
-        super().__init__(x, y, tile_size, assets, texture_location, max_health, speed, scale)
+        super().__init__(x, y, tile_size, assets, texture_location, max_health, speed, scale, animation_list)
 
         self.is_running = False
     
@@ -225,7 +272,7 @@ class MovingEnemy(Enemy):
         self.move_entity_position(dx, dy, world)
 
 class IntelligentEnemy(MovingEnemy):
-    def __init__(self, x: int, y: int, tile_size: int, assets: utils.Assets, texture_location: str, max_health = 100, speed: int = 1, scale: float = 1):
+    def __init__(self, x: int, y: int, tile_size: int, assets: utils.Assets, texture_location: str, max_health = 100, speed: int = 1, scale: float = 1, animation_list: list[str] = None):
         """Crée un ennemi intelligent
 
         Args:
@@ -237,8 +284,9 @@ class IntelligentEnemy(MovingEnemy):
             max_health (int, optional): vie maximale de l'ennemi. 100 par défaut.
             speed (int, optional): vitesse de l'ennemi. 1 par défaut.
             scale (float, optional): facteur de redimensionnement. 1 par défaut.
+            animation_list (list[str], optional): liste des animations de l'ennemi, si aucune n'est donnée, l'ennemi n'aura pas d'animation. None par défaut.
         """
-        super().__init__(x, y, tile_size, assets, texture_location, max_health, speed, scale)
+        super().__init__(x, y, tile_size, assets, texture_location, max_health, speed, scale, animation_list)
         self.viewline = None
         
         self.moving_around_direction = 1

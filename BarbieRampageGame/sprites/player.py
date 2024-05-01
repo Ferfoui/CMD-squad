@@ -276,16 +276,17 @@ class Player(Entity):
         self.image = self.animation_dict[self.action][self.frame_index]
 
         # Vérifie si assez de temps est passé depuis la dernière mise à jour
-        if pygame.time.get_ticks() - self.update_time > animation_cooldown:
-            self.update_time = pygame.time.get_ticks()
+        if (pygame.time.get_ticks() - self.update_time) > animation_cooldown:
             self.frame_index += 1
 
-	    # Si l'animation est terminée, remise de la première image
-        if self.frame_index >= len(self.animation_dict[self.action]):
-            #if self.action == self.ANIMATION_TYPES[3]:
-            #    self.frame_index = len(self.animation_dict[self.action]) - 1
-            #else:
-                self.frame_index = 0
+	        # Si l'animation est terminée, remise de la première image
+            if self.frame_index >= len(self.animation_dict[self.action]):
+                #if self.action == self.ANIMATION_TYPES[3]:
+                #    self.frame_index = len(self.animation_dict[self.action]) - 1
+                #else:
+                    self.frame_index = 0
+
+            self.update_time = pygame.time.get_ticks()
 
     def update_action(self, new_action: str):
         """Met à jour l'action que le joueur est en train d'effectuer
@@ -295,6 +296,7 @@ class Player(Entity):
         """
         # Vérifie si la nouvelle action est différente de celle d'avant
         if new_action != self.action:
+            assert new_action in self.ANIMATION_TYPES, f"Action {new_action} not in {self.ANIMATION_TYPES}"
             self.action = new_action
             # Remet à zéro les variables de l'animation
             self.frame_index = 0

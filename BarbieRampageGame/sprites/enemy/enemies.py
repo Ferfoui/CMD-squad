@@ -55,7 +55,8 @@ class KenEnemy(IntelligentEnemy):
             scale (float): facteur de redimensionnement
             assets (utils.Assets): classe qui contient les assets du jeu
         """
-        super().__init__(x, y, tile_size, assets, ENEMIES_TEXTURES_LOCATION + "ken.png", speed = 2, scale = scale)
+        ANIMATION_LIST = ['Idle']
+        super().__init__(x, y, tile_size, assets, ENEMIES_TEXTURES_LOCATION + "ken/", speed = 2, scale = scale, animation_list = ANIMATION_LIST)
         
         self.last_attack_time = pygame.time.get_ticks()
         self.ken_could_attack = False
