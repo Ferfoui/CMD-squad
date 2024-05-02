@@ -309,15 +309,15 @@ class InventoryMenu(gui.Menu):
             settings (Settings): classe qui contient les paramètres du jeu
         """
         super().__init__(COLOR_DARK)
-        talented_tree_image = assets.get_scaled_image("talented_tree", f"{TEXTURES_ROOT}gui/talented_tree.png", 1)
-        golden_trophy_image = assets.get_scaled_image("gold_trophy", f"{TEXTURES_ROOT}gui/gold_trophy.png", 1)
-        manteau_style_image = assets.get_scaled_image("manteau_super_clean", f"{TEXTURES_ROOT}gui/manteau_super_clean.png", 1)
-        AR_B4RB13_image = assets.get_scaled_image("AR_B4RB13", f"{TEXTURES_ROOT}weapons/AR_B4RB13.png", 1)
+        talented_tree_image = assets.get_scaled_image("talented_tree", f"{GUI_TEXTURES_LOCATION}talented_tree.png", 1)
+        golden_trophy_image = assets.get_scaled_image("gold_trophy", f"{GUI_TEXTURES_LOCATION}gold_trophy.png", 1)
+        manteau_style_image = assets.get_scaled_image("manteau_super_clean", f"{GUI_TEXTURES_LOCATION}manteau_super_clean.png", 1)
+        ar_b4rb13_image = assets.get_scaled_image("AR_B4RB13", f"{GUI_TEXTURES_LOCATION}AR_B4RB13.png", 1)
 
         self.add_button("arbre des talents", talented_tree_image, talented_tree_image, settings.screen_width//1.5, settings.screen_height * 0.1, 1, True)
         self.add_button("trophees", golden_trophy_image, golden_trophy_image, settings.screen_width//1.5, settings.screen_height * 0.1, 1, True)
         self.add_button("apparences", manteau_style_image, manteau_style_image, settings.screen_width//1.5, settings.screen_height * 0.1, 1, True)
-        self.add_button("progression des armes", AR_B4RB13_image, AR_B4RB13_image, settings.screen_width//1.5, settings.screen_height * 0.1, 1, True)
+        self.add_button("progression des armes", ar_b4rb13_image, ar_b4rb13_image, settings.screen_width//1.5, settings.screen_height * 0.1, 1, True)
     
     def draw(self, screen: pygame.Surface) -> dict[str, bool]:
         """Affiche les images et les boutons à l'écran et renvoie les noms des boutons qui ont été cliqués

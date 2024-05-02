@@ -50,7 +50,7 @@ if os.getcwd() == path.realpath("..\\BarbieRampageGame") or os.getcwd() == path.
     # Si la working directory est "CMD-squad/BarbieRampageGame/"
     GAME_WORKING_DIR =  path.realpath("..\\BarbieRampageGame/")
 else:
-    # Si la working directory est "CMD-squad/"*
+    # Si la working directory est "CMD-squad/"
     GAME_WORKING_DIR =  path.realpath("BarbieRampageGame/")
 
 # L'endroit où se trouve tous les fichiers non python du jeu
@@ -62,6 +62,7 @@ TEXTURES_ROOT = path.join(ASSETS_ROOT, "textures/") # Le chemin des textures
 SOUNDS_ROOT = path.join(ASSETS_ROOT, "sounds/") # Le chemin des effets sonores
 FONTS_ROOT = path.join(ASSETS_ROOT, "fonts/") # Le chemin vers les polices d'écriture
 
+GUI_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "gui/")
 PLAYER_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "player/")
 ENEMIES_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "enemies/")
 COLLECTIBLES_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "collectibles/")
