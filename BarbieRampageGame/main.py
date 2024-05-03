@@ -20,8 +20,7 @@ game_settings = utils.Settings()
 # Musique du Jeu
 pygame.mixer.music.load(SUPERSHY_MUSIC)
 pygame.mixer.music.set_volume(game_settings.volume)
-pygame.mixer.music.play(loops = -1, start = 0.0, fade_ms = 0)   
-
+pygame.mixer.music.play(loops = -1, start = 0.0, fade_ms = 0)
 
 # Définition de la taille de l'écran
 screen = pygame.display.set_mode((game_settings.screen_width, game_settings.screen_height))
@@ -34,6 +33,8 @@ clock = pygame.time.Clock()
 
 # Tous les assets du jeu, c'est-à-dire les images, les sons, les polices, etc...
 assets = utils.Assets(game_settings)
+assets.set_volume(game_settings.volume)
+
 # Pour les imputs du joueur
 user_inputs_utils = utils.UserInputStates.get_instance()
 
@@ -221,7 +222,6 @@ while run:
                         pause = not pause
             if event.key == pygame.K_TAB:
                 player.shoot(world.bullet_group)
-                pygame.mixer.Sound.play(assets.weapon_cross_sound)
 
             if event.key == pygame.K_i:
                 if (not game_loading) and player.is_alive:

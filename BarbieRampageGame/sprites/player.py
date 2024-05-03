@@ -461,9 +461,12 @@ class WeaponHolder():
         Returns:
             int: nouveau nombre de balles après le tir
         """
-        if self.has_weapon() and bullet_count > 0:
-            bullets_consuming = self.weapon.shoot(self.direction, bullet_group)
-            bullet_count -= bullets_consuming
+        if self.has_weapon():
+            if bullet_count > 0:
+                bullets_consuming = self.weapon.shoot(self.direction, bullet_group)
+                bullet_count -= bullets_consuming
+            else:
+                self.weapon.play_empty_sound()
         
         if bullet_count < 0:
             bullet_count = 0

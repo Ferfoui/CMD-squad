@@ -9,7 +9,7 @@ import utils
 
 # La classe qui crée les armes
 class Weapon(abstract.ABC):
-    def __init__(self, weapon_name: str, texture_path: str, assets: utils.Assets, tile_size: int, scale: float, shoot_cooldown: int = 300, x: int = 0, y: int = 0):
+    def __init__(self, weapon_name: str, texture_path: str, assets: utils.Assets, tile_size: int, scale: float, shoot_cooldown: int = 300):
         """Créé une nouvelle arme
 
         Args:
@@ -31,11 +31,13 @@ class Weapon(abstract.ABC):
         self.flip = False
         self.weapon_texture = self.init_texture(weapon_name, texture_path, assets, scale)
         self.rect = self.weapon_texture.get_rect()
-        #self.rect.center = (x, y)
         
         self.shoot_position_right, self.shoot_position_left = self.get_shoot_coordinates()
         
         self.handle_position_right, self.handle_position_left = self.get_handle_position()
+        
+        self.shoot_sound = assets.blaster_sound
+        self.empy_sound = assets.weapon_cross_sound
     
     @abstract.abstractmethod
     def get_shoot_coordinates(self) -> tuple[tuple[int, int], tuple[int, int]]:
@@ -109,6 +111,11 @@ class Weapon(abstract.ABC):
         self.send_bullet(direction, bullet_group)
         
         return self.bullets_consuming
+    
+    def play_empty_sound(self):
+        """Joue le son de l'arme vide
+        """
+        self.empy_sound.play()
 
     def update(self):
         """Met à jour l'arme
@@ -125,11 +132,12 @@ class Weapon(abstract.ABC):
         absolute_shoot_position = (self.rect.x + relative_shoot_position[0], self.rect.y + relative_shoot_position[1])
         
         bullet = Bullet(self.size_factor, 1, absolute_shoot_position[0], absolute_shoot_position[1], direction)
+        self.shoot_sound.play()
         bullet_group.add(bullet)
         self.bullet_group = bullet_group
 
 class Arb4rb13(Weapon):
-    def __init__(self, assets: utils.Assets, tile_size: int, scale: float, x: int = 0, y: int = 0):
+    def __init__(self, assets: utils.Assets, tile_size: int, scale: float):
         """Crée une nouvelle arme de type AR-BARB13
 
         Args:
@@ -139,7 +147,7 @@ class Arb4rb13(Weapon):
             x (int): position de l'axe horizontal
             y (int): position de l'axe vertical
         """
-        super().__init__("AR-B4RB13", WEAPONS_TEXTURES_LOCATION + "AR_B4RB13.png", assets, tile_size, scale, 400, x, y)
+        super().__init__("AR-B4RB13", WEAPONS_TEXTURES_LOCATION + "AR_B4RB13.png", assets, tile_size, scale, 400)
         
         self.last_burst_shot = pygame.time.get_ticks()
         self.burst_current_shoot = 0
@@ -203,7 +211,7 @@ class Arb4rb13(Weapon):
         return right_handle, left_handle
 
 class GunP450(Weapon):
-    def __init__(self, assets: utils.Assets, tile_size: int, scale: float, x: int = 0, y: int = 0):
+    def __init__(self, assets: utils.Assets, tile_size: int, scale: float):
         """Crée une nouvelle arme de type Gun-P450
 
         Args:
@@ -213,7 +221,7 @@ class GunP450(Weapon):
             x (int): position de l'axe horizontal
             y (int): position de l'axe vertical
         """
-        super().__init__("Gun-P450", WEAPONS_TEXTURES_LOCATION + "P450.png", assets, tile_size, scale, 500, x, y)
+        super().__init__("Gun-P450", WEAPONS_TEXTURES_LOCATION + "P450.png", assets, tile_size, scale, 500)
     
     def get_shoot_coordinates(self) -> tuple[tuple[int, int], tuple[int, int]]:
         """Récupère les coordonnées relatives du canon de l'arme
@@ -244,7 +252,7 @@ class GunP450(Weapon):
         return right_handle, left_handle
 
 class GunP90(Weapon):
-    def __init__(self, assets: utils.Assets, tile_size: int, scale: float, x: int = 0, y: int = 0):
+    def __init__(self, assets: utils.Assets, tile_size: int, scale: float):
         """Crée une nouvelle arme de type Gun-P90
 
         Args:
@@ -254,7 +262,7 @@ class GunP90(Weapon):
             x (int): position de l'axe horizontal
             y (int): position de l'axe vertical
         """
-        super().__init__("Gun-P90", WEAPONS_TEXTURES_LOCATION + "P90.png", assets, tile_size, scale, x, y)
+        super().__init__("Gun-P90", WEAPONS_TEXTURES_LOCATION + "P90.png", assets, tile_size, scale, 200)
     
     def get_shoot_coordinates(self) -> tuple[tuple[int, int], tuple[int, int]]:
         """Récupère les coordonnées relatives du canon de l'arme
