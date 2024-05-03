@@ -195,7 +195,7 @@ class AmmoBox(ItemBox):
         Args:
             player (Player): joueur auquel ajouter les balles
         """
-        player.add_bullets(10)
+        player.add_bullets(20)
 
 class HealthBox(ItemBox):
     def __init__(self, x: int, y: int, assets: utils.Assets, tile_size: int, scale: float = 1):

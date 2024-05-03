@@ -265,8 +265,8 @@ class GunP90(Weapon):
         """
         position_factor = 0.5
         
-        right_shoot = self.rect.width * 0.4, int(self.rect.height * position_factor)
-        left_shoot = self.rect.width * 0.6, int(self.rect.height * position_factor)
+        right_shoot = self.rect.width, int(self.rect.height * position_factor)
+        left_shoot = 0, int(self.rect.height * position_factor)
         
         return right_shoot, left_shoot
     
@@ -277,9 +277,9 @@ class GunP90(Weapon):
             tuple[int, int]: coordonnées de la poignée de l'arme quand elle est tournée vers la droite
             tuple[int, int]: coordonnées de la poignée de l'arme quand elle est tournée vers la gauche
         """
-        position_factor = 0.8
+        position_factor = 0.6
         
-        right_handle = self.rect.width * 0.2, int(self.rect.height * position_factor)
-        left_handle = self.rect.width * 0.8, int(self.rect.height * position_factor)
+        right_handle = self.rect.width * 0.4, int(self.rect.height * position_factor)
+        left_handle = self.rect.width * 0.6, int(self.rect.height * position_factor)
         
         return right_handle, left_handle
