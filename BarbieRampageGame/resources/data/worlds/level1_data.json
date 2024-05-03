@@ -8,32 +8,22 @@
     },
     "tiles": [
         {
-            "type": "grass_default_right_border",
-            "x": 0,
-            "y": 10
-        },
-        {
-            "type": "dirt_default_right_border",
-            "x": 0,
-            "y": 11
-        },
-        {
-            "type": "dirt_default_right_border",
+            "type": "grass_default",
             "x": 0,
             "y": 12
         },
         {
-            "type": "dirt_default_right_border",
+            "type": "dirt_default_down_border",
             "x": 0,
             "y": 13
         },
         {
-            "type": "dirt_default_right_border",
+            "type": "dirt_default",
             "x": 0,
             "y": 14
         },
         {
-            "type": "dirt_default",
+            "type": "dirt_default_down_border",
             "x": 0,
             "y": 15
         },
@@ -41,6 +31,11 @@
             "type": "grass_default",
             "x": 1,
             "y": 15
+        },
+        {
+            "type": "player_spawn",
+            "x": 2,
+            "y": 13
         },
         {
             "type": "grass_default",
@@ -53,11 +48,6 @@
             "y": 15
         },
         {
-            "type": "player_spawn",
-            "x": 4,
-            "y": 12
-        },
-        {
             "type": "grass_default",
             "x": 4,
             "y": 15
@@ -65,15 +55,30 @@
         {
             "type": "grass_default",
             "x": 5,
+            "y": 14
+        },
+        {
+            "type": "dirt_default_down_border",
+            "x": 5,
             "y": 15
         },
         {
-            "type": "grass_default",
+            "type": "grass_default_right_border",
+            "x": 6,
+            "y": 14
+        },
+        {
+            "type": "dirt_default_down_left_corner",
             "x": 6,
             "y": 15
         },
         {
-            "type": "grass_default",
+            "type": "grass_default_left_border",
+            "x": 7,
+            "y": 14
+        },
+        {
+            "type": "dirt_default_down_right_corner",
             "x": 7,
             "y": 15
         },
@@ -83,97 +88,67 @@
             "y": 15
         },
         {
-            "type": "grass_default",
+            "type": "dirt_default_left_border",
+            "x": 9,
+            "y": 12
+        },
+        {
+            "type": "dirt_default_down_right_corner",
+            "x": 9,
+            "y": 13
+        },
+        {
+            "type": "grass_default_right_border",
             "x": 9,
             "y": 15
         },
         {
-            "type": "grass_default_left_border",
+            "type": "grass_default_right_border",
             "x": 10,
-            "y": 14
+            "y": 12
         },
         {
-            "type": "dirt_default",
+            "type": "dirt_default_down_left_corner",
+            "x": 10,
+            "y": 13
+        },
+        {
+            "type": "grass_default",
             "x": 10,
             "y": 15
         },
         {
-            "type": "ammo_box",
+            "type": "grass_default_left_border",
             "x": 11,
-            "y": 11
+            "y": 12
         },
         {
-            "type": "grass_default_left_border",
+            "type": "dirt_default_down_right_corner",
             "x": 11,
             "y": 13
         },
         {
-            "type": "dirt_default",
-            "x": 11,
-            "y": 14
-        },
-        {
-            "type": "dirt_default",
+            "type": "grass_default",
             "x": 11,
             "y": 15
         },
         {
             "type": "grass_default",
             "x": 12,
-            "y": 13
-        },
-        {
-            "type": "dirt_default",
-            "x": 12,
-            "y": 14
-        },
-        {
-            "type": "dirt_default",
-            "x": 12,
             "y": 15
         },
         {
             "type": "grass_default",
             "x": 13,
-            "y": 13
-        },
-        {
-            "type": "dirt_default",
-            "x": 13,
-            "y": 14
-        },
-        {
-            "type": "dirt_default",
-            "x": 13,
             "y": 15
         },
         {
-            "type": "dummy_spawn",
-            "x": 14,
-            "y": 11
-        },
-        {
-            "type": "grass_default_right_border",
-            "x": 14,
-            "y": 13
-        },
-        {
-            "type": "dirt_default",
-            "x": 14,
-            "y": 14
-        },
-        {
-            "type": "dirt_default",
+            "type": "grass_default",
             "x": 14,
             "y": 15
         },
         {
-            "type": "grass_default_right_border",
-            "x": 15,
-            "y": 14
-        },
-        {
-            "type": "dirt_default",
+            "type": "grass_default",
             "x": 15,
             "y": 15
         },
@@ -186,11 +161,6 @@
             "type": "grass_default",
             "x": 17,
             "y": 15
-        },
-        {
-            "type": "weapon_crate",
-            "x": 18,
-            "y": 12
         },
         {
             "type": "grass_default",
@@ -208,17 +178,27 @@
             "y": 15
         },
         {
-            "type": "ken_spawn",
-            "x": 21,
-            "y": 13
-        },
-        {
-            "type": "grass_default_right_border",
+            "type": "grass_default",
             "x": 21,
             "y": 15
         },
         {
-            "type": "grass_default_left_border",
+            "type": "grass_default",
+            "x": 22,
+            "y": 15
+        },
+        {
+            "type": "grass_default",
+            "x": 23,
+            "y": 15
+        },
+        {
+            "type": "grass_default",
+            "x": 24,
+            "y": 15
+        },
+        {
+            "type": "grass_default",
             "x": 25,
             "y": 15
         },
@@ -273,44 +253,9 @@
             "y": 15
         },
         {
-            "type": "dummy_spawn",
-            "x": 36,
-            "y": 4
-        },
-        {
-            "type": "grass_default_left_border",
-            "x": 36,
-            "y": 6
-        },
-        {
-            "type": "dirt_default_left_border",
-            "x": 36,
-            "y": 7
-        },
-        {
-            "type": "dirt_default_down_left_corner",
-            "x": 36,
-            "y": 8
-        },
-        {
             "type": "grass_default",
             "x": 36,
             "y": 15
-        },
-        {
-            "type": "grass_default",
-            "x": 37,
-            "y": 6
-        },
-        {
-            "type": "dirt_default",
-            "x": 37,
-            "y": 7
-        },
-        {
-            "type": "dirt_default_down_border",
-            "x": 37,
-            "y": 8
         },
         {
             "type": "grass_default",
@@ -320,57 +265,12 @@
         {
             "type": "grass_default",
             "x": 38,
-            "y": 6
-        },
-        {
-            "type": "dirt_default",
-            "x": 38,
-            "y": 7
-        },
-        {
-            "type": "dirt_default_down_border",
-            "x": 38,
-            "y": 8
-        },
-        {
-            "type": "grass_default",
-            "x": 38,
             "y": 15
         },
         {
             "type": "grass_default",
             "x": 39,
-            "y": 6
-        },
-        {
-            "type": "dirt_default",
-            "x": 39,
-            "y": 7
-        },
-        {
-            "type": "dirt_default_down_border",
-            "x": 39,
-            "y": 8
-        },
-        {
-            "type": "grass_default",
-            "x": 39,
             "y": 15
-        },
-        {
-            "type": "grass_default_right_border",
-            "x": 40,
-            "y": 6
-        },
-        {
-            "type": "dirt_default_right_border",
-            "x": 40,
-            "y": 7
-        },
-        {
-            "type": "dirt_default_down_right_corner",
-            "x": 40,
-            "y": 8
         },
         {
             "type": "grass_default",
@@ -403,127 +303,42 @@
             "y": 15
         },
         {
-            "type": "grass_default_left_border",
-            "x": 46,
-            "y": 14
-        },
-        {
-            "type": "dirt_default",
+            "type": "grass_default",
             "x": 46,
             "y": 15
         },
         {
             "type": "grass_default",
             "x": 47,
-            "y": 14
-        },
-        {
-            "type": "dirt_default",
-            "x": 47,
             "y": 15
         },
         {
-            "type": "grass_default_left_border",
-            "x": 48,
-            "y": 13
-        },
-        {
-            "type": "dirt_default",
-            "x": 48,
-            "y": 14
-        },
-        {
-            "type": "dirt_default",
+            "type": "grass_default",
             "x": 48,
             "y": 15
         },
         {
             "type": "grass_default",
             "x": 49,
-            "y": 13
-        },
-        {
-            "type": "dirt_default",
-            "x": 49,
-            "y": 14
-        },
-        {
-            "type": "dirt_default",
-            "x": 49,
             "y": 15
         },
         {
             "type": "grass_default",
             "x": 50,
-            "y": 13
-        },
-        {
-            "type": "dirt_default",
-            "x": 50,
-            "y": 14
-        },
-        {
-            "type": "dirt_default",
-            "x": 50,
             "y": 15
         },
         {
-            "type": "grass_default_left_border",
-            "x": 51,
-            "y": 12
-        },
-        {
-            "type": "dirt_default",
-            "x": 51,
-            "y": 13
-        },
-        {
-            "type": "dirt_default",
-            "x": 51,
-            "y": 14
-        },
-        {
-            "type": "dirt_default",
+            "type": "grass_default",
             "x": 51,
             "y": 15
         },
         {
             "type": "grass_default",
             "x": 52,
-            "y": 12
-        },
-        {
-            "type": "dirt_default",
-            "x": 52,
-            "y": 13
-        },
-        {
-            "type": "dirt_default",
-            "x": 52,
-            "y": 14
-        },
-        {
-            "type": "dirt_default",
-            "x": 52,
             "y": 15
         },
         {
-            "type": "grass_default_right_border",
-            "x": 53,
-            "y": 12
-        },
-        {
-            "type": "dirt_default_right_border",
-            "x": 53,
-            "y": 13
-        },
-        {
-            "type": "dirt_default_right_border",
-            "x": 53,
-            "y": 14
-        },
-        {
-            "type": "dirt_default",
+            "type": "grass_default",
             "x": 53,
             "y": 15
         },
@@ -548,34 +363,9 @@
             "y": 15
         },
         {
-            "type": "dummy_spawn",
-            "x": 58,
-            "y": 0
-        },
-        {
-            "type": "grass_default_left_border",
-            "x": 58,
-            "y": 2
-        },
-        {
-            "type": "dirt_default_down_left_corner",
-            "x": 58,
-            "y": 3
-        },
-        {
             "type": "grass_default",
             "x": 58,
             "y": 15
-        },
-        {
-            "type": "grass_default",
-            "x": 59,
-            "y": 2
-        },
-        {
-            "type": "dirt_default_down_border",
-            "x": 59,
-            "y": 3
         },
         {
             "type": "grass_default",
@@ -585,195 +375,40 @@
         {
             "type": "grass_default",
             "x": 60,
-            "y": 2
-        },
-        {
-            "type": "dirt_default_down_border",
-            "x": 60,
-            "y": 3
-        },
-        {
-            "type": "grass_default",
-            "x": 60,
             "y": 15
         },
         {
             "type": "grass_default",
-            "x": 61,
-            "y": 2
-        },
-        {
-            "type": "dirt_default_down_border",
-            "x": 61,
-            "y": 3
-        },
-        {
-            "type": "grass_default_left_border",
-            "x": 61,
-            "y": 12
-        },
-        {
-            "type": "dirt_default_left_border",
-            "x": 61,
-            "y": 13
-        },
-        {
-            "type": "dirt_default_left_border",
-            "x": 61,
-            "y": 14
-        },
-        {
-            "type": "dirt_default",
             "x": 61,
             "y": 15
         },
         {
             "type": "grass_default",
             "x": 62,
-            "y": 2
-        },
-        {
-            "type": "dirt_default_down_border",
-            "x": 62,
-            "y": 3
-        },
-        {
-            "type": "grass_default",
-            "x": 62,
-            "y": 12
-        },
-        {
-            "type": "dirt_default",
-            "x": 62,
-            "y": 13
-        },
-        {
-            "type": "dirt_default",
-            "x": 62,
-            "y": 14
-        },
-        {
-            "type": "dirt_default",
-            "x": 62,
             "y": 15
         },
         {
             "type": "grass_default",
-            "x": 63,
-            "y": 2
-        },
-        {
-            "type": "dirt_default_down_border",
-            "x": 63,
-            "y": 3
-        },
-        {
-            "type": "grass_default",
-            "x": 63,
-            "y": 12
-        },
-        {
-            "type": "dirt_default",
-            "x": 63,
-            "y": 13
-        },
-        {
-            "type": "dirt_default",
-            "x": 63,
-            "y": 14
-        },
-        {
-            "type": "dirt_default",
             "x": 63,
             "y": 15
         },
         {
             "type": "grass_default",
             "x": 64,
-            "y": 2
-        },
-        {
-            "type": "dirt_default_down_border",
-            "x": 64,
-            "y": 3
-        },
-        {
-            "type": "grass_default_left_border",
-            "x": 64,
-            "y": 11
-        },
-        {
-            "type": "dirt_default",
-            "x": 64,
-            "y": 12
-        },
-        {
-            "type": "dirt_default",
-            "x": 64,
-            "y": 13
-        },
-        {
-            "type": "dirt_default",
-            "x": 64,
-            "y": 14
-        },
-        {
-            "type": "dirt_default",
-            "x": 64,
             "y": 15
         },
         {
-            "type": "grass_default_right_border",
-            "x": 65,
-            "y": 2
-        },
-        {
-            "type": "dirt_default_down_right_corner",
-            "x": 65,
-            "y": 3
-        },
-        {
-            "type": "grass_default_right_border",
-            "x": 65,
-            "y": 11
-        },
-        {
-            "type": "dirt_default_right_border",
-            "x": 65,
-            "y": 12
-        },
-        {
-            "type": "dirt_default_right_border",
-            "x": 65,
-            "y": 13
-        },
-        {
-            "type": "dirt_default",
-            "x": 65,
-            "y": 14
-        },
-        {
-            "type": "dirt_default",
+            "type": "grass_default",
             "x": 65,
             "y": 15
         },
         {
             "type": "grass_default",
             "x": 66,
-            "y": 14
-        },
-        {
-            "type": "dirt_default",
-            "x": 66,
             "y": 15
         },
         {
-            "type": "grass_default_right_border",
-            "x": 67,
-            "y": 14
-        },
-        {
-            "type": "dirt_default",
+            "type": "grass_default",
             "x": 67,
             "y": 15
         },
@@ -819,6 +454,26 @@
         },
         {
             "type": "grass_default",
+            "x": 76,
+            "y": 15
+        },
+        {
+            "type": "grass_default",
+            "x": 77,
+            "y": 15
+        },
+        {
+            "type": "grass_default",
+            "x": 78,
+            "y": 15
+        },
+        {
+            "type": "grass_default",
+            "x": 79,
+            "y": 15
+        },
+        {
+            "type": "grass_default",
             "x": 80,
             "y": 15
         },
@@ -853,39 +508,14 @@
             "y": 15
         },
         {
-            "type": "sand_default_top_left_corner",
-            "x": 87,
-            "y": 13
-        },
-        {
-            "type": "grass_default_left_border",
+            "type": "grass_default",
             "x": 87,
             "y": 15
         },
         {
-            "type": "sand_default_top_border",
-            "x": 88,
-            "y": 13
-        },
-        {
-            "type": "sand_default",
-            "x": 88,
-            "y": 14
-        },
-        {
             "type": "grass_default",
             "x": 88,
             "y": 15
-        },
-        {
-            "type": "sand_default_top_border",
-            "x": 89,
-            "y": 13
-        },
-        {
-            "type": "sand_default",
-            "x": 89,
-            "y": 14
         },
         {
             "type": "grass_default",
@@ -893,29 +523,9 @@
             "y": 15
         },
         {
-            "type": "sand_default_top_border",
-            "x": 90,
-            "y": 13
-        },
-        {
-            "type": "sand_default",
-            "x": 90,
-            "y": 14
-        },
-        {
             "type": "grass_default",
             "x": 90,
             "y": 15
-        },
-        {
-            "type": "sand_default_top_border",
-            "x": 91,
-            "y": 13
-        },
-        {
-            "type": "sand_default",
-            "x": 91,
-            "y": 14
         },
         {
             "type": "grass_default",
@@ -923,24 +533,9 @@
             "y": 15
         },
         {
-            "type": "sand_default_top_border",
-            "x": 92,
-            "y": 13
-        },
-        {
-            "type": "sand_default",
-            "x": 92,
-            "y": 14
-        },
-        {
             "type": "grass_default",
             "x": 92,
             "y": 15
-        },
-        {
-            "type": "sand_default_top_right_corner",
-            "x": 93,
-            "y": 13
         },
         {
             "type": "grass_default",

@@ -181,6 +181,9 @@ class World():
                         elif tile == COLLECTIBLES_TILE_TYPES[1]:
                             box = sprites.HealthBox(x * self.tile_size, y * self.tile_size, assets, self.tile_size)
                             self.collectible_group.add(box)
+                        elif tile == COLLECTIBLES_TILE_TYPES[2]:
+                            box = sprites.WeaponCrate(x * self.tile_size, y * self.tile_size, assets, self.tile_size)
+                            self.collectible_group.add(box)
                     
                 # Si c'est un personnage comme le joueur ou un ennemi
                 elif tile in PLAYER_AND_ENEMIES_TILE_TYPES:
