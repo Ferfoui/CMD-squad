@@ -25,6 +25,8 @@ class Collectible(pygame.sprite.Sprite, abstract.ABC):
         self.size_factor = tile_size * SPRITE_SCALING
         self.y_velocity = 0
         
+        self.collected = False
+        
         if do_default_load_image:
             self.image = assets.get_scaled_image(image_path, scale * self.size_factor)
         
@@ -160,11 +162,11 @@ class ItemBox(Collectible):
         Args:
             player (Player): Joueur qui interagit avec la box
         """
-        if pygame.sprite.collide_rect(player, self):
+        if (not self.collected) and pygame.sprite.collide_rect(player, self):
             self.action = self.ANIMATION_TYPES[1]
             self.frame_index = 0
             self.add_item_to_player(player)
-            self.kill()
+            self.collected = True
     
     @abstract.abstractmethod
     def add_item_to_player(self, player):
