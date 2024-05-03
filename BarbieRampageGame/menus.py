@@ -341,10 +341,10 @@ class InventoryMenu(gui.Menu):
         manteau_style_image = assets.get_scaled_image("manteau_super_clean", f"{GUI_TEXTURES_LOCATION}manteau_super_clean.png", 1)
         ar_b4rb13_image = assets.get_scaled_image("AR_B4RB13", f"{TEXTURES_ROOT}weapons/AR_B4RB13.png", 1)
 
-        self.add_button("talented tree", talented_tree_image, talented_tree_image, settings.screen_width//2, settings.screen_height * 0.1, 1, True)
-        self.add_button("trophies", golden_trophy_image, golden_trophy_image, settings.screen_width//2, settings.screen_height * 0.2, 1, True)
-        self.add_button("skins", manteau_style_image, manteau_style_image, settings.screen_width//2, settings.screen_height * 0.3, 1, True)
-        self.add_button("weapons", ar_b4rb13_image, ar_b4rb13_image, settings.screen_width//2, settings.screen_height * 0.4, 1, True)
+        self.add_button("talented tree", talented_tree_image, talented_tree_image, settings.screen_width//2, settings.screen_height * 0.2, 2, True)
+        self.add_button("trophies", golden_trophy_image, golden_trophy_image, settings.screen_width//2, settings.screen_height * 0.4, 2, True)
+        self.add_button("skins", manteau_style_image, manteau_style_image, settings.screen_width//2, settings.screen_height * 0.6, 2, True)
+        self.add_button("weapons", ar_b4rb13_image, ar_b4rb13_image, settings.screen_width//2, settings.screen_height * 0.8, 2, True)
     
     def draw(self, screen: pygame.Surface) -> dict[str, bool]:
         """Affiche les images et les boutons à l'écran et renvoie les noms des boutons qui ont été cliqués
@@ -361,7 +361,7 @@ class InventoryMenu(gui.Menu):
         clicked_buttons = super().draw(screen, False)
         
         AROUND_BORDER_SIZE = 15
-        border_rect = pygame.Rect(0, 0, screen.get_width()/2, 23 + 2 * AROUND_BORDER_SIZE)
+        border_rect = pygame.Rect(0, 0, screen.get_width()/2, 23 + 2 * AROUND_BORDER_SIZE + 100)
         
         # Affiche une bordure autour de chaque boutons
         for button in self.buttons_to_draw.values():
