@@ -142,6 +142,14 @@ class Player(Entity):
         """Renvoie la position en ordonnées de la tête du joueur"""
         return self.rect.top + self.rect.height // 6
     
+    def shoot(self, bullet_group: pygame.sprite.Group):
+        """Fait tirer le joueur
+
+        Args:
+            bullet_group (pygame.sprite.Group): groupe de sprites dans lequel les balles vont être ajoutées
+        """
+        self.bullets = self.weapon_holder.shoot(bullet_group, self.bullets)
+    
     def get_holding_weapon_coordinates(self) -> tuple[tuple[int, int], tuple[int, int]]:
         """Renvoie les coordonnées où le joueur doit tenir son arme
         
@@ -332,8 +340,14 @@ class Player(Entity):
         self.bullet_counter.bullets = self.bullets
 
         self.update_animation()
+        self.weapon_holder.update()
         
     def check_collectibles(self, world):
+        """Check_collectibles: Méthode qui permet de vérifier si le joueur est en collision avec un collectible
+
+        Args:
+            world (world.World): Monde dans lequel le joueur se trouve
+        """
         collectibles_in_range = pygame.sprite.spritecollide(self, world.collectible_group, False)
         for collectible in collectibles_in_range:
             collectible.on_collect_action(self)
@@ -402,6 +416,11 @@ class WeaponHolder():
             bool: si le joueur a une arme équipée
         """
         return self.weapon != None
+    
+    def update(self):
+        """Met à jour l'arme que le joueur a équipé"""
+        if self.has_weapon():
+            self.weapon.update()
     
     def move(self, holding_coordinates: tuple[int, int], direction: int):
         """Fait bouger l'arme que le joueur a équipé

@@ -220,7 +220,7 @@ while run:
                         # Activer ou désactiver le menu pause
                         pause = not pause
             if event.key == pygame.K_TAB:
-                player.weapon_holder.shoot(world.bullet_group, 1)
+                player.shoot(world.bullet_group)
                 pygame.mixer.Sound.play(assets.weapon_cross_sound)
 
             if event.key == pygame.K_i:
