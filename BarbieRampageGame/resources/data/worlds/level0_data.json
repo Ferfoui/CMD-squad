@@ -100,7 +100,7 @@
         {
             "type": "ammo_box",
             "x": 11,
-            "y": 12
+            "y": 11
         },
         {
             "type": "grass_default_left_border",

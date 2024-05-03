@@ -20,15 +20,14 @@ class Collectible(pygame.sprite.Sprite, abstract.ABC):
         super().__init__()
         
         self.size_factor = tile_size * SPRITE_SCALING
-        self.x = x
-        self.y = y
         self.y_velocity = 0
         
         if do_default_load_image:
             self.image = assets.get_scaled_image(image_path, scale * self.size_factor)
         
             self.rect = self.image.get_rect()
-            self.rect.center = (self.x, self.y)
+            self.rect.x = x
+            self.rect.y = y
     
     def update(self, world):
         """Met à jour l'objet collectible
@@ -37,6 +36,26 @@ class Collectible(pygame.sprite.Sprite, abstract.ABC):
             world (world.World): monde dans lequel se trouve l'objet
         """
         self.scroll(world.scroll.screen_scroll)
+        self.interact_with_world(world)
+    
+    def interact_with_world(self, world):
+        """Fait interagir l'objet avec le monde
+
+        Args:
+            world (world.World): monde dans lequel se trouve l'objet
+        """
+        self.apply_gravity()
+        
+        for tile in world.obstacle_list:
+            if pygame.sprite.collide_rect(self, tile):
+                if self.y_velocity > 0:
+                    self.y = tile.rect.top - self.rect.height
+                    self.y_velocity = 0
+                elif self.y_velocity < 0:
+                    self.y = tile.rect.bottom
+                    self.y_velocity = 0
+        
+        self.rect.y += self.y_velocity
 
     def draw(self, screen: pygame.Surface):
         """Affiche l'objet sur l'écran
@@ -49,7 +68,7 @@ class Collectible(pygame.sprite.Sprite, abstract.ABC):
     def scroll(self, scroll_value: int):
         """Déplace l'objet en fonction du scroll du monde
         """
-        self.x += scroll_value
+        self.rect.x += scroll_value
     
     def apply_gravity(self):
         """Applique la gravité à l'objet
@@ -100,7 +119,8 @@ class ItemBox(Collectible):
         self.image = self.animation_dict[self.action][self.frame_index]
         
         self.rect = self.image.get_rect()
-        self.rect.center = (self.x, self.y)
+        self.rect.x = x
+        self.rect.y = y
 
     def update_animation(self):
         """Met à jour l'animation de la box"""
