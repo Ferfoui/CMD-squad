@@ -114,9 +114,13 @@ class ItemBox(Collectible):
             self.update_time = pygame.time.get_ticks()
             self.frame_index += 1
 
-	    # Si l'animation est terminée, remise de la première image
-        if self.frame_index >= len(self.animation_dict[self.action]):
-            self.frame_index = 0
+            # Si l'animation est terminée, remise de la première image
+            if self.frame_index >= len(self.animation_dict[self.action]):
+                if self.action == self.ANIMATION_TYPES[1]:
+                    self.frame_index = len(self.animation_dict[self.action]) - 1
+                    
+                else:
+                    self.frame_index = 0
     
     def update(self, world):
         """Met à jour la box
@@ -133,7 +137,6 @@ class ItemBox(Collectible):
         Args:
             player (Player): Joueur qui interagit avec la box
         """
-        # TODO: finir les on_collect_action
         if pygame.sprite.collide_rect(player.rect, self.rect):
             self.action = self.ANIMATION_TYPES[1]
             self.add_item_to_player(player)
