@@ -30,7 +30,7 @@ COLOR_GREEN = (20, 255, 20)
 RESOLUTION_OPTIONS = {"GRO": (1200, int(1200 * 0.8)), "PA GRO": (1000, 800), "POUTI": (700, 560)}
 
 # Les noms des tuiles
-OBSTACLES_TILE_TYPES = ['dirt_default', 'dirt_default_right_border', 'dirt_default_left_border', 'dirt_default_down_border', 'dirt_default_down_left_corner', 'dirt_default_down_right_corner', 'grass_default', 'grass_default_right_border', 'grass_default_left_border', 'sand_default','sand_default_right_border','sand_default_left_border','sand_default_top_border','sand_default_top_left_corner','sand_default_top_right_corner']
+OBSTACLES_TILE_TYPES = ['dirt_default_left_border', 'dirt_default', 'dirt_default_right_border', 'dirt_default_down_left_corner', 'dirt_default_down_border', 'dirt_default_down_right_corner', 'grass_default_left_border', 'grass_default', 'grass_default_right_border', 'sand_default_left_border', 'sand_default', 'sand_default_right_border', 'sand_default_top_left_corner', 'sand_default_top_border', 'sand_default_top_right_corner']
 
 COLLECTIBLES_TILE_TYPES = ['ammo_box', 'health_box', 'weapon_crate']
 ENTITY_TILE_TYPES = COLLECTIBLES_TILE_TYPES
