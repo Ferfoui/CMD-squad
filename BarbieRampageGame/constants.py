@@ -31,6 +31,10 @@ RESOLUTION_OPTIONS = {"GRO": (1200, int(1200 * 0.8)), "PA GRO": (1000, 800), "PO
 
 # Les noms des tuiles
 OBSTACLES_TILE_TYPES = ['dirt_default', 'dirt_default_right_border', 'dirt_default_left_border', 'dirt_default_down_border', 'dirt_default_down_left_corner', 'dirt_default_down_right_corner', 'grass_default', 'grass_default_right_border', 'grass_default_left_border', 'sand_default','sand_default_right_border','sand_default_left_border','sand_default_top_border','sand_default_top_left_corner','sand_default_top_right_corner']
+
+COLLECTIBLES_TILE_TYPES = ['ammo_box', 'health_box']
+ENTITY_TILE_TYPES = COLLECTIBLES_TILE_TYPES
+
 ENTITY_TILE_TYPES = []
 PLAYER_AND_ENEMIES_TILE_TYPES = ['player_spawn', 'dummy_spawn', 'ken_spawn']
 
@@ -48,7 +52,7 @@ if os.getcwd() == path.realpath("..\\BarbieRampageGame") or os.getcwd() == path.
     # Si la working directory est "CMD-squad/BarbieRampageGame/"
     GAME_WORKING_DIR =  path.realpath("..\\BarbieRampageGame/")
 else:
-    # Si la working directory est "CMD-squad/"*
+    # Si la working directory est "CMD-squad/"
     GAME_WORKING_DIR =  path.realpath("BarbieRampageGame/")
 
 # L'endroit où se trouve tous les fichiers non python du jeu
@@ -61,9 +65,11 @@ SOUNDS_ROOT = path.join(ASSETS_ROOT, "sounds/") # Le chemin des effets sonores
 FONTS_ROOT = path.join(ASSETS_ROOT, "fonts/") # Le chemin vers les polices d'écriture
 
 # Les textures
+GUI_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "gui/")
 PLAYER_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "player/")
 ENEMIES_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "enemies/")
 WEAPONS_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "weapons/")
+COLLECTIBLES_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "collectibles/")
 
 TILES_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "tiles/")
 

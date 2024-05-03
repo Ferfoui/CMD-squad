@@ -90,7 +90,7 @@ class World():
         """Vide les groupes de sprites
         """
         self.player_group.empty()
-        
+
         self.collectible_group.empty()
         self.enemy_group.empty()
         self.bullet_group.empty()
@@ -161,8 +161,8 @@ class World():
         
         for x, column in enumerate(self.world_data):
             for y, tile in enumerate(column):
-                # Si c'est un objet comme un bloc ou une entité
-                if tile in TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES:
+                # Si c'est un obstacle
+                if tile in OBSTACLES_TILE_TYPES:
                     img = self.img_dict[tile]
                     img_rect = img.get_rect()
                     img_rect.x = x * self.tile_size
@@ -170,16 +170,29 @@ class World():
                     if tile in OBSTACLES_TILE_TYPES:
                         tile_data = Tile(img, img_rect)
                         self.obstacle_list.append(tile_data)
+                
+                elif tile in ENTITY_TILE_TYPES:
+                    if tile in COLLECTIBLES_TILE_TYPES:
+                        # Si c'est une Ammo box
+                        if tile == COLLECTIBLES_TILE_TYPES[0]:
+                            box = sprites.AmmoBox(x * self.tile_size, y * self.tile_size, assets, self.tile_size)
+                            self.collectible_group.add(box)
+                        # Si c'est une Health Box
+                        elif tile == COLLECTIBLES_TILE_TYPES[1]:
+                            box = sprites.HealthBox(x * self.tile_size, y * self.tile_size, assets, self.tile_size)
+                            self.collectible_group.add(box)
+                    
                 # Si c'est un personnage comme le joueur ou un ennemi
                 elif tile in PLAYER_AND_ENEMIES_TILE_TYPES:
                     # Si c'est le point de spawn du joueur
                     if tile == PLAYER_AND_ENEMIES_TILE_TYPES[0]:
                         self.player = sprites.Player(x * self.tile_size, y * self.tile_size, self.tile_size, assets)
                         self.player_group.add(self.player)
-                    if tile == PLAYER_AND_ENEMIES_TILE_TYPES[1]:
+                    # Si c'est un dummy
+                    elif tile == PLAYER_AND_ENEMIES_TILE_TYPES[1]:
                         dummy = sprites.IntelligentDummy(x * self.tile_size, y * self.tile_size, self.tile_size, 2, assets, 2)
                         self.enemy_group.add(dummy)
-                    if tile == PLAYER_AND_ENEMIES_TILE_TYPES[2]:
+                    elif tile == PLAYER_AND_ENEMIES_TILE_TYPES[2]:
                         ken = sprites.KenEnemy(x * self.tile_size, y * self.tile_size, self.tile_size, 2, assets)
                         self.enemy_group.add(ken)
         

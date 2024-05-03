@@ -64,7 +64,22 @@ class Menu():
         
         self.images_to_draw[name] = (text_img, img_rect)
     
-    def add_text_button(self, button_name: str, text_to_draw: str, font: pygame.font.Font, text_col: ColorValue, x: int, y: int, scale, do_place_center: bool = False):
+    def add_button(self, button_name: str, image: pygame.Surface, image_on_click: pygame.Surface, x: int, y: int, scale: float, do_place_center: bool = False):
+        """Ajoute un bouton au menu
+
+        Args:
+            button_name (str): nom du bouton
+            image (pygame.Surface): image du bouton
+            image_on_click (pygame.Surface): image du bouton quand il est cliqué
+            x (int): position en abscisses où le bouton va être créé
+            y (int): position en ordonnées où le bouton va être créé
+            scale (float): nombre par lequel le bouton va être redimensionné
+            do_place_center (bool, optional): si les coordonnées données sont celles du centre du texte. False par défaut
+        """
+        button = Button(x, y, image, image_on_click, scale, do_place_center)
+        self.buttons_to_draw[button_name] = button
+    
+    def add_text_button(self, button_name: str, text_to_draw: str, font: pygame.font.Font, text_col: ColorValue, x: int, y: int, scale: float, do_place_center: bool = False):
         """Ajoute un bouton sous forme de texte au menu
 
         Args:
@@ -74,7 +89,7 @@ class Menu():
             text_col (ColorValue): couleur
             x (int): position en abscisses où le bouton va être créé
             y (int): position en ordonnées où le bouton va être créé
-            scale (int or float): nombre par lequel le bouton va être redimensionné
+            scale (float): nombre par lequel le bouton va être redimensionné
             do_place_center (bool, optional): si les coordonnées données sont celles du centre du texte. False par défaut
         """
         text_img = font.render(text_to_draw, True, text_col)

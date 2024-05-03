@@ -78,7 +78,12 @@ def spawn_player():
 start_menu = menus.StartMenu(assets, game_settings)
 death_menu = menus.DeathMenu(assets, game_settings)
 pause_menu = menus.PauseMenu(assets, game_settings)
+inventory_menu = menus.InventoryMenu(assets, game_settings)
 settings_menu = menus.SettingsMenu(assets, game_settings)
+#skilltree_menu = menus.SkillMenu(assets, game_settings)
+#weapon_menu = menus.WeaponMenu(assets, game_settings)
+#outfit_menu = menus.OutfitMenu(assets, game_settings)
+#trophy_menu = menus.TrophyMenu(assets, game_settings)
 
 # Initialisation du monde et du joueur
 world = World()
@@ -92,6 +97,9 @@ run = True
 game_loading = True
 pause = False
 settings_choice = False
+inventory_choice = False
+inventory = False
+
 current_time = pygame.time.get_ticks()
 
 # Boucle qui va permettre de faire tourner le jeu
@@ -109,17 +117,31 @@ while run:
         # Affiche les éléments à afficher à l'écran
         world.draw(screen)
         player.draw(screen)
+        world.update_groups()
         world.draw_sprite_groups(screen)
         
         # Met à jour le joueur
         player.update()
-        world.update_groups()
         
         # Affiche les éléments de l'interface
         player.health_bar.draw(screen)
         player.kill_counter.draw(screen)
         player.bullet_counter.draw(screen)
         
+        # Gestion de certains menus
+        if inventory :
+            if settings_choice:
+                inventory_buttons = inventory_menu.draw(screen)
+                inventory_choice = not inventory_buttons['back']
+            else:
+                # Gestion du menu pause
+                menu_buttons = inventory_menu.draw(screen)
+                if menu_buttons['quit'] or settings_menu.do_restart:
+                    run = False
+                elif menu_buttons['inventory']:
+                    settings_choice = True
+                elif menu_buttons['back']:
+                    pause = False 
         if pause:
             if settings_choice:
                 settings_buttons = settings_menu.draw(screen)
@@ -178,8 +200,12 @@ while run:
                         pause = not pause
             if event.key == pygame.K_TAB:
                 player.weapon_holder.shoot(world.bullet_group, 1)
-
                 pygame.mixer.Sound.play(assets.weapon_cross_sound)
+
+            if event.key == pygame.K_i:
+                if (not game_loading) and player.is_alive:
+                    #inventory = not inventory
+                    pass
 
     # Mise à jour de l'écran à chaque tour de boucle
     pygame.display.update()

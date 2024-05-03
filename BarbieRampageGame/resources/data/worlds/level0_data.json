@@ -98,6 +98,11 @@
             "y": 15
         },
         {
+            "type": "ammo_box",
+            "x": 11,
+            "y": 11
+        },
+        {
             "type": "grass_default_left_border",
             "x": 11,
             "y": 13

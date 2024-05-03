@@ -67,7 +67,28 @@ class Player(Entity):
         # Crée la hitbox exacte du joueur
         self.mask = pygame.mask.from_surface(self.image)
         
+        self.width = self.image.get_width()
+        self.height = self.image.get_height()
+        
         return rect
+    
+    def add_health(self, amount: int):
+        """Ajoute de la vie au joueur
+
+        Args:
+            amount (int): quantité de vie à ajouter
+        """
+        self.health += amount
+        if self.health > 100:
+            self.health = 100
+    
+    def add_bullets(self, amount: int):
+        """Ajoute des balles au joueur
+
+        Args:
+            amount (int): quantité de balles à ajouter
+        """
+        self.bullets += amount
 
     def define_entity_hitbox(self, entity_rect: pygame.Rect) -> pygame.Rect:
         """Méthode qui crée la hitbox de l'entité
