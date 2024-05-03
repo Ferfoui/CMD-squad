@@ -9,7 +9,6 @@ import utils
 
 # La classe qui crée les armes
 class Weapon(abstract.ABC):
-    #TODO: Rendre l'arme obtensible
     def __init__(self, weapon_name: str, texture_path: str, assets: utils.Assets, tile_size: int, scale: float, x: int = 0, y: int = 0):
         """Créé une nouvelle arme
 
@@ -176,6 +175,47 @@ class GunP450(Weapon):
         
         right_shoot = self.rect.width, int(self.rect.height * position_factor)
         left_shoot = 0, int(self.rect.height * position_factor)
+        
+        return right_shoot, left_shoot
+    
+    def get_handle_position(self) -> tuple[tuple[int, int], tuple[int, int]]:
+        """Récupère les coordonnées relatives de la poignée de l'arme
+
+        Returns:
+            tuple[int, int]: coordonnées de la poignée de l'arme quand elle est tournée vers la droite
+            tuple[int, int]: coordonnées de la poignée de l'arme quand elle est tournée vers la gauche
+        """
+        position_factor = 0.8
+        
+        right_handle = self.rect.width * 0.2, int(self.rect.height * position_factor)
+        left_handle = self.rect.width * 0.8, int(self.rect.height * position_factor)
+        
+        return right_handle, left_handle
+
+class GunP90(Weapon):
+    def __init__(self, assets: utils.Assets, tile_size: int, scale: float, x: int = 0, y: int = 0):
+        """Crée une nouvelle arme de type Gun-P90
+
+        Args:
+            assets (utils.Assets): classe des assets
+            tile_size (int): taille des tuiles
+            scale (float): facteur de redimensionnement
+            x (int): position de l'axe horizontal
+            y (int): position de l'axe vertical
+        """
+        super().__init__("Gun-P90", WEAPONS_TEXTURES_LOCATION + "P90.png", assets, tile_size, scale, x, y)
+    
+    def get_shoot_coordinates(self) -> tuple[tuple[int, int], tuple[int, int]]:
+        """Récupère les coordonnées relatives du canon de l'arme
+
+        Returns:
+            tuple[int, int]: coordonnées du canon de l'arme quand il est tourné vers la droite
+            tuple[int, int]: coordonnées du canon de l'arme quand il est tourné vers la gauche
+        """
+        position_factor = 0.5
+        
+        right_shoot = self.rect.width * 0.4, int(self.rect.height * position_factor)
+        left_shoot = self.rect.width * 0.6, int(self.rect.height * position_factor)
         
         return right_shoot, left_shoot
     
