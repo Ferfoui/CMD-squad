@@ -206,6 +206,8 @@ while run:
                 if (not game_loading) and player.is_alive:
                     #inventory = not inventory
                     pass
+            if event.key == pygame.K_e:
+                player.check_collectibles(world)
 
     # Mise à jour de l'écran à chaque tour de boucle
     pygame.display.update()

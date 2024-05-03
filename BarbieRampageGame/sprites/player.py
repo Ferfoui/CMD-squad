@@ -22,7 +22,7 @@ class Player(Entity):
         
         # Valeurs de départ pour les kills et les balles
         self.kills = 100
-        self.bullets = 30
+        self.bullets = 0
         
         # Classe contenant l'arme du joueur
         self.weapon_holder = WeaponHolder()
@@ -332,7 +332,12 @@ class Player(Entity):
         self.bullet_counter.bullets = self.bullets
 
         self.update_animation()
-    
+        
+    def check_collectibles(self, world):
+        collectibles_in_range = pygame.sprite.spritecollide(self, world.collectible_group, False)
+        for collectible in collectibles_in_range:
+            collectible.on_collect_action(self)
+        
     def set_weapon(self, weapon: weapon.Weapon):
         """Équipe une nouvelle arme au joueur
 

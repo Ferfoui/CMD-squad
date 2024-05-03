@@ -3,6 +3,9 @@ import abc as abstract
 
 from constants import *
 import utils
+import random
+import weapon
+
 
 class Collectible(pygame.sprite.Sprite, abstract.ABC):
     def __init__(self, x: int, y: int, image_path: str, assets: utils.Assets, tile_size: int, scale: float = 1, do_default_load_image: bool = True):
@@ -157,9 +160,10 @@ class ItemBox(Collectible):
         Args:
             player (Player): Joueur qui interagit avec la box
         """
-        if pygame.sprite.collide_rect(player.rect, self.rect):
+        if pygame.sprite.collide_rect(player, self):
             self.action = self.ANIMATION_TYPES[1]
             self.add_item_to_player(player)
+            #self.kill()
     
     @abstract.abstractmethod
     def add_item_to_player(self, player):
@@ -211,3 +215,25 @@ class HealthBox(ItemBox):
         """
         player.add_health(25)
 
+class WeaponBox(ItemBox):
+    def __init__(self, x: int, y: int, assets: utils.Assets, tile_size: int, scale: float = 1):
+        """Crée une box d'armes
+
+        Args:
+            x (int): position en abscisse
+            y (int): position en ordonnée
+            assets (utils.Assets): assets utilisés par le jeu
+            tile_size (int): taille d'une tuile
+            scale (float, optional): facteur de redimensionnement. 1 par défaut.
+        """
+        super().__init__(x, y, assets, tile_size, "Weapon", scale)
+    
+    def add_item_to_player(self, player):
+        """Donne une arme au joueur
+
+        Args:
+            player (Player): joueur à qui donner une arme
+        """
+        self.weapons = [weapon.Arb4rb13, weapon.GunP450]
+        player.set_weapon(random.choice(self.weapons))
+    
