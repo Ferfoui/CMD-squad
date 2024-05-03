@@ -162,6 +162,7 @@ class ItemBox(Collectible):
         """
         if pygame.sprite.collide_rect(player, self):
             self.action = self.ANIMATION_TYPES[1]
+            self.frame_index = 0
             self.add_item_to_player(player)
             #self.kill()
     
@@ -227,6 +228,8 @@ class WeaponCrate(ItemBox):
             scale (float, optional): facteur de redimensionnement. 1 par défaut.
         """
         super().__init__(x, y, assets, tile_size, "Weapon", scale, animation_cooldown=100)
+        self.assets = assets
+        self.tile_size = tile_size
     
     def add_item_to_player(self, player):
         """Donne une arme au joueur
@@ -235,5 +238,6 @@ class WeaponCrate(ItemBox):
             player (Player): joueur à qui donner une arme
         """
         self.weapons = [weapon.Arb4rb13, weapon.GunP450]
-        player.set_weapon(random.choice(self.weapons))
+        random_weapon = random.choice(self.weapons)
+        player.set_weapon(random_weapon(self.assets, self.tile_size, 1))
     
