@@ -91,7 +91,7 @@ class Collectible(pygame.sprite.Sprite, abstract.ABC):
         pass
 
 class ItemBox(Collectible):
-    def __init__(self, x: int, y: int, assets: utils.Assets, tile_size: int, item_type: str, scale: float = 1):
+    def __init__(self, x: int, y: int, assets: utils.Assets, tile_size: int, item_type: str, scale: float = 1, animation_cooldown: int = 200):
         """Crée une box d'item
 
         Args:
@@ -109,7 +109,8 @@ class ItemBox(Collectible):
         self.update_time = pygame.time.get_ticks()
 
         self.ANIMATION_TYPES = ['Close', 'Open']
-
+        self.animation_cooldown = animation_cooldown
+        
         scale = 1.5 * self.size_factor
         # Dictionnaire dans lequel il y a les frames des différentes animations
         self.animation_dict = assets.load_animation(self.ANIMATION_TYPES, image_path, scale)
@@ -127,13 +128,12 @@ class ItemBox(Collectible):
 
     def update_animation(self):
         """Met à jour l'animation de la box"""
-        
-        ANIMATION_COOLDOWN = 200
+
         # Met à jour l'image en fonction de la frame actuelle
         self.image = self.animation_dict[self.action][self.frame_index]
 
         # Vérifie si assez de temps est passé depuis la dernière mise à jour
-        if pygame.time.get_ticks() - self.update_time > ANIMATION_COOLDOWN:
+        if pygame.time.get_ticks() - self.update_time > self.animation_cooldown:
             self.update_time = pygame.time.get_ticks()
             self.frame_index += 1
 
@@ -215,9 +215,9 @@ class HealthBox(ItemBox):
         """
         player.add_health(25)
 
-class WeaponBox(ItemBox):
+class WeaponCrate(ItemBox):
     def __init__(self, x: int, y: int, assets: utils.Assets, tile_size: int, scale: float = 1):
-        """Crée une box d'armes
+        """Crée une caisse d'armes
 
         Args:
             x (int): position en abscisse
@@ -226,7 +226,7 @@ class WeaponBox(ItemBox):
             tile_size (int): taille d'une tuile
             scale (float, optional): facteur de redimensionnement. 1 par défaut.
         """
-        super().__init__(x, y, assets, tile_size, "Weapon", scale)
+        super().__init__(x, y, assets, tile_size, "Weapon", scale, animation_cooldown=100)
     
     def add_item_to_player(self, player):
         """Donne une arme au joueur

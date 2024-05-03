@@ -188,6 +188,11 @@
             "y": 15
         },
         {
+            "type": "weapon_crate",
+            "x": 18,
+            "y": 12
+        },
+        {
             "type": "grass_default",
             "x": 18,
             "y": 15
