@@ -73,11 +73,6 @@
             "y": 15
         },
         {
-            "type": "item_box",
-            "x": 7,
-            "y": 7
-        },
-        {
             "type": "grass_default",
             "x": 7,
             "y": 15
@@ -101,6 +96,11 @@
             "type": "dirt_default",
             "x": 10,
             "y": 15
+        },
+        {
+            "type": "ammo_box",
+            "x": 11,
+            "y": 12
         },
         {
             "type": "grass_default_left_border",
