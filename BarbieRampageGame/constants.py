@@ -30,8 +30,11 @@ COLOR_GREEN = (20, 255, 20)
 RESOLUTION_OPTIONS = {"GRO": (1200, int(1200 * 0.8)), "PA GRO": (1000, 800), "POUTI": (700, 560)}
 
 # Les noms des tuiles
-OBSTACLES_TILE_TYPES = ['dirt_default', 'dirt_default_right_border', 'dirt_default_left_border', 'dirt_default_down_border', 'dirt_default_down_left_corner', 'dirt_default_down_right_corner', 'grass_default', 'grass_default_right_border', 'grass_default_left_border', 'sand_default','sand_default_right_border','sand_default_left_border','sand_default_top_border','sand_default_top_left_corner','sand_default_top_right_corner']
-ENTITY_TILE_TYPES = []
+OBSTACLES_TILE_TYPES = ['dirt_default_left_border', 'dirt_default', 'dirt_default_right_border', 'dirt_default_down_left_corner', 'dirt_default_down_border', 'dirt_default_down_right_corner', 'grass_default_left_border', 'grass_default', 'grass_default_right_border', 'sand_default_left_border', 'sand_default', 'sand_default_right_border', 'sand_default_top_left_corner', 'sand_default_top_border', 'sand_default_top_right_corner']
+
+COLLECTIBLES_TILE_TYPES = ['ammo_box', 'health_box', 'weapon_crate']
+ENTITY_TILE_TYPES = COLLECTIBLES_TILE_TYPES
+
 PLAYER_AND_ENEMIES_TILE_TYPES = ['player_spawn', 'dummy_spawn', 'ken_spawn']
 
 TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES = OBSTACLES_TILE_TYPES + ENTITY_TILE_TYPES
@@ -41,14 +44,13 @@ TILE_TYPES = TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES + PLAYER_AND_ENEMIES_TILE_TYP
 # Les constantes in-game
 GRAVITY = 0.75
 
-
 #### Les chemins vers les fichiers ####
 
 if os.getcwd() == path.realpath("..\\BarbieRampageGame") or os.getcwd() == path.realpath("..\\LevelEditor"):
     # Si la working directory est "CMD-squad/BarbieRampageGame/"
     GAME_WORKING_DIR =  path.realpath("..\\BarbieRampageGame/")
 else:
-    # Si la working directory est "CMD-squad/"*
+    # Si la working directory est "CMD-squad/"
     GAME_WORKING_DIR =  path.realpath("BarbieRampageGame/")
 
 # L'endroit où se trouve tous les fichiers non python du jeu
@@ -61,9 +63,11 @@ SOUNDS_ROOT = path.join(ASSETS_ROOT, "sounds/") # Le chemin des effets sonores
 FONTS_ROOT = path.join(ASSETS_ROOT, "fonts/") # Le chemin vers les polices d'écriture
 
 # Les textures
+GUI_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "gui/")
 PLAYER_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "player/")
 ENEMIES_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "enemies/")
 WEAPONS_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "weapons/")
+COLLECTIBLES_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "collectibles/")
 
 TILES_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "tiles/")
 
@@ -73,7 +77,8 @@ PS2P_FONT_LOCATION = path.join(FONTS_ROOT, "Press_Start_2P/PressStart2P-REGULAR.
 
 # Les sons
 WEAPON_CROSS_SOUND_LOCATION = path.join(SOUNDS_ROOT, "son_test.wav")
-PLAYBACK_MUSIC = path.join(SOUNDS_ROOT, "nj_supershy.wav" )
+SUPERSHY_MUSIC = path.join(SOUNDS_ROOT, "nj_supershy.wav" )
+BARBIE_GIRL_MUSIC = path.join(SOUNDS_ROOT, "barbie_girl.wav")
 
 ### Les données utilisées (les data)
 DATA_ROOT = path.join(RESOURCES_ROOT, "data/")

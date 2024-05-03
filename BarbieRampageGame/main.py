@@ -18,7 +18,7 @@ pygame.mixer.init()
 game_settings = utils.Settings()
 
 # Musique du Jeu
-pygame.mixer.music.load(PLAYBACK_MUSIC)
+pygame.mixer.music.load(SUPERSHY_MUSIC)
 pygame.mixer.music.set_volume(game_settings.volume)
 pygame.mixer.music.play(loops = -1, start = 0.0, fade_ms = 0)   
 
@@ -78,7 +78,12 @@ def spawn_player():
 start_menu = menus.StartMenu(assets, game_settings)
 death_menu = menus.DeathMenu(assets, game_settings)
 pause_menu = menus.PauseMenu(assets, game_settings)
+inventory_menu = menus.InventoryMenu(assets, game_settings)
 settings_menu = menus.SettingsMenu(assets, game_settings)
+talented_tree_menu = menus.SkillMenu(assets, game_settings)
+weapons_menu = menus.WeaponsMenu(assets, game_settings)
+skins_menu = menus.SkinsMenu(assets, game_settings)
+trophies_menu = menus.TrophiesMenu(assets, game_settings)
 
 # Initialisation du monde et du joueur
 world = World()
@@ -92,6 +97,14 @@ run = True
 game_loading = True
 pause = False
 settings_choice = False
+inventory_choice = False
+talented_tree_choice = False
+trophies_choice = False
+skins_choice = False
+weapons_choice = False
+inventory_active = False
+
+
 current_time = pygame.time.get_ticks()
 
 # Boucle qui va permettre de faire tourner le jeu
@@ -109,16 +122,18 @@ while run:
         # Affiche les éléments à afficher à l'écran
         world.draw(screen)
         player.draw(screen)
+        world.update_groups()
         world.draw_sprite_groups(screen)
         
         # Met à jour le joueur
         player.update()
-        world.update_groups()
         
         # Affiche les éléments de l'interface
         player.health_bar.draw(screen)
         player.kill_counter.draw(screen)
         player.bullet_counter.draw(screen)
+        
+        # Gestion de certains menus
         
         if pause:
             if settings_choice:
@@ -128,23 +143,51 @@ while run:
                     settings_menu.set_menu_off()
             else:
                 # Gestion du menu pause
-                menu_buttons = pause_menu.draw(screen)
-                if menu_buttons['quit'] or settings_menu.do_restart:
+                pause_buttons = pause_menu.draw(screen)
+                if pause_buttons['quit'] or settings_menu.do_restart:
                     run = False
-                elif menu_buttons['settings']:
+                elif pause_buttons['settings']:
                     settings_choice = True
-                elif menu_buttons['back']:
+                elif pause_buttons['back']:
                     pause = False
         else:
             player.move(world, game_settings)
-            
-            # Faire bouger les ennemis
+             # Faire bouger les ennemis
             for enemy in world.enemy_group:
                 enemy.ai(world)
         
         if not player.is_alive:
             if death_menu.draw(screen, True)['respawn']:
                 player = spawn_player()
+            
+        if inventory_active:
+            if talented_tree_choice :
+                talented_tree_buttons = talented_tree_menu.draw(screen)
+                if not talented_tree_choice:
+                    talented_tree_menu.set_menu_off()
+            elif trophies_choice :
+                trophies_buttons = trophies_menu.draw(screen)
+                if not trophies_choice:
+                    trophies_menu.set_menu_off()
+            elif skins_choice :
+                skins_buttons = skins_menu.draw(screen)
+                if not skins_choice:
+                    skins_menu.set_menu_off()
+            elif weapons_choice :
+                weapons_buttons = weapons_menu.draw(screen)
+                if not weapons_choice:
+                    weapons_menu.set_menu_off()
+            else: 
+                inventory_buttons = inventory_menu.draw(screen)
+                if inventory_buttons['talented tree']:
+                    talented_tree_choice = True
+                elif inventory_buttons['trophies']:
+                    trophies_choice = True
+                elif inventory_buttons['skins']:
+                    skins_choice = True
+                elif inventory_buttons['weapons']:
+                    weapons_choice = True
+           
     
     if game_settings.do_draw_game_time:
         # Afficher le temps actuel à l'écran
@@ -178,8 +221,23 @@ while run:
                         pause = not pause
             if event.key == pygame.K_TAB:
                 player.weapon_holder.shoot(world.bullet_group, 1)
-
                 pygame.mixer.Sound.play(assets.weapon_cross_sound)
+
+            if event.key == pygame.K_i:
+                if (not game_loading) and player.is_alive:
+                    if talented_tree_choice:
+                        talented_tree_choice = False
+                    elif trophies_choice:
+                        trophies_choice = False
+                    elif skins_choice:
+                        skins_choice = False
+                    elif weapons_choice:
+                        weapons_choice = False
+                    else: 
+                        inventory_active = not inventory_active
+                    
+            if event.key == pygame.K_e:
+                player.check_collectibles(world)
 
     # Mise à jour de l'écran à chaque tour de boucle
     pygame.display.update()

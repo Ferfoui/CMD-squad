@@ -22,7 +22,7 @@ class Player(Entity):
         
         # Valeurs de départ pour les kills et les balles
         self.kills = 100
-        self.bullets = 30
+        self.bullets = 0
         
         # Classe contenant l'arme du joueur
         self.weapon_holder = WeaponHolder()
@@ -67,7 +67,28 @@ class Player(Entity):
         # Crée la hitbox exacte du joueur
         self.mask = pygame.mask.from_surface(self.image)
         
+        self.width = self.image.get_width()
+        self.height = self.image.get_height()
+        
         return rect
+    
+    def add_health(self, amount: int):
+        """Ajoute de la vie au joueur
+
+        Args:
+            amount (int): quantité de vie à ajouter
+        """
+        self.health += amount
+        if self.health > 100:
+            self.health = 100
+    
+    def add_bullets(self, amount: int):
+        """Ajoute des balles au joueur
+
+        Args:
+            amount (int): quantité de balles à ajouter
+        """
+        self.bullets += amount
 
     def define_entity_hitbox(self, entity_rect: pygame.Rect) -> pygame.Rect:
         """Méthode qui crée la hitbox de l'entité
@@ -311,7 +332,12 @@ class Player(Entity):
         self.bullet_counter.bullets = self.bullets
 
         self.update_animation()
-    
+        
+    def check_collectibles(self, world):
+        collectibles_in_range = pygame.sprite.spritecollide(self, world.collectible_group, False)
+        for collectible in collectibles_in_range:
+            collectible.on_collect_action(self)
+        
     def set_weapon(self, weapon: weapon.Weapon):
         """Équipe une nouvelle arme au joueur
 

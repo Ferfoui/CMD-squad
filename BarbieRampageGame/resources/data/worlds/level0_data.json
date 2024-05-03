@@ -98,6 +98,11 @@
             "y": 15
         },
         {
+            "type": "ammo_box",
+            "x": 11,
+            "y": 11
+        },
+        {
             "type": "grass_default_left_border",
             "x": 11,
             "y": 13
@@ -181,6 +186,11 @@
             "type": "grass_default",
             "x": 17,
             "y": 15
+        },
+        {
+            "type": "weapon_crate",
+            "x": 18,
+            "y": 12
         },
         {
             "type": "grass_default",
