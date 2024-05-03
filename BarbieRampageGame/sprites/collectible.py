@@ -239,7 +239,7 @@ class WeaponCrate(ItemBox):
         Args:
             player (Player): joueur à qui donner une arme
         """
-        self.weapons = [weapon.Arb4rb13, weapon.GunP450]
+        self.weapons = [weapon.Arb4rb13, weapon.GunP450, weapon.GunP90]
         random_weapon = random.choice(self.weapons)
         player.set_weapon(random_weapon(self.assets, self.tile_size, 1))
     
