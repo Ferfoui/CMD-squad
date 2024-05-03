@@ -69,7 +69,7 @@ class Collectible(pygame.sprite.Sprite, abstract.ABC):
         pass
 
 class ItemBox(Collectible):
-    def __init__(self, x: int, y: int, assets: utils.Assets, tile_size: int, scale: float = 1):
+    def __init__(self, x: int, y: int, assets: utils.Assets, tile_size: int, item_type: str, scale: float = 1):
         """Crée une box d'item
 
         Args:
@@ -77,9 +77,10 @@ class ItemBox(Collectible):
             y (int): position en ordonnée
             assets (utils.Assets): assets utilisés par le jeu
             tile_size (int): taille d'une tuile
+            item_type (str): type de ce qui est contenu dans la box
             scale (float, optional): facteur de redimensionnement. 1 par défaut.
         """
-        image_path = f"{COLLECTIBLES_TEXTURES_LOCATION}chest/"
+        image_path = f"{COLLECTIBLES_TEXTURES_LOCATION}box/{item_type}/"
         super().__init__(x, y, image_path, assets, tile_size, scale, False)
 
         # Valeur du temps pour l'animation de la box
@@ -104,7 +105,7 @@ class ItemBox(Collectible):
     def update_animation(self):
         """Met à jour l'animation de la box"""
         
-        ANIMATION_COOLDOWN = 50
+        ANIMATION_COOLDOWN = 200
         # Met à jour l'image en fonction de la frame actuelle
         self.image = self.animation_dict[self.action][self.frame_index]
 
@@ -135,4 +136,55 @@ class ItemBox(Collectible):
         # TODO: finir les on_collect_action
         if pygame.sprite.collide_rect(player.rect, self.rect):
             self.action = self.ANIMATION_TYPES[1]
+            self.add_item_to_player(player)
+    
+    @abstract.abstractmethod
+    def add_item_to_player(self, player):
+        """Ajoute un item au joueur
+
+        Args:
+            player (Player): joueur auquel ajouter l'item
+        """
+
+class AmmoBox(ItemBox):
+    def __init__(self, x: int, y: int, assets: utils.Assets, tile_size: int, scale: float = 1):
+        """Crée une box de balles
+
+        Args:
+            x (int): position en abscisse
+            y (int): position en ordonnée
+            assets (utils.Assets): assets utilisés par le jeu
+            tile_size (int): taille d'une tuile
+            scale (float, optional): facteur de redimensionnement. 1 par défaut.
+        """
+        super().__init__(x, y, assets, tile_size, "Bullet", scale)
+    
+    def add_item_to_player(self, player):
+        """Ajoute des balles au joueur
+
+        Args:
+            player (Player): joueur auquel ajouter les balles
+        """
+        player.add_bullets(10)
+
+class HealthBox(ItemBox):
+    def __init__(self, x: int, y: int, assets: utils.Assets, tile_size: int, scale: float = 1):
+        """Crée une box de vie
+
+        Args:
+            x (int): position en abscisse
+            y (int): position en ordonnée
+            assets (utils.Assets): assets utilisés par le jeu
+            tile_size (int): taille d'une tuile
+            scale (float, optional): facteur de redimensionnement. 1 par défaut.
+        """
+        super().__init__(x, y, assets, tile_size, "Health", scale)
+    
+    def add_item_to_player(self, player):
+        """Ajoute de la vie au joueur
+
+        Args:
+            player (Player): joueur auquel ajouter la vie
+        """
+        player.add_health(25)
 

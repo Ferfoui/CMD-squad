@@ -167,9 +167,13 @@ class World():
                 
                 elif tile in ENTITY_TILE_TYPES:
                     if tile in COLLECTIBLES_TILE_TYPES:
-                        # Si c'est une item box
+                        # Si c'est une Ammo box
                         if tile == COLLECTIBLES_TILE_TYPES[0]:
-                            box = sprites.ItemBox(x * self.tile_size, y * self.tile_size, assets, self.tile_size)
+                            box = sprites.AmmoBox(x * self.tile_size, y * self.tile_size, assets, self.tile_size)
+                            self.collectible_group.add(box)
+                        # Si c'est une Health Box
+                        elif tile == COLLECTIBLES_TILE_TYPES[1]:
+                            box = sprites.HealthBox(x * self.tile_size, y * self.tile_size, assets, self.tile_size)
                             self.collectible_group.add(box)
                     
                 # Si c'est un personnage comme le joueur ou un ennemi
@@ -178,7 +182,7 @@ class World():
                     if tile == PLAYER_AND_ENEMIES_TILE_TYPES[0]:
                         self.player = sprites.Player(x * self.tile_size, y * self.tile_size, self.tile_size, assets)
                     # Si c'est un dummy
-                    if tile == PLAYER_AND_ENEMIES_TILE_TYPES[1]:
+                    elif tile == PLAYER_AND_ENEMIES_TILE_TYPES[1]:
                         dummy = sprites.IntelligentDummy(x * self.tile_size, y * self.tile_size, self.tile_size, 2, assets, 2)
                         self.enemy_group.add(dummy)
         

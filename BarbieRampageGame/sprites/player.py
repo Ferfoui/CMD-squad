@@ -71,6 +71,23 @@ class Player(pygame.sprite.Sprite):
         self.width = self.image.get_width()
         self.height = self.image.get_height()
     
+    def add_health(self, amount: int):
+        """Ajoute de la vie au joueur
+
+        Args:
+            amount (int): quantité de vie à ajouter
+        """
+        self.health += amount
+        if self.health > 100:
+            self.health = 100
+    
+    def add_bullets(self, amount: int):
+        """Ajoute des balles au joueur
+
+        Args:
+            amount (int): quantité de balles à ajouter
+        """
+        self.bullets += amount
 
     def create_health_bar(self, x: int, y: int, assets: utils.Assets):
         """Crée la barre de vie du joueur
