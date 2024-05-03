@@ -1,4 +1,4 @@
-import pygame
+import pygame, typing
 
 class UserInputStates():
     __instance = None
@@ -19,15 +19,15 @@ class UserInputStates():
         self._clicked = False
         self.methods_to_be_processed = []
     
-    def add_method_to_be_processed(self, method: callable):
+    def add_method_to_be_processed(self, method: typing.Callable):
         """Ajoute une méthode qui sera exécutée lors de l'appel de la méthode process_events
 
         Args:
-            method (callable): méthode à exécuter
+            method (typing.Callable): méthode à exécuter
         """
         self.methods_to_be_processed.append(method)
     
-    def process_events(self, event: pygame.event):
+    def process_events(self, event: pygame.event.Event):
         """Gère les évènements de l'utilisateur
 
         Args:

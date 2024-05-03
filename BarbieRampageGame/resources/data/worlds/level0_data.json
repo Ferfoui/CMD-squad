@@ -188,11 +188,6 @@
             "y": 15
         },
         {
-            "type": "dummy_spawn",
-            "x": 18,
-            "y": 13
-        },
-        {
             "type": "grass_default",
             "x": 18,
             "y": 15
@@ -206,6 +201,11 @@
             "type": "grass_default",
             "x": 20,
             "y": 15
+        },
+        {
+            "type": "ken_spawn",
+            "x": 21,
+            "y": 13
         },
         {
             "type": "grass_default_right_border",
@@ -266,6 +266,11 @@
             "type": "grass_default",
             "x": 35,
             "y": 15
+        },
+        {
+            "type": "dummy_spawn",
+            "x": 36,
+            "y": 4
         },
         {
             "type": "grass_default_left_border",
@@ -538,12 +543,12 @@
             "y": 15
         },
         {
-            "type": "grass_default_left_border",
+            "type": "dummy_spawn",
             "x": 58,
-            "y": 1
+            "y": 0
         },
         {
-            "type": "dirt_default_left_border",
+            "type": "grass_default_left_border",
             "x": 58,
             "y": 2
         },
@@ -560,11 +565,6 @@
         {
             "type": "grass_default",
             "x": 59,
-            "y": 1
-        },
-        {
-            "type": "dirt_default",
-            "x": 59,
             "y": 2
         },
         {
@@ -580,11 +580,6 @@
         {
             "type": "grass_default",
             "x": 60,
-            "y": 1
-        },
-        {
-            "type": "dirt_default",
-            "x": 60,
             "y": 2
         },
         {
@@ -599,11 +594,6 @@
         },
         {
             "type": "grass_default",
-            "x": 61,
-            "y": 1
-        },
-        {
-            "type": "dirt_default",
             "x": 61,
             "y": 2
         },
@@ -635,11 +625,6 @@
         {
             "type": "grass_default",
             "x": 62,
-            "y": 1
-        },
-        {
-            "type": "dirt_default",
-            "x": 62,
             "y": 2
         },
         {
@@ -670,11 +655,6 @@
         {
             "type": "grass_default",
             "x": 63,
-            "y": 1
-        },
-        {
-            "type": "dirt_default",
-            "x": 63,
             "y": 2
         },
         {
@@ -703,12 +683,7 @@
             "y": 15
         },
         {
-            "type": "grass_default_right_border",
-            "x": 64,
-            "y": 1
-        },
-        {
-            "type": "dirt_default",
+            "type": "grass_default",
             "x": 64,
             "y": 2
         },

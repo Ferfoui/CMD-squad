@@ -11,8 +11,17 @@ print(f"Bienvenue dans le jeu Barbie Rampage!\nVersion: {GAME_VERSION}\nPar la C
 # Initialisation du moteur graphique
 pygame.init()
 
+# Initiallisation du mixer
+pygame.mixer.init()
+
 # Tous les paramètres que le joueur peut modifier comme les touches, etc.
 game_settings = utils.Settings()
+
+# Musique du Jeu
+pygame.mixer.music.load(PLAYBACK_MUSIC)
+pygame.mixer.music.set_volume(game_settings.volume)
+pygame.mixer.music.play(loops = -1, start = 0.0, fade_ms = 0)   
+
 
 # Définition de la taille de l'écran
 screen = pygame.display.set_mode((game_settings.screen_width, game_settings.screen_height))
@@ -30,16 +39,16 @@ user_inputs_utils = utils.UserInputStates.get_instance()
 
 ### Fonctions ###
 
-def timer_minute(milisec: int) -> str:
+def timer_minute(time_milisec: int) -> str:
     """Transforme des milisecondes dans le format heures, minutes puis secondes
 
     Args:
         milisec (int): nombre de milisecondes
 
     Returns:
-        str: temps converti (et pas au bouddhisme hein ^^)
+        str: temps converti
     """
-    sec = milisec // 1000
+    sec = time_milisec // 1000
     min = sec // 60
     hour = min // 60
     return f"{hour:02}:{min - hour * 60:02}:{sec - min * 60:02}"
@@ -53,11 +62,12 @@ def spawn_player():
     death_menu.reset_animation(game_settings.screen_width)
     world.init_data("level0_data.json", assets, game_settings)
     player = world.process_data(assets)
+    world.set_debug_display(game_settings.do_draw_hitboxes)
     
     # Création des éléments de l'interface
     player.create_health_bar(10, game_settings.screen_width // 18, assets)
-    player.create_kill_counter(10, game_settings.screen_width * 5/45, assets)
-    player.create_bullet_counter(10, game_settings.screen_width * 33/45, assets)
+    player.create_kill_counter(10, int(game_settings.screen_width * 5/45), assets)
+    player.create_bullet_counter(10, int(game_settings.screen_width * 33/45), assets)
     
     return player
 
@@ -107,14 +117,11 @@ while run:
         # Affiche les éléments à afficher à l'écran
         world.draw(screen)
         player.draw(screen)
-        world.enemy_group.draw(screen)
-        world.collectible_group.update(world)
-        for collectible in world.collectible_group:
-            collectible.draw(screen)
+        world.update_groups()
+        world.draw_sprite_groups(screen)
         
         # Met à jour le joueur
         player.update()
-        world.enemy_group.update()
         
         # Affiche les éléments de l'interface
         player.health_bar.draw(screen)
@@ -139,6 +146,8 @@ while run:
             if settings_choice:
                 settings_buttons = settings_menu.draw(screen)
                 settings_choice = not settings_buttons['back']
+                if not settings_choice:
+                    settings_menu.set_menu_off()
             else:
                 # Gestion du menu pause
                 menu_buttons = pause_menu.draw(screen)
@@ -158,7 +167,6 @@ while run:
         if not player.is_alive:
             if death_menu.draw(screen, True)['respawn']:
                 player = spawn_player()
-    
     
     if game_settings.do_draw_game_time:
         # Afficher le temps actuel à l'écran
@@ -191,8 +199,9 @@ while run:
                         # Activer ou désactiver le menu pause
                         pause = not pause
             if event.key == pygame.K_TAB:
-                pass
-                #ar_weapon.shoot(1,bullet_group)
+                player.weapon_holder.shoot(world.bullet_group, 1)
+                pygame.mixer.Sound.play(assets.weapon_cross_sound)
+
             if event.key == pygame.K_i:
                 if (not game_loading) and player.is_alive:
                     #inventory = not inventory

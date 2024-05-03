@@ -24,6 +24,7 @@ COLOR_ORANGE = (189, 68, 23)
 COLOR_DARK_ORANGE = (107, 28, 6)
 COLOR_HOT_PINK = (227, 28, 121)
 COLOR_HEALTH_PINK = (191, 17, 139)
+COLOR_GREEN = (20, 255, 20)
 
 # Les options pour les settings
 RESOLUTION_OPTIONS = {"GRO": (1200, int(1200 * 0.8)), "PA GRO": (1000, 800), "POUTI": (700, 560)}
@@ -34,7 +35,8 @@ OBSTACLES_TILE_TYPES = ['dirt_default', 'dirt_default_right_border', 'dirt_defau
 COLLECTIBLES_TILE_TYPES = ['ammo_box', 'health_box']
 ENTITY_TILE_TYPES = COLLECTIBLES_TILE_TYPES
 
-PLAYER_AND_ENEMIES_TILE_TYPES = ['player_spawn', 'dummy_spawn']
+ENTITY_TILE_TYPES = []
+PLAYER_AND_ENEMIES_TILE_TYPES = ['player_spawn', 'dummy_spawn', 'ken_spawn']
 
 TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES = OBSTACLES_TILE_TYPES + ENTITY_TILE_TYPES
 
@@ -62,9 +64,11 @@ TEXTURES_ROOT = path.join(ASSETS_ROOT, "textures/") # Le chemin des textures
 SOUNDS_ROOT = path.join(ASSETS_ROOT, "sounds/") # Le chemin des effets sonores
 FONTS_ROOT = path.join(ASSETS_ROOT, "fonts/") # Le chemin vers les polices d'écriture
 
+# Les textures
 GUI_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "gui/")
 PLAYER_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "player/")
 ENEMIES_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "enemies/")
+WEAPONS_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "weapons/")
 COLLECTIBLES_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "collectibles/")
 
 TILES_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "tiles/")
@@ -73,6 +77,9 @@ BACKGROUND_TEXTURES_LOCATION = path.join(TEXTURES_ROOT, "background/")
 
 PS2P_FONT_LOCATION = path.join(FONTS_ROOT, "Press_Start_2P/PressStart2P-REGULAR.ttf")
 
+# Les sons
+WEAPON_CROSS_SOUND_LOCATION = path.join(SOUNDS_ROOT, "son_test.wav")
+PLAYBACK_MUSIC = path.join(SOUNDS_ROOT, "nj_supershy.wav" )
 
 ### Les données utilisées (les data)
 DATA_ROOT = path.join(RESOURCES_ROOT, "data/")

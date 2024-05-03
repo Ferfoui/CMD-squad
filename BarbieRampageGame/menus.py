@@ -96,6 +96,13 @@ class SettingsMenu(gui.Menu):
         self.add_text("/!\\ Attention, le jeu doit être redémarré", assets.default_font, COLOR_WHITE_AZURE, settings.screen_width / 2, settings.screen_height * 3/16, do_place_center=True, name='do_restart_line1')
         self.add_text("si cette option est changée", assets.default_font, COLOR_WHITE_AZURE, settings.screen_width / 2, settings.screen_height * 7/32, do_place_center=True, name='do_restart_line2')
         
+        
+        self.volume_cursor_width = settings.screen_width / 3
+        volume_cursor_height = settings.screen_height / 32
+        self.add_text("volume :", assets.default_font, COLOR_WHITE_AZURE, settings.screen_width / 4, settings.screen_height / 2, True)
+        self.add_text(str(int(settings.volume * 100)) + "%", assets.default_font, COLOR_WHITE_AZURE, (settings.screen_width * 5/8) + (self.volume_cursor_width * 0.7), settings.screen_height / 2, True, name="current_volume")
+        self.add_cursor("volume_cursor", settings.screen_width * 5/8, settings.screen_height / 2, self.volume_cursor_width, volume_cursor_height, COLOR_GRAY, COLOR_WHITE_AZURE, 0, 1, settings.volume, True)
+        
         self.set_back_button(False)
         
     def draw(self, screen: pygame.Surface) -> dict[str, any]:
@@ -109,6 +116,7 @@ class SettingsMenu(gui.Menu):
         """
         gui_values = super().draw(screen, True)
         self.change_resolution(gui_values["resolution"])
+        self.change_volume(gui_values["volume_cursor"])
         return gui_values
 
     def change_resolution(self, resolution_str_value: str):
@@ -135,6 +143,17 @@ class SettingsMenu(gui.Menu):
             self.add_text("si cette option est changée", self.default_font, COLOR_WHITE_AZURE, self.initial_resolution[0] / 2, self.initial_resolution[1] * 7/32, do_place_center=True, name='do_restart_line2')
         
         self.set_back_button(self.do_restart)
+    
+    def change_volume(self, volume: float):
+        """Change le volume dans les paramètres
+
+        Args:
+            volume (float): volume du jeu
+        """
+        if self.settings.volume != volume:
+            self.settings.change_volume(volume)
+            current_volume_percentage = str(int(volume * 100)) + "%"
+            self.add_text(current_volume_percentage, self.default_font, COLOR_WHITE_AZURE, (self.initial_resolution[0] * 5/8) + (self.volume_cursor_width * 0.7), self.initial_resolution[1] / 2, True, name="current_volume")
 
     def set_back_button(self, do_restart: bool):
         """Change le bouton de retour pour qu'il redémarre le jeu
@@ -146,7 +165,11 @@ class SettingsMenu(gui.Menu):
             self.add_text_button("back", "restart game", self.bigger_font, COLOR_WHITE_AZURE, self.initial_resolution[0] / 2, self.initial_resolution[1] * 0.9, 1, True)
         else:
             self.add_text_button("back", "back to game", self.bigger_font, COLOR_WHITE_AZURE, self.initial_resolution[0] / 2, self.initial_resolution[1] * 0.9, 1, True)
-
+    
+    def set_menu_off(self):
+        """Désactive la clickabilité des boutons
+        """
+        self.set_cursors_off()
 
 
 # Classe du menu de mort et de réapparition
