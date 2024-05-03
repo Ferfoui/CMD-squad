@@ -18,7 +18,7 @@ pygame.mixer.init()
 game_settings = utils.Settings()
 
 # Musique du Jeu
-pygame.mixer.music.load(PLAYBACK_MUSIC)
+pygame.mixer.music.load(SUPERSHY_MUSIC)
 pygame.mixer.music.set_volume(game_settings.volume)
 pygame.mixer.music.play(loops = -1, start = 0.0, fade_ms = 0)   
 
