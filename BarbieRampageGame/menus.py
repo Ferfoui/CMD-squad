@@ -506,9 +506,7 @@ class WeaponsMenu(gui.Menu):
         """
         super().__init__(COLOR_DARK)
         
-        
-        
-# Création d'un background à moitié transparent
+        # Création d'un background à moitié transparent
         self.semi_transparent_background = pygame.Surface((settings.screen_width, settings.screen_height), pygame.SRCALPHA)
         self.semi_transparent_background.fill(self.background_color)
         
