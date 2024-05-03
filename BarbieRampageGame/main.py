@@ -235,7 +235,6 @@ while run:
                         weapons_choice = False
                     else: 
                         inventory_active = not inventory_active
-                    print('appuyer')
                     
             if event.key == pygame.K_e:
                 player.check_collectibles(world)
