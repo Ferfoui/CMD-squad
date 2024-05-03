@@ -332,15 +332,19 @@ class InventoryMenu(gui.Menu):
             settings (Settings): classe qui contient les paramètres du jeu
         """
         super().__init__(COLOR_DARK)
+        # Création d'un background à moitié transparent
+        self.semi_transparent_background = pygame.Surface((settings.screen_width, settings.screen_height), pygame.SRCALPHA)
+        self.semi_transparent_background.fill(self.background_color)
+        
         talented_tree_image = assets.get_scaled_image("talented_tree", f"{GUI_TEXTURES_LOCATION}talented_tree.png", 1)
         golden_trophy_image = assets.get_scaled_image("gold_trophy", f"{GUI_TEXTURES_LOCATION}gold_trophy.png", 1)
         manteau_style_image = assets.get_scaled_image("manteau_super_clean", f"{GUI_TEXTURES_LOCATION}manteau_super_clean.png", 1)
         ar_b4rb13_image = assets.get_scaled_image("AR_B4RB13", f"{TEXTURES_ROOT}weapons/AR_B4RB13.png", 1)
 
-        self.add_button("arbre des talents", talented_tree_image, talented_tree_image, settings.screen_width//1.5, settings.screen_height * 0.1, 1, True)
-        self.add_button("trophees", golden_trophy_image, golden_trophy_image, settings.screen_width//1.5, settings.screen_height * 0.1, 1, True)
-        self.add_button("apparences", manteau_style_image, manteau_style_image, settings.screen_width//1.5, settings.screen_height * 0.1, 1, True)
-        self.add_button("progression des armes", ar_b4rb13_image, ar_b4rb13_image, settings.screen_width//1.5, settings.screen_height * 0.1, 1, True)
+        self.add_button("talented tree", talented_tree_image, talented_tree_image, settings.screen_width//2, settings.screen_height * 0.1, 1, True)
+        self.add_button("trophies", golden_trophy_image, golden_trophy_image, settings.screen_width//2, settings.screen_height * 0.2, 1, True)
+        self.add_button("skins", manteau_style_image, manteau_style_image, settings.screen_width//2, settings.screen_height * 0.3, 1, True)
+        self.add_button("weapons", ar_b4rb13_image, ar_b4rb13_image, settings.screen_width//2, settings.screen_height * 0.4, 1, True)
     
     def draw(self, screen: pygame.Surface) -> dict[str, bool]:
         """Affiche les images et les boutons à l'écran et renvoie les noms des boutons qui ont été cliqués
@@ -363,6 +367,173 @@ class InventoryMenu(gui.Menu):
         for button in self.buttons_to_draw.values():
             
             # Positionnement du rectangle pour la bordure
+            border_rect.center = button.rect.center
+            
+            pygame.draw.rect(screen, COLOR_HOT_PINK, border_rect, 4, border_radius= 6)
+        
+        return clicked_buttons
+    
+class SkillMenu(gui.Menu):
+    def __init__(self, assets: utils.Assets, settings: utils.Settings):
+        """Initialise le menu de l'inventaire
+
+        Args:
+            settings (Settings): classe qui contient les paramètres du jeu
+        """
+        super().__init__(COLOR_DARK)
+    
+        # Création d'un background à moitié transparent
+        self.semi_transparent_background = pygame.Surface((settings.screen_width, settings.screen_height), pygame.SRCALPHA)
+        self.semi_transparent_background.fill(self.background_color)
+        
+    
+    def draw(self, screen: pygame.Surface) -> dict[str, bool]:
+        """Affiche les images et les boutons à l'écran et renvoie les noms des boutons qui ont été cliqués
+
+        Args:
+            screen (pygame.Surface): écran sur lequel le menu doit s'afficher
+
+        Returns:
+            dict[str, bool]: noms des boutons avec la valeur true s'ils ont été cliqués
+        """
+        # Affiche le background à moitié transparent
+        screen.blit(self.semi_transparent_background, (0, 0))
+
+        clicked_buttons = super().draw(screen, False)
+        
+        AROUND_BORDER_SIZE = 15
+        border_rect = pygame.Rect(0, 0, screen.get_width()/2, 23 + 2 * AROUND_BORDER_SIZE)
+        
+        # Affiche une bordure autour de chaque boutons
+        for button in self.buttons_to_draw.values():
+            
+            # Positionnement du rectangle pour la bourdure
+            border_rect.center = button.rect.center
+            
+            pygame.draw.rect(screen, COLOR_HOT_PINK, border_rect, 4, border_radius= 6)
+        
+        return clicked_buttons
+
+        
+class TrophiesMenu(gui.Menu):
+    def __init__(self, assets: utils.Assets, settings: utils.Settings):
+        """Initialise le menu de l'inventaire
+
+        Args:
+            settings (Settings): classe qui contient les paramètres du jeu
+        """
+        super().__init__(COLOR_DARK)
+        # Création d'un background à moitié transparent
+        self.semi_transparent_background = pygame.Surface((settings.screen_width, settings.screen_height), pygame.SRCALPHA)
+        self.semi_transparent_background.fill(self.background_color)
+        
+    
+    def draw(self, screen: pygame.Surface) -> dict[str, bool]:
+        """Affiche les images et les boutons à l'écran et renvoie les noms des boutons qui ont été cliqués
+
+        Args:
+            screen (pygame.Surface): écran sur lequel le menu doit s'afficher
+
+        Returns:
+            dict[str, bool]: noms des boutons avec la valeur true s'ils ont été cliqués
+        """
+        # Affiche le background à moitié transparent
+        screen.blit(self.semi_transparent_background, (0, 0))
+
+        clicked_buttons = super().draw(screen, False)
+        
+        AROUND_BORDER_SIZE = 15
+        border_rect = pygame.Rect(0, 0, screen.get_width()/2, 23 + 2 * AROUND_BORDER_SIZE)
+        
+        # Affiche une bordure autour de chaque boutons
+        for button in self.buttons_to_draw.values():
+            
+            # Positionnement du rectangle pour la bourdure
+            border_rect.center = button.rect.center
+            
+            pygame.draw.rect(screen, COLOR_HOT_PINK, border_rect, 4, border_radius= 6)
+        
+        return clicked_buttons
+
+        
+class SkinsMenu(gui.Menu):
+    def __init__(self, assets: utils.Assets, settings: utils.Settings):
+        """Initialise le menu de l'inventaire
+
+        Args:
+            settings (Settings): classe qui contient les paramètres du jeu
+        """
+        super().__init__(COLOR_DARK)
+        # Création d'un background à moitié transparent
+        self.semi_transparent_background = pygame.Surface((settings.screen_width, settings.screen_height), pygame.SRCALPHA)
+        self.semi_transparent_background.fill(self.background_color)
+        
+    
+    def draw(self, screen: pygame.Surface) -> dict[str, bool]:
+        """Affiche les images et les boutons à l'écran et renvoie les noms des boutons qui ont été cliqués
+
+        Args:
+            screen (pygame.Surface): écran sur lequel le menu doit s'afficher
+
+        Returns:
+            dict[str, bool]: noms des boutons avec la valeur true s'ils ont été cliqués
+        """
+        # Affiche le background à moitié transparent
+        screen.blit(self.semi_transparent_background, (0, 0))
+
+        clicked_buttons = super().draw(screen, False)
+        
+        AROUND_BORDER_SIZE = 15
+        border_rect = pygame.Rect(0, 0, screen.get_width()/2, 23 + 2 * AROUND_BORDER_SIZE)
+        
+        # Affiche une bordure autour de chaque boutons
+        for button in self.buttons_to_draw.values():
+            
+            # Positionnement du rectangle pour la bourdure
+            border_rect.center = button.rect.center
+            
+            pygame.draw.rect(screen, COLOR_HOT_PINK, border_rect, 4, border_radius= 6)
+        
+        return clicked_buttons
+
+        
+class WeaponsMenu(gui.Menu):
+    def __init__(self, assets: utils.Assets, settings: utils.Settings):
+        """Initialise le menu de l'inventaire
+
+        Args:
+            settings (Settings): classe qui contient les paramètres du jeu
+        """
+        super().__init__(COLOR_DARK)
+        
+        
+        
+# Création d'un background à moitié transparent
+        self.semi_transparent_background = pygame.Surface((settings.screen_width, settings.screen_height), pygame.SRCALPHA)
+        self.semi_transparent_background.fill(self.background_color)
+        
+    
+    def draw(self, screen: pygame.Surface) -> dict[str, bool]:
+        """Affiche les images et les boutons à l'écran et renvoie les noms des boutons qui ont été cliqués
+
+        Args:
+            screen (pygame.Surface): écran sur lequel le menu doit s'afficher
+
+        Returns:
+            dict[str, bool]: noms des boutons avec la valeur true s'ils ont été cliqués
+        """
+        # Affiche le background à moitié transparent
+        screen.blit(self.semi_transparent_background, (0, 0))
+
+        clicked_buttons = super().draw(screen, False)
+        
+        AROUND_BORDER_SIZE = 15
+        border_rect = pygame.Rect(0, 0, screen.get_width()/2, 23 + 2 * AROUND_BORDER_SIZE)
+        
+        # Affiche une bordure autour de chaque boutons
+        for button in self.buttons_to_draw.values():
+            
+            # Positionnement du rectangle pour la bourdure
             border_rect.center = button.rect.center
             
             pygame.draw.rect(screen, COLOR_HOT_PINK, border_rect, 4, border_radius= 6)

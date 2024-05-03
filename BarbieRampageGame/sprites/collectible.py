@@ -163,7 +163,7 @@ class ItemBox(Collectible):
         if pygame.sprite.collide_rect(player, self):
             self.action = self.ANIMATION_TYPES[1]
             self.add_item_to_player(player)
-            #self.kill()
+            self.kill()
     
     @abstract.abstractmethod
     def add_item_to_player(self, player):

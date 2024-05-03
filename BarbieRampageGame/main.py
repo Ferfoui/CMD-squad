@@ -80,10 +80,10 @@ death_menu = menus.DeathMenu(assets, game_settings)
 pause_menu = menus.PauseMenu(assets, game_settings)
 inventory_menu = menus.InventoryMenu(assets, game_settings)
 settings_menu = menus.SettingsMenu(assets, game_settings)
-#skilltree_menu = menus.SkillMenu(assets, game_settings)
-#weapon_menu = menus.WeaponMenu(assets, game_settings)
-#outfit_menu = menus.OutfitMenu(assets, game_settings)
-#trophy_menu = menus.TrophyMenu(assets, game_settings)
+talented_tree_menu = menus.SkillMenu(assets, game_settings)
+weapons_menu = menus.WeaponsMenu(assets, game_settings)
+skins_menu = menus.SkinsMenu(assets, game_settings)
+trophies_menu = menus.TrophiesMenu(assets, game_settings)
 
 # Initialisation du monde et du joueur
 world = World()
@@ -98,7 +98,12 @@ game_loading = True
 pause = False
 settings_choice = False
 inventory_choice = False
-inventory = False
+talented_tree_choice = False
+trophies_choice = False
+skins_choice = False
+weapons_choice = False
+inventory_active = False
+
 
 current_time = pygame.time.get_ticks()
 
@@ -129,19 +134,7 @@ while run:
         player.bullet_counter.draw(screen)
         
         # Gestion de certains menus
-        if inventory :
-            if settings_choice:
-                inventory_buttons = inventory_menu.draw(screen)
-                inventory_choice = not inventory_buttons['back']
-            else:
-                # Gestion du menu pause
-                menu_buttons = inventory_menu.draw(screen)
-                if menu_buttons['quit'] or settings_menu.do_restart:
-                    run = False
-                elif menu_buttons['inventory']:
-                    settings_choice = True
-                elif menu_buttons['back']:
-                    pause = False 
+        
         if pause:
             if settings_choice:
                 settings_buttons = settings_menu.draw(screen)
@@ -150,23 +143,51 @@ while run:
                     settings_menu.set_menu_off()
             else:
                 # Gestion du menu pause
-                menu_buttons = pause_menu.draw(screen)
-                if menu_buttons['quit'] or settings_menu.do_restart:
+                pause_buttons = pause_menu.draw(screen)
+                if pause_buttons['quit'] or settings_menu.do_restart:
                     run = False
-                elif menu_buttons['settings']:
+                elif pause_buttons['settings']:
                     settings_choice = True
-                elif menu_buttons['back']:
+                elif pause_buttons['back']:
                     pause = False
         else:
             player.move(world, game_settings)
-            
-            # Faire bouger les ennemis
+             # Faire bouger les ennemis
             for enemy in world.enemy_group:
                 enemy.ai(world)
         
         if not player.is_alive:
             if death_menu.draw(screen, True)['respawn']:
                 player = spawn_player()
+            
+        if inventory_active:
+            if talented_tree_choice :
+                talented_tree_buttons = talented_tree_menu.draw(screen)
+                if not talented_tree_choice:
+                    talented_tree_menu.set_menu_off()
+            elif trophies_choice :
+                trophies_buttons = trophies_menu.draw(screen)
+                if not trophies_choice:
+                    trophies_menu.set_menu_off()
+            elif skins_choice :
+                skins_buttons = skins_menu.draw(screen)
+                if not skins_choice:
+                    skins_menu.set_menu_off()
+            elif weapons_choice :
+                weapons_buttons = weapons_menu.draw(screen)
+                if not weapons_choice:
+                    weapons_menu.set_menu_off()
+            else: 
+                inventory_buttons = inventory_menu.draw(screen)
+                if inventory_buttons['talented tree']:
+                    talented_tree_choice = True
+                elif inventory_buttons['trophies']:
+                    trophies_choice = True
+                elif inventory_buttons['skins']:
+                    skins_choice = True
+                elif inventory_buttons['weapons']:
+                    weapons_choice = True
+           
     
     if game_settings.do_draw_game_time:
         # Afficher le temps actuel à l'écran
@@ -204,8 +225,18 @@ while run:
 
             if event.key == pygame.K_i:
                 if (not game_loading) and player.is_alive:
-                    #inventory = not inventory
-                    pass
+                    if talented_tree_choice:
+                        talented_tree_choice = False
+                    elif trophies_choice:
+                        trophies_choice = False
+                    elif skins_choice:
+                        skins_choice = False
+                    elif weapons_choice:
+                        weapons_choice = False
+                    else: 
+                        inventory_active = not inventory_active
+                    print('appuyer')
+                    
             if event.key == pygame.K_e:
                 player.check_collectibles(world)
 

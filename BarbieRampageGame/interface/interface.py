@@ -216,7 +216,7 @@ class BulletCounter():
         self.x = x
         self.y = y
         self.width = width
-        self.bullet= max_bullet
+        self.bullets= max_bullet
         self.max_bullet = max_bullet
         #self.image = assets.get_image("bullet_count", f"{TEXTURES_ROOT}gui/Bullet_count")
         self.image = assets.get_image("bullet_counter", f"{TEXTURES_ROOT}gui/Bullet_count.png", width)
@@ -231,7 +231,7 @@ class BulletCounter():
             screen (pygame.Surface): surface de l'écran sur laquelle afficher le compteur de munitions
         """
         screen.blit(self.image, (self.x, self.y))
-        draw_text(screen, f"Bullets: {self.bullet} ", self.font, COLOR_DARK, self.x+50, self.y, False)
+        draw_text(screen, f"Bullets: {self.bullets} ", self.font, COLOR_DARK, self.x+50, self.y, False)
         
 
 class KillCounter():
