@@ -35,7 +35,6 @@ OBSTACLES_TILE_TYPES = ['dirt_default', 'dirt_default_right_border', 'dirt_defau
 COLLECTIBLES_TILE_TYPES = ['ammo_box', 'health_box']
 ENTITY_TILE_TYPES = COLLECTIBLES_TILE_TYPES
 
-ENTITY_TILE_TYPES = []
 PLAYER_AND_ENEMIES_TILE_TYPES = ['player_spawn', 'dummy_spawn', 'ken_spawn']
 
 TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES = OBSTACLES_TILE_TYPES + ENTITY_TILE_TYPES
