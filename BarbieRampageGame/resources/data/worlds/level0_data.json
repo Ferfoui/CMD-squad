@@ -293,6 +293,11 @@
             "y": 8
         },
         {
+            "type": "health_box",
+            "x": 36,
+            "y": 13
+        },
+        {
             "type": "grass_default",
             "x": 36,
             "y": 15
@@ -488,6 +493,11 @@
             "y": 15
         },
         {
+            "type": "ammo_box",
+            "x": 52,
+            "y": 10
+        },
+        {
             "type": "grass_default",
             "x": 52,
             "y": 12
@@ -636,6 +646,11 @@
             "type": "dirt_default_down_border",
             "x": 62,
             "y": 3
+        },
+        {
+            "type": "ammo_box",
+            "x": 62,
+            "y": 10
         },
         {
             "type": "grass_default",
@@ -963,6 +978,11 @@
             "y": 15
         },
         {
+            "type": "weapon_crate",
+            "x": 97,
+            "y": 13
+        },
+        {
             "type": "grass_default",
             "x": 97,
             "y": 15
@@ -1001,6 +1021,11 @@
             "type": "grass_default",
             "x": 104,
             "y": 15
+        },
+        {
+            "type": "weapon_crate",
+            "x": 105,
+            "y": 13
         },
         {
             "type": "grass_default",
