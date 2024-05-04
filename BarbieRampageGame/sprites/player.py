@@ -17,7 +17,7 @@ class Player(Entity):
             assets (utils.Assets): classe qui contient les assets du jeu
         """
         #self.ANIMATION_TYPES = ['Idle', 'Run', 'Jump', 'Death']
-        self.ANIMATION_TYPES = ['Idle', 'Idle_has_weapon', 'Run', 'Run_has_weapon']
+        self.ANIMATION_TYPES = ['Idle', 'Idle_has_weapon', 'Run', 'Run_has_weapon', 'Jump']
         super().__init__(x, y, 100, tile_size, assets, speed = 5, scale = 1.5)
         
         # Valeurs de départ pour les kills et les balles
@@ -277,8 +277,7 @@ class Player(Entity):
         # Met l'animation qui correspond à ce que le joueur fait
         #if not self.is_alive:
         #    self.update_action(self.ANIMATION_TYPES[3]) # "Death"
-        #elif self.jump == True:
-        #    self.update_action(self.ANIMATION_TYPES[2]) # "Jump"
+        
         if self.is_running == True:
             if has_weapon:
                 self.update_action(self.ANIMATION_TYPES[3]) # "Run_has_weapon"
@@ -292,6 +291,9 @@ class Player(Entity):
                 self.update_action(self.ANIMATION_TYPES[1]) # "Idle_has_weapon"
             else:
                 self.update_action(self.ANIMATION_TYPES[0]) # "Idle"
+            
+        if self.jump == True:
+            self.update_action(self.ANIMATION_TYPES[4]) # "Jump"
         
         # Met à jour l'image en fonction de la frame actuelle
         self.image = self.animation_dict[self.action][self.frame_index]
