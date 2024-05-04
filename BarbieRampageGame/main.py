@@ -220,9 +220,11 @@ while run:
                     else:
                         # Activer ou désactiver le menu pause
                         pause = not pause
+            
             if event.key == pygame.K_TAB:
-                player.shoot(world.bullet_group)
-
+                if (not game_loading) and (not pause) and player.is_alive:
+                    player.shoot(world.bullet_group)
+            
             if event.key == pygame.K_i:
                 if (not game_loading) and player.is_alive:
                     if talented_tree_choice:
