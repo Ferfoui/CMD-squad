@@ -171,6 +171,37 @@ class SettingsMenu(gui.Menu):
         """
         self.set_cursors_off()
 
+# Overlay qui affiche les commandes
+class Overlay(gui.Menu):
+    def __init__(self, assets: utils.Assets, settings: utils.Settings):
+        """Initialise l'overlay
+
+        Args:
+            assets (Assets): classe des assets
+        """
+        super().__init__(COLOR_DARK)
+        text_color = COLOR_DARK_BLUE
+        self.add_text("Appuyer sur Échap pour", assets.default_font, text_color, settings.screen_width // 2, settings.screen_height // 8)
+        self.add_text("ouvrir le menu pause", assets.default_font, text_color, settings.screen_width // 2, settings.screen_height * 3//16)
+        self.add_text("Appuyer sur I pour", assets.default_font, text_color, settings.screen_width // 2, settings.screen_height * 5//16)
+        self.add_text("ouvrir l'inventaire", assets.default_font, text_color, settings.screen_width // 2, settings.screen_height * 3//8)
+        
+        self.font = assets.default_font
+    
+    def draw(self, screen: pygame.Surface, world):
+        """Affiche l'overlay
+
+        Args:
+            screen (pygame.Surface): écran sur lequel l'overlay doit être affiché
+        """
+        super().draw(screen, False)
+        
+        collided_collectibles = pygame.sprite.spritecollide(world.player, world.collectible_group, False)
+        
+        for collectible in collided_collectibles:
+            if not collectible.collected:
+                gui.draw_text(screen, "E pour ramasser", self.font, COLOR_GREEN, collectible.rect.centerx, collectible.rect.centery - 2 * world.tile_size, True)
+
 
 # Classe du menu de mort et de réapparition
 class DeathMenu(gui.Menu):
