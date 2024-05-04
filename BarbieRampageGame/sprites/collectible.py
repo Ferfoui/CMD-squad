@@ -24,6 +24,7 @@ class Collectible(pygame.sprite.Sprite, abstract.ABC):
         
         self.size_factor = tile_size * SPRITE_SCALING
         self.y_velocity = 0
+        self.initial_x = x
         
         self.collected = False
         
@@ -40,7 +41,7 @@ class Collectible(pygame.sprite.Sprite, abstract.ABC):
         Args:
             world (world.World): monde dans lequel se trouve l'objet
         """
-        self.scroll(world.scroll.screen_scroll)
+        self.scroll(world)
         self.interact_with_world(world)
     
     def interact_with_world(self, world):
@@ -70,10 +71,13 @@ class Collectible(pygame.sprite.Sprite, abstract.ABC):
         """
         screen.blit(self.image, self.rect)
     
-    def scroll(self, scroll_value: int):
+    def scroll(self, world):
         """Déplace l'objet en fonction du scroll du monde
+        
+        Args:
+            world (world.World): monde dans lequel se trouve l'objet
         """
-        self.rect.x += scroll_value
+        self.rect.x = self.initial_x - world.scroll.bg_scroll
     
     def apply_gravity(self):
         """Applique la gravité à l'objet
@@ -239,7 +243,7 @@ class WeaponCrate(ItemBox):
         Args:
             player (Player): joueur à qui donner une arme
         """
-        self.weapons = [weapon.Arb4rb13, weapon.GunP450]
+        self.weapons = [weapon.Arb4rb13, weapon.GunP450, weapon.GunP90]
         random_weapon = random.choice(self.weapons)
         player.set_weapon(random_weapon(self.assets, self.tile_size, 1))
     

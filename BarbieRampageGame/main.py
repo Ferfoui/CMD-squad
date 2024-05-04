@@ -18,7 +18,7 @@ pygame.mixer.init()
 game_settings = utils.Settings()
 
 # Musique du Jeu
-pygame.mixer.music.load(PLAYBACK_MUSIC)
+pygame.mixer.music.load(SUPERSHY_MUSIC)
 pygame.mixer.music.set_volume(game_settings.volume)
 pygame.mixer.music.play(loops = -1, start = 0.0, fade_ms = 0)   
 
@@ -85,6 +85,8 @@ weapons_menu = menus.WeaponsMenu(assets, game_settings)
 skins_menu = menus.SkinsMenu(assets, game_settings)
 trophies_menu = menus.TrophiesMenu(assets, game_settings)
 
+overlay = menus.Overlay(assets)
+
 # Initialisation du monde et du joueur
 world = World()
 
@@ -132,6 +134,7 @@ while run:
         player.health_bar.draw(screen)
         player.kill_counter.draw(screen)
         player.bullet_counter.draw(screen)
+        overlay.draw(screen, world)
         
         # Gestion de certains menus
         
