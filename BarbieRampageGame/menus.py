@@ -35,6 +35,9 @@ class PauseMenu(gui.Menu):
         self.add_text_button("settings", "game settings", assets.default_font_bigger, COLOR_WHITE_AZURE, settings.screen_width//2, settings.screen_height * 0.5, 1, True)
         self.add_text_button("back", "back to game", assets.default_font_bigger, COLOR_WHITE_AZURE, settings.screen_width//2, settings.screen_height * 0.6, 1, True)
         
+        self.add_text("Appuyez sur I pour", assets.default_font, COLOR_WHITE_AZURE, settings.screen_width / 2, settings.screen_height // 8)
+        self.add_text("ouvrir l'inventaire", assets.default_font, COLOR_WHITE_AZURE, settings.screen_width / 2, settings.screen_height // 8 + 23)
+        
         # Création d'un background à moitié transparent
         self.semi_transparent_background = pygame.Surface((settings.screen_width, settings.screen_height), pygame.SRCALPHA)
         self.semi_transparent_background.fill(self.background_color)
@@ -170,6 +173,32 @@ class SettingsMenu(gui.Menu):
         """Désactive la clickabilité des boutons
         """
         self.set_cursors_off()
+
+# Overlay qui affiche les commandes
+class Overlay(gui.Menu):
+    def __init__(self, assets: utils.Assets):
+        """Initialise l'overlay
+
+        Args:
+            assets (Assets): classe des assets
+        """
+        super().__init__(COLOR_DARK)
+
+        self.font = assets.default_font
+    
+    def draw(self, screen: pygame.Surface, world):
+        """Affiche l'overlay
+
+        Args:
+            screen (pygame.Surface): écran sur lequel l'overlay doit être affiché
+        """
+        super().draw(screen, False)
+        
+        collided_collectibles = pygame.sprite.spritecollide(world.player, world.collectible_group, False)
+        
+        for collectible in collided_collectibles:
+            if not collectible.collected:
+                gui.draw_text(screen, "E pour ramasser", self.font, COLOR_GREEN, collectible.rect.centerx, collectible.rect.centery - 2 * world.tile_size, True)
 
 
 # Classe du menu de mort et de réapparition

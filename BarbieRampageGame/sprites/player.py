@@ -17,7 +17,7 @@ class Player(Entity):
             assets (utils.Assets): classe qui contient les assets du jeu
         """
         #self.ANIMATION_TYPES = ['Idle', 'Run', 'Jump', 'Death']
-        self.ANIMATION_TYPES = ['Idle', 'Idle_has_weapon', 'Run', 'Run_has_weapon']
+        self.ANIMATION_TYPES = ['Idle', 'Idle_has_weapon', 'Run', 'Run_has_weapon', 'Jump']
         super().__init__(x, y, 100, tile_size, assets, speed = 5, scale = 1.5)
         
         # Valeurs de départ pour les kills et les balles
@@ -141,6 +141,14 @@ class Player(Entity):
     def get_head_y(self) -> int:
         """Renvoie la position en ordonnées de la tête du joueur"""
         return self.rect.top + self.rect.height // 6
+    
+    def shoot(self, bullet_group: pygame.sprite.Group):
+        """Fait tirer le joueur
+
+        Args:
+            bullet_group (pygame.sprite.Group): groupe de sprites dans lequel les balles vont être ajoutées
+        """
+        self.bullets = self.weapon_holder.shoot(bullet_group, self.bullets)
     
     def get_holding_weapon_coordinates(self) -> tuple[tuple[int, int], tuple[int, int]]:
         """Renvoie les coordonnées où le joueur doit tenir son arme
@@ -277,16 +285,17 @@ class Player(Entity):
         # Met l'animation qui correspond à ce que le joueur fait
         #if not self.is_alive:
         #    self.update_action(self.ANIMATION_TYPES[3]) # "Death"
-        #elif self.jump == True:
-        #    self.update_action(self.ANIMATION_TYPES[2]) # "Jump"
-        if self.is_running == True:
+        
+        if self.jump == True:
+            self.update_action(self.ANIMATION_TYPES[4]) # "Jump"
+        
+        elif self.is_running == True:
             if has_weapon:
                 self.update_action(self.ANIMATION_TYPES[3]) # "Run_has_weapon"
             else:
                 self.update_action(self.ANIMATION_TYPES[2]) # "Run"
             
             animation_cooldown = NORMAL_ANIMATION_COOLDOWN // 2
-        
         else:
             if has_weapon:
                 self.update_action(self.ANIMATION_TYPES[1]) # "Idle_has_weapon"
@@ -332,8 +341,14 @@ class Player(Entity):
         self.bullet_counter.bullets = self.bullets
 
         self.update_animation()
+        self.weapon_holder.update()
         
     def check_collectibles(self, world):
+        """Check_collectibles: Méthode qui permet de vérifier si le joueur est en collision avec un collectible
+
+        Args:
+            world (world.World): Monde dans lequel le joueur se trouve
+        """
         collectibles_in_range = pygame.sprite.spritecollide(self, world.collectible_group, False)
         for collectible in collectibles_in_range:
             collectible.on_collect_action(self)
@@ -403,6 +418,11 @@ class WeaponHolder():
         """
         return self.weapon != None
     
+    def update(self):
+        """Met à jour l'arme que le joueur a équipé"""
+        if self.has_weapon():
+            self.weapon.update()
+    
     def move(self, holding_coordinates: tuple[int, int], direction: int):
         """Fait bouger l'arme que le joueur a équipé
 
@@ -442,9 +462,12 @@ class WeaponHolder():
         Returns:
             int: nouveau nombre de balles après le tir
         """
-        if self.has_weapon() and bullet_count > 0:
-            bullets_consuming = self.weapon.shoot(self.direction, bullet_group)
-            bullet_count -= bullets_consuming
+        if self.has_weapon():
+            if bullet_count > 0:
+                bullets_consuming = self.weapon.shoot(self.direction, bullet_group)
+                bullet_count -= bullets_consuming
+            else:
+                self.weapon.play_empty_sound()
         
         if bullet_count < 0:
             bullet_count = 0

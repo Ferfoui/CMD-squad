@@ -16,6 +16,7 @@ SPRITE_SCALING = 1/35
 # Les couleurs du jeu
 COLOR_WHITE_AZURE = (240, 255, 255)
 COLOR_SKY_BLUE = (52, 117, 183)
+COLOR_DARK_BLUE = (33, 49, 61)
 COLOR_GRAY = (60, 64, 64)
 COLOR_LIGHT_GRAY = (120, 128, 128)
 COLOR_DARK = (20, 21, 25)
@@ -77,6 +78,8 @@ PS2P_FONT_LOCATION = path.join(FONTS_ROOT, "Press_Start_2P/PressStart2P-REGULAR.
 
 # Les sons
 WEAPON_CROSS_SOUND_LOCATION = path.join(SOUNDS_ROOT, "son_test.wav")
+BLASTER_SOUND_LOCATION = path.join(SOUNDS_ROOT, "blaster.wav")
+
 SUPERSHY_MUSIC = path.join(SOUNDS_ROOT, "nj_supershy.wav" )
 BARBIE_GIRL_MUSIC = path.join(SOUNDS_ROOT, "barbie_girl.wav")
 
