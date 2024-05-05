@@ -24,7 +24,7 @@ class Player(Entity):
         # Valeurs de départ pour les kills et les balles
         self.bullets = 0
         
-        #self.inventory = inventory
+        self.inventory = inventory
         
         # Classe contenant l'arme du joueur
         self.weapon_holder = WeaponHolder()
@@ -90,7 +90,7 @@ class Player(Entity):
         Args:
             amount (int): quantité de balles à ajouter
         """
-        self.bullets += amount
+        self.inventory.bullets += amount
 
     def define_entity_hitbox(self, entity_rect: pygame.Rect) -> pygame.Rect:
         """Méthode qui crée la hitbox de l'entité
@@ -138,7 +138,7 @@ class Player(Entity):
             y (int): position en ordonnées où le compteur de balles va être créé
             assets (utils.Assets): classe qui contient les assets du jeu
         """
-        self.bullet_counter = gui.BulletCounter(x, y, 64, self.bullets, assets)
+        self.bullet_counter = gui.BulletCounter(x, y, 64, self.inventory.bullets, assets)
     
     def get_head_y(self) -> int:
         """Renvoie la position en ordonnées de la tête du joueur"""
@@ -150,7 +150,7 @@ class Player(Entity):
         Args:
             bullet_group (pygame.sprite.Group): groupe de sprites dans lequel les balles vont être ajoutées
         """
-        self.bullets = self.weapon_holder.shoot(bullet_group, self.bullets)
+        self.inventory.bullets = self.weapon_holder.shoot(bullet_group, self.inventory.bullets)
     
     def get_holding_weapon_coordinates(self) -> tuple[tuple[int, int], tuple[int, int]]:
         """Renvoie les coordonnées où le joueur doit tenir son arme
@@ -339,7 +339,7 @@ class Player(Entity):
         super().update()
 
         self.health_bar.hp = self.health
-        self.bullet_counter.bullets = self.bullets
+        self.bullet_counter.bullets = self.inventory.bullets
 
         self.update_animation()
         self.weapon_holder.update()

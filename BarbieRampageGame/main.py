@@ -93,6 +93,8 @@ world = World()
 
 player = spawn_player()
 
+player_inventory = player.inventory
+
 # Debug
 
 # Variables pour la boucle

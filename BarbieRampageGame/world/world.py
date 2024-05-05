@@ -97,8 +97,15 @@ class World():
         self.enemy_group.empty()
         self.bullet_group.empty()
     
-    def load_tiles_images(self, tile_size):
-        if (len(self.img_dict) == len(TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES)) and (self.img_dict['air'].get_width() == tile_size):
+    def load_tiles_images(self, tile_size: int):
+        """Charge les images des tuiles
+
+        Args:
+            tile_size (int): Taille des tuiles
+        """
+        do_keep_current_images = (len(self.img_dict) == len(TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES)) and (self.img_dict[TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES[0]].get_width() == tile_size)
+        
+        if do_keep_current_images:
             return
         # Charge toutes les images
         self.img_dict = {}
@@ -165,7 +172,7 @@ class World():
             self.world_data[tile['x']][tile['y']] = tile['type']
 
 
-    def process_data(self, assets: utils.Assets, inventory: inventory.Inventory = None) -> sprites.Player:
+    def process_data(self, assets: utils.Assets, player_inventory: inventory.Inventory = None) -> sprites.Player:
         """Méthode qui génére le monde en fonction des données données
 
         Args:
@@ -181,6 +188,9 @@ class World():
         
         self.level_length = self.world_json['attributes']['level_size']
         self.enemies = 0
+        
+        if player_inventory == None:
+            player_inventory = inventory.Inventory()
         
         for x, column in enumerate(self.world_data):
             for y, tile in enumerate(column):
@@ -212,7 +222,7 @@ class World():
                 elif tile in PLAYER_AND_ENEMIES_TILE_TYPES:
                     # Si c'est le point de spawn du joueur
                     if tile == PLAYER_AND_ENEMIES_TILE_TYPES[0]:
-                        self.player = sprites.Player(x * self.tile_size, y * self.tile_size, self.tile_size, assets, inventory)
+                        self.player = sprites.Player(x * self.tile_size, y * self.tile_size, self.tile_size, assets, player_inventory)
                         self.player_group.add(self.player)
                     # Si c'est un dummy
                     elif tile == PLAYER_AND_ENEMIES_TILE_TYPES[1]:
