@@ -233,7 +233,7 @@ class BulletCounter():
         
 
 class KillCounter():
-    def __init__(self, x: int, y: int, width: int, max_kl: int, assets: Assets):
+    def __init__(self, x: int, y: int, width: int, max_kl: int, assets: Assets, enemies):
         """Initialise le compteur de kills
         
         Args:
@@ -246,8 +246,8 @@ class KillCounter():
         self.x = x
         self.y = y
         self.width = width
-        self.kl = max_kl
-        self.max_kl = max_kl
+        self.kl = 0
+        self.max_kl = enemies
         self.image = assets.get_image("kill_counter", f"{TEXTURES_ROOT}gui/Kill_bar.png", width)
         self.height = self.image.get_height()
         

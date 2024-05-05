@@ -66,6 +66,7 @@ class World():
         self.current_level_index = 0
         self.world_data = []
         self.obstacle_list = []
+        self.img_dict = {}
         
         self.player = None
         self.scroll = None
@@ -178,6 +179,7 @@ class World():
         self.obstacle_list = []
         
         self.level_length = self.world_json['attributes']['level_size']
+        self.enemies = 0
         
         for x, column in enumerate(self.world_data):
             for y, tile in enumerate(column):
@@ -215,9 +217,11 @@ class World():
                     elif tile == PLAYER_AND_ENEMIES_TILE_TYPES[1]:
                         dummy = sprites.IntelligentDummy(x * self.tile_size, y * self.tile_size, self.tile_size, 2, assets, 2)
                         self.enemy_group.add(dummy)
+                        self.enemies += 1
                     elif tile == PLAYER_AND_ENEMIES_TILE_TYPES[2]:
                         ken = sprites.KenEnemy(x * self.tile_size, y * self.tile_size, self.tile_size, 2, assets)
                         self.enemy_group.add(ken)
+                        self.enemies += 1
         
         return self.player
     

@@ -21,7 +21,7 @@ class Player(Entity):
         super().__init__(x, y, 100, tile_size, assets, speed = 5, scale = 1.5)
         
         # Valeurs de départ pour les kills et les balles
-        self.kills = 100
+        self.kills = 0
         self.bullets = 0
         
         # Classe contenant l'arme du joueur
@@ -118,7 +118,7 @@ class Player(Entity):
         """
         self.health_bar = gui.HealthBar(x, y, 256, self.health, assets)
 
-    def create_kill_counter(self, x: int, y: int, assets: utils.Assets):
+    def create_kill_counter(self, x: int, y: int, assets: utils.Assets, enemies: int):
         """Crée le compteur de kills du joueur
 
         Args:
@@ -126,7 +126,7 @@ class Player(Entity):
             y (int): position en ordonnées où le compteur de kills va être créé
             assets (utils.Assets): classe qui contient les assets du jeu
         """
-        self.kill_counter = gui.KillCounter(x, y, 256, self.kills, assets)
+        self.kill_counter = gui.KillCounter(x, y, 256, self.kills, assets, enemies)
     
     def create_bullet_counter(self, x: int, y: int, assets: utils.Assets):
         """Crée le compteur de balles du joueur

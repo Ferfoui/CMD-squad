@@ -67,7 +67,7 @@ def spawn_player():
     
     # Création des éléments de l'interface
     player.create_health_bar(10, game_settings.screen_width // 18, assets)
-    player.create_kill_counter(10, int(game_settings.screen_width * 5/45), assets)
+    player.create_kill_counter(10, int(game_settings.screen_width * 5/45), assets, world.enemies)
     player.create_bullet_counter(10, int(game_settings.screen_width * 33/45), assets)
     
     return player
