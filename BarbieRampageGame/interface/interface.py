@@ -3,8 +3,6 @@ import pygame
 from _common import ColorValue
 from constants import *
 from utils import Assets
-
-
 from .buttons import Button, DropDown, Cursor
 
 # Classe qui gère les menus
@@ -264,7 +262,6 @@ class KillCounter():
         pygame.draw.rect(screen, COLOR_RED, (self.x + 5, self.y + 5, (self.width - 10) * ratio, self.height - 10))
         screen.blit(self.image, (self.x, self.y))
 
-
 ### Fonctions ###
 def draw_text(screen: pygame.Surface, text: str, font: pygame.font.Font, text_col: ColorValue, x: int, y: int, do_place_center: bool = False):
     """Fonction fiche du texte
@@ -285,4 +282,3 @@ def draw_text(screen: pygame.Surface, text: str, font: pygame.font.Font, text_co
         screen.blit(img, img_rect)
     else:
         screen.blit(img, (x, y))
-

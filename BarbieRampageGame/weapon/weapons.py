@@ -10,6 +10,7 @@ import utils
 # La classe qui crée les armes
 class Weapon(abstract.ABC):
     def __init__(self, weapon_name: str, texture_path: str, assets: utils.Assets, tile_size: int, scale: float, shoot_cooldown: int = 300):
+
         """Créé une nouvelle arme
 
         Args:
