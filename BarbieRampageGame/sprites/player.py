@@ -1,13 +1,13 @@
-import pygame, os
+import pygame
 
 from constants import *
 from . import Entity
-import utils, weapon
+import utils, weapon, inventory
 import interface as gui
 
 # Classe qui permet de créer le joueur
 class Player(Entity):
-    def __init__(self, x: int, y: int, tile_size: int, assets: utils.Assets):
+    def __init__(self, x: int, y: int, tile_size: int, assets: utils.Assets, inventory: inventory.Inventory):
         """Initialise la classe Player
 
         Args:
@@ -15,6 +15,7 @@ class Player(Entity):
             y (int): position en ordonnées où le joueur va être créé
             tile_size (int): taille d'une tuile en pixel
             assets (utils.Assets): classe qui contient les assets du jeu
+            inventory (inventory.Inventory): inventaire du joueur
         """
         #self.ANIMATION_TYPES = ['Idle', 'Run', 'Jump', 'Death']
         self.ANIMATION_TYPES = ['Idle', 'Idle_has_weapon', 'Run', 'Run_has_weapon', 'Jump']
@@ -23,6 +24,8 @@ class Player(Entity):
         # Valeurs de départ pour les kills et les balles
         self.kills = 100
         self.bullets = 0
+        
+        self.inventory = inventory
         
         # Classe contenant l'arme du joueur
         self.weapon_holder = WeaponHolder()
