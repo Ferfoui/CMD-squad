@@ -64,6 +64,7 @@ class World():
     def __init__(self):
         """Initialise la classe World
         """
+        self.current_level_index = 0
         self.world_data = []
         self.obstacle_list = []
         
@@ -102,6 +103,21 @@ class World():
             img = pygame.image.load(f'{TILES_TEXTURES_LOCATION}{tile_name}.png').convert_alpha()
             img = pygame.transform.scale(img, (tile_size, tile_size * img.get_height() // img.get_width()))
             self.img_dict[tile_name] = img
+    
+    def go_to_next_level(self, assets: utils.Assets, settings: utils.Settings):
+        """Passe au niveau suivant
+        
+        Args:
+            assets (Assets): classe qui contient les assets du jeu
+            settings (Settings): classe qui contient les paramètres du jeu
+        """
+        self.current_level_index += 1
+        if self.current_level_index >= len(WORLD_LIST):
+            self.current_level_index = 0
+            
+        world_file_name = f"{WORLD_LIST[self.current_level_index]}_data.json"
+        
+        self.init_data(world_file_name, assets, settings)
     
     def init_data(self, level_name: str, assets: utils.Assets, settings: utils.Settings):
         """Initialise les données du niveau
