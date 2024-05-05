@@ -227,8 +227,9 @@ while run:
                         pause = not pause
             
             if event.key == pygame.K_TAB:
-                player.weapon_holder.shoot(world.bullet_group, 1)
-                pygame.mixer.Sound.play(assets.weapon_cross_sound)
+                if (not game_loading) and player.is_alive:
+                    player.shoot(world.bullet_group)
+            
             if event.key == pygame.K_a:
                 player_inventory.swap_weapons()
 
