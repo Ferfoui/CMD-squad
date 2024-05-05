@@ -233,7 +233,7 @@ class BulletCounter():
         
 
 class KillCounter():
-    def __init__(self, x: int, y: int, width: int, max_kl: int, assets: Assets):
+    def __init__(self, x: int, y: int, width: int, assets: Assets, world):
         """Initialise le compteur de kills
         
         Args:
@@ -246,10 +246,10 @@ class KillCounter():
         self.x = x
         self.y = y
         self.width = width
-        self.kl = max_kl
-        self.max_kl = max_kl
+        self.max_kill = world.enemies
         self.image = assets.get_image("kill_counter", f"{TEXTURES_ROOT}gui/Kill_bar.png", width)
         self.height = self.image.get_height()
+        self.world = world 
         
     def draw(self, screen: pygame.Surface):
         """Affiche le compteur de kills sur l'écran
@@ -258,7 +258,7 @@ class KillCounter():
             screen (pygame.Surface): écran sur laquelle afficher le compteur de kills
         """
         # Calcul du ratio de kills
-        ratio = self.kl / self.max_kl
+        ratio = self.world.killed / self.max_kill
         pygame.draw.rect(screen, COLOR_RED, (self.x + 5, self.y + 5, (self.width - 10) * ratio, self.height - 10))
         screen.blit(self.image, (self.x, self.y))
 
