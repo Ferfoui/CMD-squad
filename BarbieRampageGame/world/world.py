@@ -2,8 +2,7 @@ import pygame
 import json
 
 from constants import *
-import sprites
-import utils
+import sprites, utils, inventory
 
 # Classe qui permet de gérer le scrolling de l'écran
 class Scroll():
@@ -97,6 +96,8 @@ class World():
         self.bullet_group.empty()
     
     def load_tiles_images(self, tile_size):
+        if (len(self.img_dict) == len(TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES)) and (self.img_dict['air'].get_width() == tile_size):
+            return
         # Charge toutes les images
         self.img_dict = {}
         for tile_name in TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES:
@@ -162,9 +163,12 @@ class World():
             self.world_data[tile['x']][tile['y']] = tile['type']
 
 
-    def process_data(self, assets: utils.Assets) -> sprites.Player:
+    def process_data(self, assets: utils.Assets, inventory: inventory.Inventory = None) -> sprites.Player:
         """Méthode qui génére le monde en fonction des données données
 
+        Args:
+            assets (Assets): classe qui contient les assets du jeu
+            inventory (Inventory): inventaire du joueur. S'il n'est pas donné, l'inventaire va être créé
         Returns:
             Player: joueur créé dans le monde
         """
