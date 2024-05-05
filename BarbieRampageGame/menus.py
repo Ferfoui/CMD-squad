@@ -35,6 +35,9 @@ class PauseMenu(gui.Menu):
         self.add_text_button("settings", "game settings", assets.default_font_bigger, COLOR_WHITE_AZURE, settings.screen_width//2, settings.screen_height * 0.5, 1, True)
         self.add_text_button("back", "back to game", assets.default_font_bigger, COLOR_WHITE_AZURE, settings.screen_width//2, settings.screen_height * 0.6, 1, True)
         
+        self.add_text("Appuyez sur I pour", assets.default_font, COLOR_WHITE_AZURE, settings.screen_width / 2, settings.screen_height // 8)
+        self.add_text("ouvrir l'inventaire", assets.default_font, COLOR_WHITE_AZURE, settings.screen_width / 2, settings.screen_height // 8 + 23)
+        
         # Création d'un background à moitié transparent
         self.semi_transparent_background = pygame.Surface((settings.screen_width, settings.screen_height), pygame.SRCALPHA)
         self.semi_transparent_background.fill(self.background_color)
@@ -170,6 +173,32 @@ class SettingsMenu(gui.Menu):
         """Désactive la clickabilité des boutons
         """
         self.set_cursors_off()
+
+# Overlay qui affiche les commandes
+class Overlay(gui.Menu):
+    def __init__(self, assets: utils.Assets):
+        """Initialise l'overlay
+
+        Args:
+            assets (Assets): classe des assets
+        """
+        super().__init__(COLOR_DARK)
+
+        self.font = assets.default_font
+    
+    def draw(self, screen: pygame.Surface, world):
+        """Affiche l'overlay
+
+        Args:
+            screen (pygame.Surface): écran sur lequel l'overlay doit être affiché
+        """
+        super().draw(screen, False)
+        
+        collided_collectibles = pygame.sprite.spritecollide(world.player, world.collectible_group, False)
+        
+        for collectible in collided_collectibles:
+            if not collectible.collected:
+                gui.draw_text(screen, "E pour ramasser", self.font, COLOR_GREEN, collectible.rect.centerx, collectible.rect.centery - 2 * world.tile_size, True)
 
 
 # Classe du menu de mort et de réapparition
@@ -341,10 +370,10 @@ class InventoryMenu(gui.Menu):
         manteau_style_image = assets.get_scaled_image("manteau_super_clean", f"{GUI_TEXTURES_LOCATION}manteau_super_clean.png", 1)
         ar_b4rb13_image = assets.get_scaled_image("AR_B4RB13", f"{TEXTURES_ROOT}weapons/AR_B4RB13.png", 1)
 
-        self.add_button("talented tree", talented_tree_image, talented_tree_image, settings.screen_width//2, settings.screen_height * 0.1, 1, True)
-        self.add_button("trophies", golden_trophy_image, golden_trophy_image, settings.screen_width//2, settings.screen_height * 0.2, 1, True)
-        self.add_button("skins", manteau_style_image, manteau_style_image, settings.screen_width//2, settings.screen_height * 0.3, 1, True)
-        self.add_button("weapons", ar_b4rb13_image, ar_b4rb13_image, settings.screen_width//2, settings.screen_height * 0.4, 1, True)
+        self.add_button("talented tree", talented_tree_image, talented_tree_image, settings.screen_width//2, settings.screen_height * 0.2, 2, True)
+        self.add_button("trophies", golden_trophy_image, golden_trophy_image, settings.screen_width//2, settings.screen_height * 0.4, 2, True)
+        self.add_button("skins", manteau_style_image, manteau_style_image, settings.screen_width//2, settings.screen_height * 0.6, 2, True)
+        self.add_button("weapons", ar_b4rb13_image, ar_b4rb13_image, settings.screen_width//2, settings.screen_height * 0.8, 2, True)
     
     def draw(self, screen: pygame.Surface) -> dict[str, bool]:
         """Affiche les images et les boutons à l'écran et renvoie les noms des boutons qui ont été cliqués
@@ -361,7 +390,7 @@ class InventoryMenu(gui.Menu):
         clicked_buttons = super().draw(screen, False)
         
         AROUND_BORDER_SIZE = 15
-        border_rect = pygame.Rect(0, 0, screen.get_width()/2, 23 + 2 * AROUND_BORDER_SIZE)
+        border_rect = pygame.Rect(0, 0, screen.get_width()/2, 23 + 2 * AROUND_BORDER_SIZE + 100)
         
         # Affiche une bordure autour de chaque boutons
         for button in self.buttons_to_draw.values():
@@ -506,9 +535,7 @@ class WeaponsMenu(gui.Menu):
         """
         super().__init__(COLOR_DARK)
         
-        
-        
-# Création d'un background à moitié transparent
+        # Création d'un background à moitié transparent
         self.semi_transparent_background = pygame.Surface((settings.screen_width, settings.screen_height), pygame.SRCALPHA)
         self.semi_transparent_background.fill(self.background_color)
         
