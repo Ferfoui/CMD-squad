@@ -4,7 +4,7 @@ import pygame, os, sys
 
 from constants import *
 from world import World
-import utils, menus, interface, weapon
+import utils, menus, interface, weapon, inventory
 
 print(f"Bienvenue dans le jeu Barbie Rampage!\nVersion: {GAME_VERSION}\nPar la CMD-squad\n")
 
@@ -92,6 +92,8 @@ overlay = menus.Overlay(assets)
 world = World()
 
 player = spawn_player()
+
+player_inventory = inventory.Inventory()
 
 # Debug
 
@@ -225,9 +227,12 @@ while run:
                         pause = not pause
             
             if event.key == pygame.K_TAB:
-                if (not game_loading) and (not pause) and player.is_alive:
+                if (not game_loading) and player.is_alive:
                     player.shoot(world.bullet_group)
             
+            if event.key == pygame.K_a:
+                player_inventory.swap_weapons()
+
             if event.key == pygame.K_i:
                 if (not game_loading) and player.is_alive:
                     if talented_tree_choice:
