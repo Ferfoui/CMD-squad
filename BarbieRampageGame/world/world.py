@@ -67,6 +67,7 @@ class World():
         self.world_data = []
         self.obstacle_list = []
         self.img_dict = {}
+        self.killed = 0
         
         self.player = None
         self.scroll = None
@@ -211,7 +212,7 @@ class World():
                 elif tile in PLAYER_AND_ENEMIES_TILE_TYPES:
                     # Si c'est le point de spawn du joueur
                     if tile == PLAYER_AND_ENEMIES_TILE_TYPES[0]:
-                        self.player = sprites.Player(x * self.tile_size, y * self.tile_size, self.tile_size, assets)
+                        self.player = sprites.Player(x * self.tile_size, y * self.tile_size, self.tile_size, assets, inventory)
                         self.player_group.add(self.player)
                     # Si c'est un dummy
                     elif tile == PLAYER_AND_ENEMIES_TILE_TYPES[1]:
@@ -267,7 +268,11 @@ class World():
         """Met à jour les groupes de sprites
         """
         self.bullet_group.update(self)
-        self.enemy_group.update()
+        self.killed = 0
+        for enemy in self.enemy_group :
+            enemy.update()
+            if not enemy.is_alive:
+                self.killed += 1
         self.collectible_group.update(self)
         
     def set_debug_display(self, display: bool):
