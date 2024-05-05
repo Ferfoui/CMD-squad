@@ -4,7 +4,7 @@ import pygame, os, sys
 
 from constants import *
 from world import World
-import utils, menus, interface, weapon
+import utils, menus, interface, weapon, inventory
 
 print(f"Bienvenue dans le jeu Barbie Rampage!\nVersion: {GAME_VERSION}\nPar la CMD-squad\n")
 
@@ -54,9 +54,12 @@ def timer_minute(time_milisec: int) -> str:
     hour = min // 60
     return f"{hour:02}:{min - hour * 60:02}:{sec - min * 60:02}"
 
-def spawn_player():
+def spawn_player(inventory: inventory.Inventory = None):
     """Fais réapparaître le joueur et réinitialise le monde
 
+    Args:
+        inventory (Inventory, optional): inventaire du joueur. None par défaut
+    
     Returns:
         Player: joueur recréé
     """
@@ -227,9 +230,12 @@ while run:
                         pause = not pause
             
             if event.key == pygame.K_TAB:
-                if (not game_loading) and (not pause) and player.is_alive:
+                if (not game_loading) and player.is_alive:
                     player.shoot(world.bullet_group)
             
+            if event.key == pygame.K_a:
+                player_inventory.swap_weapons()
+
             if event.key == pygame.K_i:
                 if (not game_loading) and player.is_alive:
                     if talented_tree_choice:

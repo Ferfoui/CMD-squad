@@ -18,7 +18,7 @@ class Player(Entity):
             inventory (inventory.Inventory): inventaire du joueur
         """
         #self.ANIMATION_TYPES = ['Idle', 'Run', 'Jump', 'Death']
-        self.ANIMATION_TYPES = ['Idle', 'Idle_has_weapon', 'Run', 'Run_has_weapon', 'Jump']
+        self.ANIMATION_TYPES = ['Idle', 'Idle_has_weapon', 'Run', 'Run_has_weapon', 'Jump', 'Jump_has_weapon']
         super().__init__(x, y, 100, tile_size, assets, speed = 5, scale = 1.5)
         
         # Valeurs de départ pour les kills et les balles
@@ -289,8 +289,11 @@ class Player(Entity):
         #    self.update_action(self.ANIMATION_TYPES[3]) # "Death"
         
         if self.jump == True:
-            self.update_action(self.ANIMATION_TYPES[4]) # "Jump"
-        
+            if has_weapon:
+                self.update_action(self.ANIMATION_TYPES[5]) # "Jump_has_weapon"
+            else:
+                self.update_action(self.ANIMATION_TYPES[4]) # "Jump"
+
         elif self.is_running == True:
             if has_weapon:
                 self.update_action(self.ANIMATION_TYPES[3]) # "Run_has_weapon"
