@@ -78,6 +78,8 @@ PS2P_FONT_LOCATION = path.join(FONTS_ROOT, "Press_Start_2P/PressStart2P-REGULAR.
 
 # Les sons
 WEAPON_CROSS_SOUND_LOCATION = path.join(SOUNDS_ROOT, "son_test.wav")
+BLASTER_SOUND_LOCATION = path.join(SOUNDS_ROOT, "blaster.wav")
+
 SUPERSHY_MUSIC = path.join(SOUNDS_ROOT, "nj_supershy.wav" )
 BARBIE_GIRL_MUSIC = path.join(SOUNDS_ROOT, "barbie_girl.wav")
 

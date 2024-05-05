@@ -13,6 +13,7 @@ class Settings():
         self.set_default_settings()
         
         self.load_settings()
+        self.assets = None
     
     def set_default_settings(self):
         """Initialise les paramètres par défaut
@@ -103,6 +104,14 @@ class Settings():
         
         print("Settings have been saved")
     
+    def set_assets(self, assets):
+        """Défini les assets du jeu
+
+        Args:
+            assets (Assets): les assets du jeu
+        """
+        self.assets = assets
+    
     def change_volume(self, volume: float):
         """Change le volume de la musique
 
@@ -111,4 +120,7 @@ class Settings():
         """
         self.volume = volume
         pygame.mixer.music.set_volume(self.volume)
+        
+        if self.assets:
+            self.assets.set_volume(self.volume)
     

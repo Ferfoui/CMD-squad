@@ -9,7 +9,8 @@ import utils
 
 # La classe qui crée les armes
 class Weapon(abstract.ABC):
-    def __init__(self, weapon_name: str, texture_path: str, assets: utils.Assets, tile_size: int, scale: float, x: int = 0, y: int = 0):
+    def __init__(self, weapon_name: str, texture_path: str, assets: utils.Assets, tile_size: int, scale: float, shoot_cooldown: int = 300):
+
         """Créé une nouvelle arme
 
         Args:
@@ -22,6 +23,8 @@ class Weapon(abstract.ABC):
             y (int): position sur l'axe vertical
         """
         self.size_factor = tile_size * SPRITE_SCALING
+        self.last_shoot_time = pygame.time.get_ticks()
+        self.shoot_cooldown = shoot_cooldown
         
         self.bullets_consuming = 1
         
@@ -29,11 +32,13 @@ class Weapon(abstract.ABC):
         self.flip = False
         self.weapon_texture = self.init_texture(weapon_name, texture_path, assets, scale)
         self.rect = self.weapon_texture.get_rect()
-        #self.rect.center = (x, y)
         
         self.shoot_position_right, self.shoot_position_left = self.get_shoot_coordinates()
         
         self.handle_position_right, self.handle_position_left = self.get_handle_position()
+        
+        self.shoot_sound = assets.blaster_sound
+        self.empy_sound = assets.weapon_cross_sound
     
     @abstract.abstractmethod
     def get_shoot_coordinates(self) -> tuple[tuple[int, int], tuple[int, int]]:
@@ -100,18 +105,40 @@ class Weapon(abstract.ABC):
         Returns:
             int: nombre de munitions consommées
         """
-        relative_shoot_position = self.shoot_position_right if direction == 1 else self.shoot_position_left
+        if (pygame.time.get_ticks() - self.last_shoot_time) < self.shoot_cooldown:
+            return 0
         
+        self.last_shoot_time = pygame.time.get_ticks()
+        self.send_bullet(direction, bullet_group)
+        
+        return self.bullets_consuming
+    
+    def play_empty_sound(self):
+        """Joue le son de l'arme vide
+        """
+        self.empy_sound.play()
+
+    def update(self):
+        """Met à jour l'arme
+        """
+    
+    def send_bullet(self, direction: int, bullet_group: pygame.sprite.Group):
+        """Envoie une balle
+
+        Args:
+            direction (int): direction dans laquelle la balle va, 1 si c'est vers la droite et -1 si c'est vers la gauche
+            bullet_group (pygame.sprite.Group): groupe dans lequel la balle va être ajoutée
+        """
+        relative_shoot_position = self.shoot_position_right if direction == 1 else self.shoot_position_left
         absolute_shoot_position = (self.rect.x + relative_shoot_position[0], self.rect.y + relative_shoot_position[1])
         
         bullet = Bullet(self.size_factor, 1, absolute_shoot_position[0], absolute_shoot_position[1], direction)
+        self.shoot_sound.play()
         bullet_group.add(bullet)
-        
-        return self.bullets_consuming
-        
+        self.bullet_group = bullet_group
 
 class Arb4rb13(Weapon):
-    def __init__(self, assets: utils.Assets, tile_size: int, scale: float, x: int = 0, y: int = 0):
+    def __init__(self, assets: utils.Assets, tile_size: int, scale: float):
         """Crée une nouvelle arme de type AR-BARB13
 
         Args:
@@ -121,7 +148,40 @@ class Arb4rb13(Weapon):
             x (int): position de l'axe horizontal
             y (int): position de l'axe vertical
         """
-        super().__init__("AR-B4RB13", WEAPONS_TEXTURES_LOCATION + "AR_B4RB13.png", assets, tile_size, scale, x, y)
+        super().__init__("AR-B4RB13", WEAPONS_TEXTURES_LOCATION + "AR_B4RB13.png", assets, tile_size, scale, 400)
+        
+        self.last_burst_shot = pygame.time.get_ticks()
+        self.burst_current_shoot = 0
+    
+    def update(self):
+        """Met à jour l'arme
+        """
+        if (self.burst_current_shoot > 0) and ((pygame.time.get_ticks() - self.last_burst_shot) > 100):
+            
+            direction = -1 if self.flip else 1
+            
+            self.send_bullet(direction, self.bullet_group)
+            self.burst_current_shoot -= 1
+            self.last_burst_shot = pygame.time.get_ticks()
+    
+    def shoot(self, direction: int, bullet_group: pygame.sprite.Group) -> int:
+        """Tire une munition
+
+        Args:
+            direction (int): direction dans laquelle la balle va, 1 si c'est vers la droite et -1 si c'est vers la gauche
+            bullet_group (pygame.sprite.Group): groupe dans lequel la balle va être ajoutée
+        
+        Returns:
+            int: nombre de munitions consommées
+        """
+        if (pygame.time.get_ticks() - self.last_shoot_time) < self.shoot_cooldown:
+            return 0
+        
+        self.last_shoot_time = pygame.time.get_ticks()
+        self.burst_current_shoot = 3
+        self.send_bullet(direction, bullet_group)
+        
+        return self.bullets_consuming
     
     def get_shoot_coordinates(self) -> tuple[tuple[int, int], tuple[int, int]]:
         """Récupère les coordonnées relatives du canon de l'arme
@@ -152,7 +212,7 @@ class Arb4rb13(Weapon):
         return right_handle, left_handle
 
 class GunP450(Weapon):
-    def __init__(self, assets: utils.Assets, tile_size: int, scale: float, x: int = 0, y: int = 0):
+    def __init__(self, assets: utils.Assets, tile_size: int, scale: float):
         """Crée une nouvelle arme de type Gun-P450
 
         Args:
@@ -162,7 +222,7 @@ class GunP450(Weapon):
             x (int): position de l'axe horizontal
             y (int): position de l'axe vertical
         """
-        super().__init__("Gun-P450", WEAPONS_TEXTURES_LOCATION + "P450.png", assets, tile_size, scale, x, y)
+        super().__init__("Gun-P450", WEAPONS_TEXTURES_LOCATION + "P450.png", assets, tile_size, scale, 500)
     
     def get_shoot_coordinates(self) -> tuple[tuple[int, int], tuple[int, int]]:
         """Récupère les coordonnées relatives du canon de l'arme
@@ -193,7 +253,7 @@ class GunP450(Weapon):
         return right_handle, left_handle
 
 class GunP90(Weapon):
-    def __init__(self, assets: utils.Assets, tile_size: int, scale: float, x: int = 0, y: int = 0):
+    def __init__(self, assets: utils.Assets, tile_size: int, scale: float):
         """Crée une nouvelle arme de type Gun-P90
 
         Args:
@@ -203,7 +263,7 @@ class GunP90(Weapon):
             x (int): position de l'axe horizontal
             y (int): position de l'axe vertical
         """
-        super().__init__("Gun-P90", WEAPONS_TEXTURES_LOCATION + "P90.png", assets, tile_size, scale, x, y)
+        super().__init__("Gun-P90", WEAPONS_TEXTURES_LOCATION + "P90.png", assets, tile_size, scale, 200)
     
     def get_shoot_coordinates(self) -> tuple[tuple[int, int], tuple[int, int]]:
         """Récupère les coordonnées relatives du canon de l'arme
@@ -214,8 +274,8 @@ class GunP90(Weapon):
         """
         position_factor = 0.5
         
-        right_shoot = self.rect.width * 0.4, int(self.rect.height * position_factor)
-        left_shoot = self.rect.width * 0.6, int(self.rect.height * position_factor)
+        right_shoot = self.rect.width, int(self.rect.height * position_factor)
+        left_shoot = 0, int(self.rect.height * position_factor)
         
         return right_shoot, left_shoot
     
@@ -226,9 +286,9 @@ class GunP90(Weapon):
             tuple[int, int]: coordonnées de la poignée de l'arme quand elle est tournée vers la droite
             tuple[int, int]: coordonnées de la poignée de l'arme quand elle est tournée vers la gauche
         """
-        position_factor = 0.8
+        position_factor = 0.6
         
-        right_handle = self.rect.width * 0.2, int(self.rect.height * position_factor)
-        left_handle = self.rect.width * 0.8, int(self.rect.height * position_factor)
+        right_handle = self.rect.width * 0.4, int(self.rect.height * position_factor)
+        left_handle = self.rect.width * 0.6, int(self.rect.height * position_factor)
         
         return right_handle, left_handle

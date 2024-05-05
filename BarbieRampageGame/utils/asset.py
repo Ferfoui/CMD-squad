@@ -20,6 +20,18 @@ class Assets():
 
         ### Les sons ###
         self.weapon_cross_sound = pygame.mixer.Sound(WEAPON_CROSS_SOUND_LOCATION)
+        self.blaster_sound = pygame.mixer.Sound(BLASTER_SOUND_LOCATION)
+        
+        settings.set_assets(self)
+        
+    def set_volume(self, volume: float):
+        """Change le volume de la musique
+
+        Args:
+            volume (float): volume de la musique
+        """
+        self.weapon_cross_sound.set_volume(volume)
+        self.blaster_sound.set_volume(volume)
 
     def load_image(self, texture_location: str, width: int, height: int) -> pygame.Surface:
         """Charge une image
