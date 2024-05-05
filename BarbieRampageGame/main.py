@@ -65,7 +65,7 @@ def spawn_player(inventory: inventory.Inventory = None):
     """
     death_menu.reset_animation(game_settings.screen_width)
     world.init_data("level0_data.json", assets, game_settings)
-    player = world.process_data(assets)
+    player = world.process_data(assets, inventory)
     world.set_debug_display(game_settings.do_draw_hitboxes)
     
     # Création des éléments de l'interface
@@ -116,7 +116,7 @@ inventory_active = False
 current_time = pygame.time.get_ticks()
 
 # Boucle qui va permettre de faire tourner le jeu
-while run:
+while run:  
 
     # Fait en sorte que le jeu tourne à un nombre limité de FPS
     clock.tick(FPS)
@@ -167,7 +167,7 @@ while run:
         
         if not player.is_alive:
             if death_menu.draw(screen, True)['respawn']:
-                player = spawn_player()
+                player = spawn_player(player_inventory)
             
         if inventory_active:
             if talented_tree_choice :
@@ -220,7 +220,7 @@ while run:
                     game_loading = False
                 elif not player.is_alive:
                     # Faire réapparaître le joueur si la touche 'enter' est pressée
-                    player = spawn_player()
+                    player = spawn_player(player_inventory)
             if event.key == pygame.K_ESCAPE:
                 if (not game_loading) and player.is_alive:
                     if settings_choice:

@@ -191,6 +191,7 @@ class World():
         
         if player_inventory == None:
             player_inventory = inventory.Inventory()
+            print("Inventory created")
         
         for x, column in enumerate(self.world_data):
             for y, tile in enumerate(column):

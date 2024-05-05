@@ -22,8 +22,6 @@ class Player(Entity):
         super().__init__(x, y, 100, tile_size, assets, speed = 5, scale = 1.5)
         
         # Valeurs de départ pour les kills et les balles
-        self.bullets = 0
-        
         self.inventory = inventory
         
         # Classe contenant l'arme du joueur
