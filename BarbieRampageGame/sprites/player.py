@@ -286,22 +286,21 @@ class Player(Entity):
         #if not self.is_alive:
         #    self.update_action(self.ANIMATION_TYPES[3]) # "Death"
         
-        if self.is_running == True:
+        if self.jump == True:
+            self.update_action(self.ANIMATION_TYPES[4]) # "Jump"
+        
+        elif self.is_running == True:
             if has_weapon:
                 self.update_action(self.ANIMATION_TYPES[3]) # "Run_has_weapon"
             else:
                 self.update_action(self.ANIMATION_TYPES[2]) # "Run"
             
             animation_cooldown = NORMAL_ANIMATION_COOLDOWN // 2
-        
         else:
             if has_weapon:
                 self.update_action(self.ANIMATION_TYPES[1]) # "Idle_has_weapon"
             else:
                 self.update_action(self.ANIMATION_TYPES[0]) # "Idle"
-            
-        if self.jump == True:
-            self.update_action(self.ANIMATION_TYPES[4]) # "Jump"
         
         # Met à jour l'image en fonction de la frame actuelle
         self.image = self.animation_dict[self.action][self.frame_index]
