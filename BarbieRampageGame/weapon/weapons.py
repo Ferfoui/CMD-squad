@@ -151,6 +151,7 @@ class Arb4rb13(Weapon):
             y (int): position de l'axe vertical
         """
         super().__init__("AR-B4RB13", WEAPONS_TEXTURES_LOCATION + "AR_B4RB13.png", assets, tile_size, scale, 400)
+        self.bullets_consuming = 2
         
         self.last_burst_shot = pygame.time.get_ticks()
         self.burst_current_shoot = 0
