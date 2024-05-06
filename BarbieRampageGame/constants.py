@@ -45,7 +45,7 @@ TILE_TYPES = TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES + PLAYER_AND_ENEMIES_TILE_TYP
 # Les constantes in-game
 GRAVITY = 0.75
 
-WORLD_LIST = ["level0", "level1"]
+WORLD_LIST = ["level0", "level1", "level4"]
 
 #### Les chemins vers les fichiers ####
 
