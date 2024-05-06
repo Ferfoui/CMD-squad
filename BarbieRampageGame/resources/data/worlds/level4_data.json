@@ -55,7 +55,7 @@
         {
             "type": "ammo_box",
             "x": 5,
-            "y": 13
+            "y": 12
         },
         {
             "type": "grass_default",
@@ -90,7 +90,7 @@
         {
             "type": "weapon_crate",
             "x": 10,
-            "y": 10
+            "y": 9
         },
         {
             "type": "grass_default_left_border",
@@ -115,7 +115,7 @@
         {
             "type": "ammo_box",
             "x": 12,
-            "y": 10
+            "y": 9
         },
         {
             "type": "grass_default_right_border",
@@ -140,7 +140,7 @@
         {
             "type": "dummy_spawn",
             "x": 17,
-            "y": 7
+            "y": 6
         },
         {
             "type": "grass_default",
@@ -175,7 +175,7 @@
         {
             "type": "dummy_spawn",
             "x": 23,
-            "y": 5
+            "y": 4
         },
         {
             "type": "grass_default",
@@ -210,7 +210,7 @@
         {
             "type": "ken_spawn",
             "x": 29,
-            "y": 3
+            "y": 2
         },
         {
             "type": "grass_default",
@@ -240,22 +240,22 @@
         {
             "type": "dirt_default_down_border",
             "x": 31,
-            "y": 6
-        },
-        {
-            "type": "grass_default",
-            "x": 32,
-            "y": 5
-        },
-        {
-            "type": "dirt_default_down_border",
-            "x": 32,
             "y": 6
         },
         {
             "type": "ken_spawn",
-            "x": 33,
-            "y": 3
+            "x": 32,
+            "y": 2
+        },
+        {
+            "type": "grass_default",
+            "x": 32,
+            "y": 5
+        },
+        {
+            "type": "dirt_default_down_border",
+            "x": 32,
+            "y": 6
         },
         {
             "type": "grass_default",
@@ -290,7 +290,7 @@
         {
             "type": "ken_spawn",
             "x": 36,
-            "y": 3
+            "y": 2
         },
         {
             "type": "grass_default",
@@ -355,7 +355,7 @@
         {
             "type": "ammo_box",
             "x": 43,
-            "y": 12
+            "y": 11
         },
         {
             "type": "grass_default_left_border",
@@ -460,7 +460,7 @@
         {
             "type": "health_box",
             "x": 45,
-            "y": 12
+            "y": 11
         },
         {
             "type": "grass_default_right_border",
@@ -560,7 +560,7 @@
         {
             "type": "weapon_crate",
             "x": 65,
-            "y": 10
+            "y": 9
         },
         {
             "type": "grass_default",
@@ -595,7 +595,7 @@
         {
             "type": "ken_spawn",
             "x": 74,
-            "y": 6
+            "y": 5
         },
         {
             "type": "grass_default_right_border",
@@ -690,7 +690,7 @@
         {
             "type": "ken_spawn",
             "x": 81,
-            "y": 8
+            "y": 7
         },
         {
             "type": "dirt_default_down_right_corner",
@@ -710,7 +710,7 @@
         {
             "type": "ken_spawn",
             "x": 84,
-            "y": 13
+            "y": 12
         },
         {
             "type": "grass_default_right_border",
@@ -825,7 +825,7 @@
         {
             "type": "ammo_box",
             "x": 117,
-            "y": 14
+            "y": 13
         },
         {
             "type": "grass_default",
@@ -845,7 +845,7 @@
         {
             "type": "dummy_spawn",
             "x": 126,
-            "y": 11
+            "y": 10
         },
         {
             "type": "grass_default",
@@ -865,7 +865,7 @@
         {
             "type": "health_box",
             "x": 134,
-            "y": 14
+            "y": 13
         },
         {
             "type": "sand_default_top_left_corner",
@@ -875,7 +875,7 @@
         {
             "type": "ammo_box",
             "x": 135,
-            "y": 14
+            "y": 13
         },
         {
             "type": "sand_default_top_border",
@@ -925,7 +925,7 @@
         {
             "type": "ken_spawn",
             "x": 144,
-            "y": 11
+            "y": 10
         },
         {
             "type": "sand_default",
@@ -975,7 +975,7 @@
         {
             "type": "ken_spawn",
             "x": 147,
-            "y": 11
+            "y": 10
         },
         {
             "type": "sand_default",
@@ -993,6 +993,11 @@
             "y": 15
         },
         {
+            "type": "finish_flag",
+            "x": 148,
+            "y": 11
+        },
+        {
             "type": "sand_default",
             "x": 148,
             "y": 13
@@ -1006,6 +1011,21 @@
             "type": "sand_default_top_right_corner",
             "x": 148,
             "y": 15
+        },
+        {
+            "type": "sand_default_top_left_corner",
+            "x": 149,
+            "y": 10
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 149,
+            "y": 11
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 149,
+            "y": 12
         },
         {
             "type": "sand_default",
