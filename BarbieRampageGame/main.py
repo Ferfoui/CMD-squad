@@ -4,7 +4,7 @@ import pygame, os, sys
 
 from constants import *
 from world import World
-import utils, menus, interface, weapon
+import utils, menus, interface, weapon, inventory
 
 print(f"Bienvenue dans le jeu Barbie Rampage!\nVersion: {GAME_VERSION}\nPar la CMD-squad\n")
 
@@ -54,20 +54,23 @@ def timer_minute(time_milisec: int) -> str:
     hour = min // 60
     return f"{hour:02}:{min - hour * 60:02}:{sec - min * 60:02}"
 
-def spawn_player():
+def spawn_player(inventory: inventory.Inventory = None):
     """Fais réapparaître le joueur et réinitialise le monde
 
+    Args:
+        inventory (Inventory, optional): inventaire du joueur. None par défaut
+    
     Returns:
         Player: joueur recréé
     """
     death_menu.reset_animation(game_settings.screen_width)
     world.init_data("level0_data.json", assets, game_settings)
-    player = world.process_data(assets)
+    player = world.process_data(assets, inventory)
     world.set_debug_display(game_settings.do_draw_hitboxes)
     
     # Création des éléments de l'interface
     player.create_health_bar(10, game_settings.screen_width // 18, assets)
-    player.create_kill_counter(10, int(game_settings.screen_width * 5/45), assets)
+    player.create_kill_counter(10, int(game_settings.screen_width * 5/45), assets, world)
     player.create_bullet_counter(10, int(game_settings.screen_width * 33/45), assets)
     
     return player
@@ -93,6 +96,8 @@ world = World()
 
 player = spawn_player()
 
+player_inventory = player.inventory
+
 # Debug
 
 # Variables pour la boucle
@@ -111,7 +116,7 @@ inventory_active = False
 current_time = pygame.time.get_ticks()
 
 # Boucle qui va permettre de faire tourner le jeu
-while run:
+while run:  
 
     # Fait en sorte que le jeu tourne à un nombre limité de FPS
     clock.tick(FPS)
@@ -162,7 +167,7 @@ while run:
         
         if not player.is_alive:
             if death_menu.draw(screen, True)['respawn']:
-                player = spawn_player()
+                player = spawn_player(player_inventory)
             
         if inventory_active:
             if talented_tree_choice :
@@ -215,7 +220,7 @@ while run:
                     game_loading = False
                 elif not player.is_alive:
                     # Faire réapparaître le joueur si la touche 'enter' est pressée
-                    player = spawn_player()
+                    player = spawn_player(player_inventory)
             if event.key == pygame.K_ESCAPE:
                 if (not game_loading) and player.is_alive:
                     if settings_choice:
@@ -225,9 +230,12 @@ while run:
                         pause = not pause
             
             if event.key == pygame.K_TAB:
-                if (not game_loading) and (not pause) and player.is_alive:
+                if (not game_loading) and player.is_alive:
                     player.shoot(world.bullet_group)
             
+            if event.key == pygame.K_a:
+                player_inventory.swap_weapons()
+
             if event.key == pygame.K_i:
                 if (not game_loading) and player.is_alive:
                     if talented_tree_choice:
