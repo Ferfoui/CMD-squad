@@ -246,4 +246,58 @@ class WeaponCrate(ItemBox):
         self.weapons = [weapon.Arb4rb13, weapon.GunP450, weapon.GunP90]
         random_weapon = random.choice(self.weapons)
         player.set_weapon(random_weapon(self.assets, self.tile_size, 1))
+
+class FinishLevelFlag(Collectible):
+    def __init__(self, x: int, y: int, assets: utils.Assets, tile_size: int, scale: float = 1):
+        """Crée un drapeau de fin de niveau
+
+        Args:
+            x (int): position en abscisse
+            y (int): position en ordonnée
+            assets (utils.Assets): assets utilisés par le jeu
+            tile_size (int): taille d'une tuile
+            scale (float, optional): facteur de redimensionnement. 1 par défaut.
+        """
+        # TODO: Ajouter la texture (c'est un trophée)
+        image_path = f"{COLLECTIBLES_TEXTURES_LOCATION}flag.png"
+        super().__init__(x, y, image_path, assets, tile_size, scale, True)
+        
+        scale = 1.5 * self.size_factor
+        #self.animation_dict = assets.load_animation(['Flag'], image_path, scale)
+        #self.frame_index = 0
+        
+        #self.image = self.animation_dict['Flag'][self.frame_index]
+        
+        #self.rect = self.image.get_rect()
+        #self.rect.x = x
+        #self.rect.y = y
     
+    def update(self, world):
+        """Met à jour le drapeau
+
+        Args:
+            world (world.World): monde dans lequel se trouve le drapeau
+        """
+        super().update(world)
+        #self.update_animation()
+    
+    def update_animation(self):
+        """Met à jour l'animation du drapeau"""
+        self.image = self.animation_dict['Flag'][self.frame_index]
+        
+        if pygame.time.get_ticks() - self.update_time > 200:
+            self.update_time = pygame.time.get_ticks()
+            self.frame_index += 1
+            
+            if self.frame_index >= len(self.animation_dict['Flag']):
+                self.frame_index = 0
+    
+    def on_collect_action(self, player):
+        """Méthode qui permet au joueur d'interagir avec le drapeau
+
+        Args:
+            player (Player): Joueur qui interagit avec le drapeau
+        """
+        if pygame.sprite.collide_rect(player, self):
+            player.finish_level()
+            self.collected = True
