@@ -50,6 +50,7 @@ class Enemy(Entity):
             self.animation_action = self.animation_list[0]
             self.image = self.animation_dict[self.animation_action][self.animation_index]
             self.animation_update_time = pygame.time.get_ticks()
+            self.animation_cooldown = 100
             
         else:
             self.image = assets.load_scaled_image(self.texture_location, scale * self.size_factor)
@@ -188,11 +189,13 @@ class Enemy(Entity):
         """Méthode qui permet de mettre à jour l'animation de l'ennemi
         """
         if self.animation_list:
-            ANIMATION_COOLDOWN = 100
-            
             self.image = self.animation_dict[self.animation_action][self.animation_index]
             
-            if (pygame.time.get_ticks() - self.animation_update_time) > ANIMATION_COOLDOWN:
+            new_rect = self.image.get_rect()
+            new_rect.center = self.rect.center
+            self.rect = new_rect
+            
+            if (pygame.time.get_ticks() - self.animation_update_time) > self.animation_cooldown:
                 self.animation_index += 1
 
                 if self.animation_index >= len(self.animation_dict[self.animation_action]):
