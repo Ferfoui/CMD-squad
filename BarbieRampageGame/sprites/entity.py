@@ -39,6 +39,8 @@ class Entity(pygame.sprite.Sprite, abstract.ABC):
         
         self.hitbox = self.define_entity_hitbox(self.rect)
         
+        self.death_level = tile_size * 30
+        
         self.display_debug = False
 
     @abstract.abstractmethod
@@ -137,7 +139,7 @@ class Entity(pygame.sprite.Sprite, abstract.ABC):
     
     def check_if_alive(self) -> bool:
         """Vérifie si l'entité est vivante"""
-        if self.health <= 0:
+        if self.health <= 0 or self.rect.y > self.death_level:
             self.health = 0
             self.speed = 0
             self.is_alive = False

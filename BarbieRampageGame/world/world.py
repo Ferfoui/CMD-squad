@@ -2,8 +2,7 @@ import pygame
 import json
 
 from constants import *
-import sprites
-import utils
+import sprites, utils, inventory
 
 # Classe qui permet de gérer le scrolling de l'écran
 class Scroll():
@@ -64,8 +63,11 @@ class World():
     def __init__(self):
         """Initialise la classe World
         """
+        self.current_level_index = 0
         self.world_data = []
         self.obstacle_list = []
+        self.img_dict = {}
+        self.killed = 0
         
         self.player = None
         self.scroll = None
@@ -95,13 +97,60 @@ class World():
         self.enemy_group.empty()
         self.bullet_group.empty()
     
-    def load_tiles_images(self, tile_size):
+    def load_tiles_images(self, tile_size: int):
+        """Charge les images des tuiles
+
+        Args:
+            tile_size (int): Taille des tuiles
+        """
+        do_keep_current_images = (len(self.img_dict) == len(TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES)) and (self.img_dict[TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES[0]].get_width() == tile_size)
+        
+        if do_keep_current_images:
+            return
         # Charge toutes les images
         self.img_dict = {}
         for tile_name in TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES:
             img = pygame.image.load(f'{TILES_TEXTURES_LOCATION}{tile_name}.png').convert_alpha()
             img = pygame.transform.scale(img, (tile_size, tile_size * img.get_height() // img.get_width()))
             self.img_dict[tile_name] = img
+    
+    def first_level(self, assets: utils.Assets, settings: utils.Settings):
+        """Charge le premier niveau
+
+        Args:
+            assets (Assets): classe qui contient les assets du jeu
+            settings (Settings): classe qui contient les paramètres du jeu
+        """
+        self.current_level_index = 0
+        world_file_name = f"{WORLD_LIST[self.current_level_index]}_data.json"
+        
+        self.init_data(world_file_name, assets, settings)
+    
+    def restart_level(self, assets: utils.Assets, settings: utils.Settings):
+        """Recharge le niveau actuel
+
+        Args:
+            assets (Assets): classe qui contient les assets du jeu
+            settings (Settings): classe qui contient les paramètres du jeu
+        """
+        world_file_name = f"{WORLD_LIST[self.current_level_index]}_data.json"
+        
+        self.init_data(world_file_name, assets, settings)
+    
+    def go_to_next_level(self, assets: utils.Assets, settings: utils.Settings):
+        """Passe au niveau suivant
+        
+        Args:
+            assets (Assets): classe qui contient les assets du jeu
+            settings (Settings): classe qui contient les paramètres du jeu
+        """
+        self.current_level_index += 1
+        if self.current_level_index >= len(WORLD_LIST):
+            self.current_level_index = 0
+            
+        world_file_name = f"{WORLD_LIST[self.current_level_index]}_data.json"
+        
+        self.init_data(world_file_name, assets, settings)
     
     def init_data(self, level_name: str, assets: utils.Assets, settings: utils.Settings):
         """Initialise les données du niveau
@@ -146,9 +195,12 @@ class World():
             self.world_data[tile['x']][tile['y']] = tile['type']
 
 
-    def process_data(self, assets: utils.Assets) -> sprites.Player:
+    def process_data(self, assets: utils.Assets, player_inventory: inventory.Inventory = None) -> sprites.Player:
         """Méthode qui génére le monde en fonction des données données
 
+        Args:
+            assets (Assets): classe qui contient les assets du jeu
+            inventory (Inventory): inventaire du joueur. S'il n'est pas donné, l'inventaire va être créé
         Returns:
             Player: joueur créé dans le monde
         """
@@ -158,6 +210,11 @@ class World():
         self.obstacle_list = []
         
         self.level_length = self.world_json['attributes']['level_size']
+        self.enemies = 0
+        
+        if player_inventory == None:
+            player_inventory = inventory.Inventory()
+            print("Inventory created")
         
         for x, column in enumerate(self.world_data):
             for y, tile in enumerate(column):
@@ -181,23 +238,30 @@ class World():
                         elif tile == COLLECTIBLES_TILE_TYPES[1]:
                             box = sprites.HealthBox(x * self.tile_size, y * self.tile_size, assets, self.tile_size)
                             self.collectible_group.add(box)
+                        # Si c'est une Weapon Crate
                         elif tile == COLLECTIBLES_TILE_TYPES[2]:
                             box = sprites.WeaponCrate(x * self.tile_size, y * self.tile_size, assets, self.tile_size)
                             self.collectible_group.add(box)
+                        # Si c'est un drapeau de fin de niveau
+                        elif tile == COLLECTIBLES_TILE_TYPES[3]:
+                            finish_flag = sprites.FinishLevelFlag(x * self.tile_size, y * self.tile_size, assets, self.tile_size)
+                            self.collectible_group.add(finish_flag)
                     
                 # Si c'est un personnage comme le joueur ou un ennemi
                 elif tile in PLAYER_AND_ENEMIES_TILE_TYPES:
                     # Si c'est le point de spawn du joueur
                     if tile == PLAYER_AND_ENEMIES_TILE_TYPES[0]:
-                        self.player = sprites.Player(x * self.tile_size, y * self.tile_size, self.tile_size, assets)
+                        self.player = sprites.Player(x * self.tile_size, y * self.tile_size, self.tile_size, assets, player_inventory)
                         self.player_group.add(self.player)
                     # Si c'est un dummy
                     elif tile == PLAYER_AND_ENEMIES_TILE_TYPES[1]:
-                        dummy = sprites.IntelligentDummy(x * self.tile_size, y * self.tile_size, self.tile_size, 2, assets, 2)
+                        dummy = sprites.Dummy(x * self.tile_size, y * self.tile_size, self.tile_size, 2, assets)
                         self.enemy_group.add(dummy)
+                        self.enemies += 1
                     elif tile == PLAYER_AND_ENEMIES_TILE_TYPES[2]:
                         ken = sprites.KenEnemy(x * self.tile_size, y * self.tile_size, self.tile_size, 2, assets)
                         self.enemy_group.add(ken)
+                        self.enemies += 1
         
         return self.player
     
@@ -243,7 +307,11 @@ class World():
         """Met à jour les groupes de sprites
         """
         self.bullet_group.update(self)
-        self.enemy_group.update()
+        self.killed = 0
+        for enemy in self.enemy_group :
+            enemy.update()
+            if not enemy.is_alive:
+                self.killed += 1
         self.collectible_group.update(self)
         
     def set_debug_display(self, display: bool):

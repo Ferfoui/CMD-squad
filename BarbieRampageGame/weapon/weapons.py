@@ -28,6 +28,8 @@ class Weapon(abstract.ABC):
         
         self.bullets_consuming = 1
         
+        self.bullet_type = "PinkBullet"
+        
         self.is_grab = False
         self.flip = False
         self.weapon_texture = self.init_texture(weapon_name, texture_path, assets, scale)
@@ -132,7 +134,7 @@ class Weapon(abstract.ABC):
         relative_shoot_position = self.shoot_position_right if direction == 1 else self.shoot_position_left
         absolute_shoot_position = (self.rect.x + relative_shoot_position[0], self.rect.y + relative_shoot_position[1])
         
-        bullet = Bullet(self.size_factor, 1, absolute_shoot_position[0], absolute_shoot_position[1], direction)
+        bullet = Bullet(self.size_factor, 1, absolute_shoot_position[0], absolute_shoot_position[1], direction, bullet_type=self.bullet_type)
         self.shoot_sound.play()
         bullet_group.add(bullet)
         self.bullet_group = bullet_group
@@ -149,6 +151,7 @@ class Arb4rb13(Weapon):
             y (int): position de l'axe vertical
         """
         super().__init__("AR-B4RB13", WEAPONS_TEXTURES_LOCATION + "AR_B4RB13.png", assets, tile_size, scale, 400)
+        self.bullets_consuming = 2
         
         self.last_burst_shot = pygame.time.get_ticks()
         self.burst_current_shoot = 0
@@ -263,7 +266,8 @@ class GunP90(Weapon):
             x (int): position de l'axe horizontal
             y (int): position de l'axe vertical
         """
-        super().__init__("Gun-P90", WEAPONS_TEXTURES_LOCATION + "P90.png", assets, tile_size, scale, 200)
+        super().__init__("Gun-P90", WEAPONS_TEXTURES_LOCATION + "P90.png", assets, tile_size, scale, 100)
+        self.bullet_type = "ClassicBullet"
     
     def get_shoot_coordinates(self) -> tuple[tuple[int, int], tuple[int, int]]:
         """Récupère les coordonnées relatives du canon de l'arme
@@ -272,10 +276,10 @@ class GunP90(Weapon):
             tuple[int, int]: coordonnées du canon de l'arme quand il est tourné vers la droite
             tuple[int, int]: coordonnées du canon de l'arme quand il est tourné vers la gauche
         """
-        position_factor = 0.5
+        position_factor = 0.47
         
-        right_shoot = self.rect.width, int(self.rect.height * position_factor)
-        left_shoot = 0, int(self.rect.height * position_factor)
+        right_shoot = self.rect.width * 0.8, int(self.rect.height * position_factor)
+        left_shoot = self.rect.width * 0.2, int(self.rect.height * position_factor)
         
         return right_shoot, left_shoot
     

@@ -15,7 +15,14 @@ class Dummy(Enemy):
             scale (float): facteur de redimensionnement
             assets (utils.Assets): classe qui contient les assets du jeu
         """
-        super().__init__(x, y, tile_size, assets, ENEMIES_TEXTURES_LOCATION + "dummy.png", scale = scale)
+        super().__init__(x, y, tile_size, assets, ENEMIES_TEXTURES_LOCATION + "dummy/dummy.png", scale = scale)
+        self.dead_image = assets.get_scaled_image("dummy_dead", ENEMIES_TEXTURES_LOCATION + "dummy/dummy_dead.png", scale * self.size_factor)
+    
+    def update(self):
+        super().update()
+        
+        if not self.is_alive:
+            self.image = self.dead_image
 
 class IntelligentDummy(IntelligentEnemy):
     def __init__(self, x: int, y: int, tile_size: int, scale: float, assets: utils.Assets, speed: int):
@@ -29,7 +36,7 @@ class IntelligentDummy(IntelligentEnemy):
             assets (utils.Assets): classe qui contient les assets du jeu
             speed (int): vitesse de l'ennemi
         """
-        super().__init__(x, y, tile_size, assets, ENEMIES_TEXTURES_LOCATION + "dummy.png", speed = speed, scale = scale)
+        super().__init__(x, y, tile_size, assets, ENEMIES_TEXTURES_LOCATION + "dummy/dummy.png", speed = speed, scale = scale)
 
     def ai(self, world):
         """Méthode qui permet de déplacer l'ennemi vers le joueur
@@ -55,11 +62,17 @@ class KenEnemy(IntelligentEnemy):
             scale (float): facteur de redimensionnement
             assets (utils.Assets): classe qui contient les assets du jeu
         """
-        ANIMATION_LIST = ['Idle']
+        ANIMATION_LIST = ['Idle', 'Attack', 'Dead']
         super().__init__(x, y, tile_size, assets, ENEMIES_TEXTURES_LOCATION + "ken/", speed = 2, scale = scale, animation_list = ANIMATION_LIST)
         
         self.last_attack_time = pygame.time.get_ticks()
         self.ken_could_attack = False
+        self.ken_is_attacking = False
+        
+        self.animation_cooldown = 50
+        
+        self.ATTACK_COOLDOWN = 1500
+        self.damage_time = 1000
     
     def ai(self, world):
         """Méthode qui permet de déplacer Ken vers le joueur
@@ -74,6 +87,8 @@ class KenEnemy(IntelligentEnemy):
             
             if self.player_in_attack_range(world):
                 self.attack(world)
+            elif not self.ken_is_attacking:
+                self.update_action('Idle')
         else:
             self.move_around(world)
     
@@ -97,34 +112,62 @@ class KenEnemy(IntelligentEnemy):
             world (World): monde dans lequel Ken se déplace
         """
         
-        ATTACK_COOLDOWN = 1000
+        self.ATTACK_COOLDOWN = 1200
         
-        ken_could_attack = (pygame.time.get_ticks() - self.last_attack_time) > ATTACK_COOLDOWN
+        ken_could_attack = (pygame.time.get_ticks() - self.last_attack_time) > self.ATTACK_COOLDOWN
 
         if ken_could_attack and self.is_alive:
             
             if self.player_in_attack_range(world):
-                self.last_attack_time = pygame.time.get_ticks()
-                world.player.health -= 10
-
-            #TODO: Ajouter l'animation d'attaque de Ken
+                self.world = world
+                self.start_attack()
+    
+    def start_attack(self):
+        """Méthode qui permet de définir le début de l'attaque de Ken
+        """
+        self.update_action('Attack')
+        self.ken_is_attacking = True
+        self.last_attack_time = pygame.time.get_ticks()
 
     def attack_rect(self):
         """Méthode qui permet de définir la zone d'attaque de Ken
         """
-        width = int(self.rect.width * 0.8)
-        height = int(self.rect.height * 0.23)
+        width = int(self.rect.width * 1.2)
+        height = int(self.rect.height * 0.3)
         
         if not self.flip:
-            x = self.rect.right
+            x = self.rect.right - self.rect.width * 0.2
         else:
-            x = self.rect.left - width
+            x = self.rect.left - width + self.rect.width * 0.2
         
         y = self.rect.y + self.rect.height * 0.4
         
         attack_rect = pygame.Rect(x, y, width, height)
         
         return attack_rect
+    
+    def check_if_alive(self) -> bool:
+        """Vérifie si Ken est vivant"""
+        if self.health <= 0 or self.rect.y > self.death_level:
+            self.health = 0
+            self.speed = 0
+            self.is_alive = False
+            self.update_action('Dead')
+        
+        return self.is_alive
+
+    def update(self):
+        """Met à jour Ken
+        """
+        super().update()
+        
+        if self.ken_is_attacking:
+            if (pygame.time.get_ticks() - self.last_attack_time) > self.damage_time:
+                
+                if self.player_in_attack_range(self.world):
+                    self.world.player.health -= 15
+                
+                self.ken_is_attacking = False
     
     def draw(self, screen: pygame.Surface):
         """Affiche Ken à l'écran

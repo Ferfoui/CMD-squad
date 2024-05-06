@@ -201,21 +201,20 @@ class HealthBar():
 
 class BulletCounter():
     #a delete + 30 munis 
-    def __init__(self, x, y, width: int, max_bullet: int, assets: Assets):
+    def __init__(self, x, y, width: int, bullets: int, assets: Assets):
         """Initialise le compteur de munitions
         
         Args:
             x (int): position en abscisses où le compteur de munitions va être créé
             y (int): position en ordonnées où le compteur de munitions va être créé
             width (int): largeur du compteur de munitions
-            max_bullet (int): nombre maximal de munitions
+            bullet (int): nombre de munitions
             assets (Assets): classe des assets
         """
         self.x = x
         self.y = y
         self.width = width
-        self.bullets= max_bullet
-        self.max_bullet = max_bullet
+        self.bullets = bullets
         #self.image = assets.get_image("bullet_count", f"{TEXTURES_ROOT}gui/Bullet_count")
         self.image = assets.get_image("bullet_counter", f"{TEXTURES_ROOT}gui/Bullet_count.png", width)
         self.height = self.image.get_height()
@@ -233,7 +232,7 @@ class BulletCounter():
         
 
 class KillCounter():
-    def __init__(self, x: int, y: int, width: int, max_kl: int, assets: Assets):
+    def __init__(self, x: int, y: int, width: int, assets: Assets, world):
         """Initialise le compteur de kills
         
         Args:
@@ -246,10 +245,10 @@ class KillCounter():
         self.x = x
         self.y = y
         self.width = width
-        self.kl = max_kl
-        self.max_kl = max_kl
+        self.max_kill = world.enemies
         self.image = assets.get_image("kill_counter", f"{TEXTURES_ROOT}gui/Kill_bar.png", width)
         self.height = self.image.get_height()
+        self.world = world 
         
     def draw(self, screen: pygame.Surface):
         """Affiche le compteur de kills sur l'écran
@@ -258,7 +257,7 @@ class KillCounter():
             screen (pygame.Surface): écran sur laquelle afficher le compteur de kills
         """
         # Calcul du ratio de kills
-        ratio = self.kl / self.max_kl
+        ratio = self.world.killed / self.max_kill
         pygame.draw.rect(screen, COLOR_RED, (self.x + 5, self.y + 5, (self.width - 10) * ratio, self.height - 10))
         screen.blit(self.image, (self.x, self.y))
 
