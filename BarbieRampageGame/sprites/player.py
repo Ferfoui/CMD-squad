@@ -287,6 +287,7 @@ class Player(Entity):
         #    self.update_action(self.ANIMATION_TYPES[3]) # "Death"
         
         if self.jump == True:
+
             if has_weapon:
                 self.update_action(self.ANIMATION_TYPES[5]) # "Jump_has_weapon"
             else:

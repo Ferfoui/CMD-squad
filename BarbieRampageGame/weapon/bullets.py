@@ -4,7 +4,7 @@ from constants import *
 
 # Classe pour les balles
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, size_factor: float, scale: float, x: int, y: int, direction: int, speed: int = 10, range: int = 400, damage: int = 20):
+    def __init__(self, size_factor: float, scale: float, x: int, y: int, direction: int, speed: int = 10, range: int = 400, damage: int = 20, bullet_type: str = "PinkBullet"):
         """Crée une nouvelle balle
 
         Args:
@@ -30,7 +30,7 @@ class Bullet(pygame.sprite.Sprite):
         
         self.ANIMATION_TYPES = ["bullet_start", "bullet_end"]
         
-        self.animation = self.load_animation(self.ANIMATION_TYPES, TEXTURES_ROOT + "bullets", scale)
+        self.animation = self.load_animation(self.ANIMATION_TYPES, f"{TEXTURES_ROOT}bullets/{bullet_type}", scale)
         self.frame_index = 0
         
         # Valeur du temps pour l'animation de la balle
