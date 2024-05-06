@@ -114,6 +114,29 @@ class World():
             img = pygame.transform.scale(img, (tile_size, tile_size * img.get_height() // img.get_width()))
             self.img_dict[tile_name] = img
     
+    def first_level(self, assets: utils.Assets, settings: utils.Settings):
+        """Charge le premier niveau
+
+        Args:
+            assets (Assets): classe qui contient les assets du jeu
+            settings (Settings): classe qui contient les paramètres du jeu
+        """
+        self.current_level_index = 0
+        world_file_name = f"{WORLD_LIST[self.current_level_index]}_data.json"
+        
+        self.init_data(world_file_name, assets, settings)
+    
+    def restart_level(self, assets: utils.Assets, settings: utils.Settings):
+        """Recharge le niveau actuel
+
+        Args:
+            assets (Assets): classe qui contient les assets du jeu
+            settings (Settings): classe qui contient les paramètres du jeu
+        """
+        world_file_name = f"{WORLD_LIST[self.current_level_index]}_data.json"
+        
+        self.init_data(world_file_name, assets, settings)
+    
     def go_to_next_level(self, assets: utils.Assets, settings: utils.Settings):
         """Passe au niveau suivant
         
@@ -215,9 +238,14 @@ class World():
                         elif tile == COLLECTIBLES_TILE_TYPES[1]:
                             box = sprites.HealthBox(x * self.tile_size, y * self.tile_size, assets, self.tile_size)
                             self.collectible_group.add(box)
+                        # Si c'est une Weapon Crate
                         elif tile == COLLECTIBLES_TILE_TYPES[2]:
                             box = sprites.WeaponCrate(x * self.tile_size, y * self.tile_size, assets, self.tile_size)
                             self.collectible_group.add(box)
+                        # Si c'est un drapeau de fin de niveau
+                        elif tile == COLLECTIBLES_TILE_TYPES[3]:
+                            finish_flag = sprites.FinishLevelFlag(x * self.tile_size, y * self.tile_size, assets, self.tile_size)
+                            self.collectible_group.add(finish_flag)
                     
                 # Si c'est un personnage comme le joueur ou un ennemi
                 elif tile in PLAYER_AND_ENEMIES_TILE_TYPES:

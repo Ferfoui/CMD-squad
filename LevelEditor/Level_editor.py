@@ -71,7 +71,7 @@ button_dict = {}
 button_col = 0
 button_row = 0
 for tile_name in consts.TILE_TYPES:
-	tile_button = interface.Button(SCREEN_WIDTH + (75 * button_col) + 50, 75 * button_row + 50, img_dict[tile_name], img_dict[tile_name], 1, False)
+	tile_button = interface.Button(SCREEN_WIDTH + (75 * button_col) + 50, 70 * button_row + 50, img_dict[tile_name], img_dict[tile_name], 1, False)
 	button_dict[tile_name] = tile_button
 	button_col += 1
 	if button_col == 3:

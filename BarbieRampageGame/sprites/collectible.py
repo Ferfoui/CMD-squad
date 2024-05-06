@@ -29,7 +29,7 @@ class Collectible(pygame.sprite.Sprite, abstract.ABC):
         self.collected = False
         
         if do_default_load_image:
-            self.image = assets.get_scaled_image(image_path, scale * self.size_factor)
+            self.image = assets.get_scaled_image(image_path, image_path, scale * self.size_factor)
         
             self.rect = self.image.get_rect()
             self.rect.x = x
@@ -259,7 +259,7 @@ class FinishLevelFlag(Collectible):
             scale (float, optional): facteur de redimensionnement. 1 par défaut.
         """
         # TODO: Ajouter la texture (c'est un trophée)
-        image_path = f"{COLLECTIBLES_TEXTURES_LOCATION}flag.png"
+        image_path = f"{COLLECTIBLES_TEXTURES_LOCATION}finish/gold_trophy.png"
         super().__init__(x, y, image_path, assets, tile_size, scale, True)
         
         scale = 1.5 * self.size_factor

@@ -66,7 +66,7 @@ def spawn_player(inventory: inventory.Inventory = None, do_regenerate: bool = Tr
     """
     death_menu.reset_animation(game_settings.screen_width)
     if do_regenerate:
-        world.init_data("level0_data.json", assets, game_settings)
+        world.restart_level(assets, game_settings)
     player = world.process_data(assets, inventory)
     world.set_debug_display(game_settings.do_draw_hitboxes)
     
@@ -95,6 +95,7 @@ overlay = menus.Overlay(assets)
 
 # Initialisation du monde et du joueur
 world = World()
+world.first_level(assets, game_settings)
 
 player = spawn_player()
 
@@ -172,6 +173,7 @@ while run:
                 player = spawn_player(player_inventory)
         
         elif player.is_ready_to_go_to_next_level:
+            world.go_to_next_level(assets, game_settings)
             player = spawn_player(player_inventory, False)
             
         if inventory_active:
