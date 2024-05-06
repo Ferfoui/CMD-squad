@@ -227,7 +227,7 @@ class World():
                         self.player_group.add(self.player)
                     # Si c'est un dummy
                     elif tile == PLAYER_AND_ENEMIES_TILE_TYPES[1]:
-                        dummy = sprites.IntelligentDummy(x * self.tile_size, y * self.tile_size, self.tile_size, 2, assets, 2)
+                        dummy = sprites.Dummy(x * self.tile_size, y * self.tile_size, self.tile_size, 2, assets)
                         self.enemy_group.add(dummy)
                         self.enemies += 1
                     elif tile == PLAYER_AND_ENEMIES_TILE_TYPES[2]:

@@ -29,5 +29,6 @@ class Inventory:
                 self.unlocked_weapons.append(item)
     
     def swap_weapons(self):
+        return
         self.current_weapon_index += 1
         self.current_weapon = self.unlocked_weapons[self.current_weapon_index]
