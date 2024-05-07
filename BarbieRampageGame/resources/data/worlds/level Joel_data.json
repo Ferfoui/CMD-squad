@@ -25,7 +25,7 @@
         {
             "type": "ammo_box",
             "x": 2,
-            "y": 14
+            "y": 13
         },
         {
             "type": "sand_default_left_border",
@@ -90,7 +90,7 @@
         {
             "type": "ammo_box",
             "x": 19,
-            "y": 14
+            "y": 13
         },
         {
             "type": "sand_default_left_border",
@@ -140,7 +140,7 @@
         {
             "type": "ammo_box",
             "x": 31,
-            "y": 14
+            "y": 13
         },
         {
             "type": "sand_default_left_border",
@@ -155,7 +155,7 @@
         {
             "type": "ammo_box",
             "x": 33,
-            "y": 14
+            "y": 13
         },
         {
             "type": "sand_default_left_border",
@@ -250,7 +250,7 @@
         {
             "type": "weapon_crate",
             "x": 60,
-            "y": 13
+            "y": 12
         },
         {
             "type": "sand_default_left_border",
@@ -270,7 +270,7 @@
         {
             "type": "health_box",
             "x": 69,
-            "y": 10
+            "y": 9
         },
         {
             "type": "sand_default_left_border",
@@ -280,7 +280,7 @@
         {
             "type": "ammo_box",
             "x": 72,
-            "y": 9
+            "y": 8
         },
         {
             "type": "sand_default_left_border",
@@ -375,7 +375,7 @@
         {
             "type": "ammo_box",
             "x": 109,
-            "y": 7
+            "y": 6
         },
         {
             "type": "sand_default_left_border",
@@ -385,7 +385,7 @@
         {
             "type": "health_box",
             "x": 110,
-            "y": 7
+            "y": 6
         },
         {
             "type": "sand_default_left_border",
@@ -395,7 +395,7 @@
         {
             "type": "health_box",
             "x": 111,
-            "y": 7
+            "y": 6
         },
         {
             "type": "sand_default_left_border",
@@ -453,89 +453,244 @@
             "y": 8
         },
         {
-            "type": "grass_default",
+            "type": "sand_default_top_left_corner",
+            "x": 122,
+            "y": 9
+        },
+        {
+            "type": "sand_default_top_left_corner",
+            "x": 125,
+            "y": 11
+        },
+        {
+            "type": "ammo_box",
+            "x": 128,
+            "y": 11
+        },
+        {
+            "type": "sand_default_top_left_corner",
+            "x": 128,
+            "y": 13
+        },
+        {
+            "type": "health_box",
+            "x": 129,
+            "y": 11
+        },
+        {
+            "type": "sand_default_top_left_corner",
+            "x": 129,
+            "y": 13
+        },
+        {
+            "type": "health_box",
+            "x": 130,
+            "y": 11
+        },
+        {
+            "type": "sand_default_top_left_corner",
+            "x": 130,
+            "y": 13
+        },
+        {
+            "type": "sand_default_top_left_corner",
+            "x": 131,
+            "y": 13
+        },
+        {
+            "type": "sand_default_top_left_corner",
+            "x": 132,
+            "y": 13
+        },
+        {
+            "type": "sand_default_top_left_corner",
             "x": 133,
-            "y": 15
+            "y": 13
         },
         {
-            "type": "grass_default",
+            "type": "sand_default_top_left_corner",
             "x": 134,
-            "y": 15
+            "y": 13
         },
         {
-            "type": "grass_default",
+            "type": "sand_default_top_left_corner",
             "x": 135,
-            "y": 15
+            "y": 13
         },
         {
-            "type": "grass_default",
+            "type": "sand_default_top_left_corner",
             "x": 136,
-            "y": 15
+            "y": 12
         },
         {
-            "type": "grass_default",
+            "type": "sand_default_top_left_corner",
+            "x": 136,
+            "y": 13
+        },
+        {
+            "type": "sand_default_top_left_corner",
             "x": 137,
-            "y": 15
+            "y": 11
         },
         {
-            "type": "grass_default",
+            "type": "sand_default_top_left_corner",
+            "x": 137,
+            "y": 12
+        },
+        {
+            "type": "sand_default_top_left_corner",
+            "x": 137,
+            "y": 13
+        },
+        {
+            "type": "sand_default_top_left_corner",
             "x": 138,
-            "y": 15
+            "y": 10
         },
         {
-            "type": "grass_default",
+            "type": "sand_default_top_left_corner",
+            "x": 138,
+            "y": 11
+        },
+        {
+            "type": "sand_default_top_left_corner",
+            "x": 138,
+            "y": 12
+        },
+        {
+            "type": "sand_default_top_left_corner",
+            "x": 138,
+            "y": 13
+        },
+        {
+            "type": "sand_default_top_left_corner",
             "x": 139,
-            "y": 15
+            "y": 9
         },
         {
-            "type": "grass_default",
+            "type": "sand_default_top_left_corner",
+            "x": 139,
+            "y": 10
+        },
+        {
+            "type": "sand_default_top_left_corner",
+            "x": 139,
+            "y": 11
+        },
+        {
+            "type": "sand_default_top_left_corner",
+            "x": 139,
+            "y": 12
+        },
+        {
+            "type": "sand_default_top_left_corner",
+            "x": 139,
+            "y": 13
+        },
+        {
+            "type": "sand_default_top_left_corner",
             "x": 140,
-            "y": 15
+            "y": 8
         },
         {
-            "type": "grass_default",
+            "type": "sand_default_top_left_corner",
+            "x": 140,
+            "y": 9
+        },
+        {
+            "type": "sand_default_top_left_corner",
+            "x": 140,
+            "y": 10
+        },
+        {
+            "type": "sand_default_top_left_corner",
+            "x": 140,
+            "y": 11
+        },
+        {
+            "type": "sand_default_top_left_corner",
+            "x": 140,
+            "y": 12
+        },
+        {
+            "type": "sand_default_top_left_corner",
+            "x": 140,
+            "y": 13
+        },
+        {
+            "type": "ken_spawn",
             "x": 141,
-            "y": 15
+            "y": 5
         },
         {
-            "type": "grass_default",
+            "type": "sand_default_top_left_corner",
+            "x": 141,
+            "y": 7
+        },
+        {
+            "type": "sand_default_top_left_corner",
+            "x": 141,
+            "y": 8
+        },
+        {
+            "type": "sand_default_top_left_corner",
+            "x": 141,
+            "y": 9
+        },
+        {
+            "type": "sand_default_top_left_corner",
+            "x": 141,
+            "y": 10
+        },
+        {
+            "type": "sand_default_top_left_corner",
+            "x": 141,
+            "y": 11
+        },
+        {
+            "type": "sand_default_top_left_corner",
+            "x": 141,
+            "y": 12
+        },
+        {
+            "type": "sand_default_top_left_corner",
+            "x": 141,
+            "y": 13
+        },
+        {
+            "type": "sand_default_top_left_corner",
             "x": 142,
-            "y": 15
+            "y": 13
         },
         {
-            "type": "grass_default",
+            "type": "sand_default_top_left_corner",
             "x": 143,
-            "y": 15
+            "y": 13
         },
         {
-            "type": "grass_default",
+            "type": "sand_default_top_left_corner",
             "x": 144,
-            "y": 15
+            "y": 13
         },
         {
-            "type": "grass_default",
+            "type": "sand_default_top_left_corner",
             "x": 145,
-            "y": 15
+            "y": 13
         },
         {
-            "type": "grass_default",
+            "type": "sand_default_top_left_corner",
             "x": 146,
-            "y": 15
+            "y": 13
         },
         {
-            "type": "grass_default",
+            "type": "finish_flag",
             "x": 147,
-            "y": 15
+            "y": 11
         },
         {
-            "type": "grass_default",
-            "x": 148,
-            "y": 15
-        },
-        {
-            "type": "grass_default",
-            "x": 149,
-            "y": 15
+            "type": "sand_default_top_left_corner",
+            "x": 147,
+            "y": 13
         }
     ]
 }

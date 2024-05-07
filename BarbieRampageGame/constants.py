@@ -5,7 +5,7 @@ from os import path
 
 # Le nom du jeu
 GAME_NAME = "Barbie Rampage"
-GAME_VERSION = "V0.2"
+GAME_VERSION = "V0.5"
 
 # Le nombre d'images par seconde
 FPS = 60
@@ -45,7 +45,7 @@ TILE_TYPES = TILE_TYPES_WITHOUT_PLAYER_AND_ENEMIES + PLAYER_AND_ENEMIES_TILE_TYP
 # Les constantes in-game
 GRAVITY = 0.75
 
-WORLD_LIST = ["level1", "level4"]
+WORLD_LIST = ["level1", "level Joel", "level4"]
 
 #### Les chemins vers les fichiers ####
 
@@ -84,6 +84,9 @@ BLASTER_SOUND_LOCATION = path.join(SOUNDS_ROOT, "blaster.wav")
 
 SUPERSHY_MUSIC = path.join(SOUNDS_ROOT, "nj_supershy.wav" )
 BARBIE_GIRL_MUSIC = path.join(SOUNDS_ROOT, "barbie_girl.wav")
+DANCE_THE_NIGHT_MUSIC = path.join(SOUNDS_ROOT, "dance_the_night.mp3")
+
+GAME_MUSICS = [SUPERSHY_MUSIC, BARBIE_GIRL_MUSIC, DANCE_THE_NIGHT_MUSIC]
 
 ### Les données utilisées (les data)
 DATA_ROOT = path.join(RESOURCES_ROOT, "data/")

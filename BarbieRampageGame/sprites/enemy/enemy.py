@@ -380,6 +380,9 @@ class IntelligentEnemy(MovingEnemy):
             random_list = [self.moving_around_direction] * 30 + [-self.moving_around_direction]
             self.moving_around_direction = random.choice(random_list)
         
+        if self.predict_void(self.moving_around_direction * self.speed, 0, world):
+            self.moving_around_direction = -self.moving_around_direction
+        
         # Vérifie si la direction de l'ennemi a changé
         if last_moving_around_direction != self.moving_around_direction:
             self.moving_time = pygame.time.get_ticks()
