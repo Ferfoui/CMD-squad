@@ -18,7 +18,9 @@ pygame.mixer.init()
 game_settings = utils.Settings()
 
 # Musique du Jeu
-pygame.mixer.music.load(SUPERSHY_MUSIC)
+current_music_index = 0
+
+pygame.mixer.music.load(GAME_MUSICS[current_music_index])
 pygame.mixer.music.set_volume(game_settings.volume)
 pygame.mixer.music.play(loops = -1, start = 0.0, fade_ms = 0)
 
@@ -54,6 +56,16 @@ def timer_minute(time_milisec: int) -> str:
     hour = min // 60
     return f"{hour:02}:{min - hour * 60:02}:{sec - min * 60:02}"
 
+def change_music():
+    """Change la musique du jeu
+    """
+    global current_music_index
+    current_music_index = (current_music_index + 1) % len(GAME_MUSICS)
+    
+    pygame.mixer.music.load(GAME_MUSICS[current_music_index])
+    pygame.mixer.music.set_volume(game_settings.volume)
+    pygame.mixer.music.play(loops = -1, start = 0.0, fade_ms = 0)
+
 def spawn_player(inventory: inventory.Inventory = None, do_regenerate: bool = True):
     """Fais réapparaître le joueur et réinitialise le monde
 
@@ -67,6 +79,8 @@ def spawn_player(inventory: inventory.Inventory = None, do_regenerate: bool = Tr
     death_menu.reset_animation(game_settings.screen_width)
     if do_regenerate:
         world.restart_level(assets, game_settings)
+    else:
+        change_music()
     player = world.process_data(assets, inventory)
     world.set_debug_display(game_settings.do_draw_hitboxes)
     
