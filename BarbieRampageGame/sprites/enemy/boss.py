@@ -11,8 +11,9 @@ class Boss(IntelligentEnemy):
 
 class SuperDuperHyperMegaKenMonster(Boss):
     def __init__(self, x: int, y: int, tile_size: int, assets: utils.Assets, scale: float = 1):
-        ANIMATION_LIST = ['Idle', 'Attack1', 'Attack2', 'Dead']
-        super().__init__(x, y, tile_size, assets, ENEMIES_TEXTURES_LOCATION + "boss/", 1000, 3, scale, ANIMATION_LIST)
+        ANIMATION_LIST = ['Idle', 'Attack1']
+        #ANIMATION_LIST = ['Idle', 'Attack1', 'Attack2', 'Dead']
+        super().__init__(x, y, tile_size, assets, ENEMIES_TEXTURES_LOCATION + "boss/superken/", 1000, 3, scale, ANIMATION_LIST)
         self.last_attack_time = pygame.time.get_ticks()
         self.ken_monster_could_attack = False
         self.ken_monster_is_attacking = False
