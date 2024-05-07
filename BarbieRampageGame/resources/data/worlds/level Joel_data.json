@@ -25,7 +25,7 @@
         {
             "type": "ammo_box",
             "x": 2,
-            "y": 14
+            "y": 13
         },
         {
             "type": "sand_default_left_border",
@@ -90,7 +90,7 @@
         {
             "type": "ammo_box",
             "x": 19,
-            "y": 14
+            "y": 13
         },
         {
             "type": "sand_default_left_border",
@@ -140,7 +140,7 @@
         {
             "type": "ammo_box",
             "x": 31,
-            "y": 14
+            "y": 13
         },
         {
             "type": "sand_default_left_border",
@@ -155,7 +155,7 @@
         {
             "type": "ammo_box",
             "x": 33,
-            "y": 14
+            "y": 13
         },
         {
             "type": "sand_default_left_border",
@@ -250,7 +250,7 @@
         {
             "type": "weapon_crate",
             "x": 60,
-            "y": 13
+            "y": 12
         },
         {
             "type": "sand_default_left_border",
@@ -270,7 +270,7 @@
         {
             "type": "health_box",
             "x": 69,
-            "y": 10
+            "y": 9
         },
         {
             "type": "sand_default_left_border",
@@ -280,7 +280,7 @@
         {
             "type": "ammo_box",
             "x": 72,
-            "y": 9
+            "y": 8
         },
         {
             "type": "sand_default_left_border",
@@ -375,7 +375,7 @@
         {
             "type": "ammo_box",
             "x": 109,
-            "y": 7
+            "y": 6
         },
         {
             "type": "sand_default_left_border",
@@ -385,7 +385,7 @@
         {
             "type": "health_box",
             "x": 110,
-            "y": 7
+            "y": 6
         },
         {
             "type": "sand_default_left_border",
@@ -395,7 +395,7 @@
         {
             "type": "health_box",
             "x": 111,
-            "y": 7
+            "y": 6
         },
         {
             "type": "sand_default_left_border",
@@ -465,7 +465,7 @@
         {
             "type": "ammo_box",
             "x": 128,
-            "y": 12
+            "y": 11
         },
         {
             "type": "sand_default_top_left_corner",
@@ -475,7 +475,7 @@
         {
             "type": "health_box",
             "x": 129,
-            "y": 12
+            "y": 11
         },
         {
             "type": "sand_default_top_left_corner",
@@ -485,7 +485,7 @@
         {
             "type": "health_box",
             "x": 130,
-            "y": 12
+            "y": 11
         },
         {
             "type": "sand_default_top_left_corner",
@@ -685,7 +685,7 @@
         {
             "type": "finish_flag",
             "x": 147,
-            "y": 12
+            "y": 11
         },
         {
             "type": "sand_default_top_left_corner",
