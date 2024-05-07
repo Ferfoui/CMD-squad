@@ -5,7 +5,7 @@ from os import path
 
 # Le nom du jeu
 GAME_NAME = "Barbie Rampage"
-GAME_VERSION = "V0.2"
+GAME_VERSION = "V0.5"
 
 # Le nombre d'images par seconde
 FPS = 60
