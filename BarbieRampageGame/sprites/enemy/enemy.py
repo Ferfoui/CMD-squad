@@ -6,7 +6,7 @@ import utils
 from ..entity import Entity
 
 class Enemy(Entity):
-    def __init__(self, x: int, y: int, tile_size: int, assets: utils.Assets, texture_location: str, max_health = 100, speed: int = 1, scale: float = 1, animation_list: list[str] = None):
+    def __init__(self, x: int, y: int, tile_size: int, assets: utils.Assets, texture_location: str, max_health: int = 100, speed: int = 1, scale: float = 1, animation_list: list[str] = None):
         """Crée un ennemi
 
         Args:
@@ -223,7 +223,7 @@ class Enemy(Entity):
             pygame.draw.rect(screen, (0, 0, 255), self.rect, 1)
 
 class MovingEnemy(Enemy):
-    def __init__(self, x: int, y: int, tile_size: int, assets: utils.Assets, texture_location: str, max_health = 100, speed: int = 1, scale: float = 1, animation_list: list[str] = None):
+    def __init__(self, x: int, y: int, tile_size: int, assets: utils.Assets, texture_location: str, max_health: int = 100, speed: int = 1, scale: float = 1, animation_list: list[str] = None):
         """Crée un ennemi qui peut se déplacer
 
         Args:
@@ -276,7 +276,7 @@ class MovingEnemy(Enemy):
         self.move_entity_position(dx, dy, world)
 
 class IntelligentEnemy(MovingEnemy):
-    def __init__(self, x: int, y: int, tile_size: int, assets: utils.Assets, texture_location: str, max_health = 100, speed: int = 1, scale: float = 1, animation_list: list[str] = None):
+    def __init__(self, x: int, y: int, tile_size: int, assets: utils.Assets, texture_location: str, max_health: int = 100, speed: int = 1, scale: float = 1, animation_list: list[str] = None):
         """Crée un ennemi intelligent
 
         Args:
