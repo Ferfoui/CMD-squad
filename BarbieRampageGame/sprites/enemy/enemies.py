@@ -72,7 +72,7 @@ class KenEnemy(IntelligentEnemy):
         self.animation_cooldown = 50
         
         self.ATTACK_COOLDOWN = 1500
-        self.damage_time = 1000
+        self.damage_time = 1200
     
     def ai(self, world):
         """Méthode qui permet de déplacer Ken vers le joueur
