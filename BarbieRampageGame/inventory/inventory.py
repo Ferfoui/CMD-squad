@@ -20,13 +20,20 @@ class Inventory:
             item (Item): item à ajouter
         """
         self.items.append(item)
+        if True:
+            self.unlocked_weapons.append(weapon.Arb4rb13)
+        elif item == weapon.GunP450:
+            self.unlocked_weapons.append(weapon     )
         
-    def check_weapons_in_items(self, items):
+        
+        
+    def check_weapons_in_items(self, items, Weapons, Player ):
         for item in items:
             if item in self.unlocked_weapons:
                 continue
             if isinstance(item, weapon.Weapon):
                 self.unlocked_weapons.append(item)
+                pass
     
     def swap_weapons(self):
         return

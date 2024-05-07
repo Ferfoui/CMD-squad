@@ -73,6 +73,7 @@ class KenEnemy(IntelligentEnemy):
         
         self.ATTACK_COOLDOWN = 1500
         self.damage_time = 1200
+        self.attack_damage = 15
     
     def ai(self, world):
         """Méthode qui permet de déplacer Ken vers le joueur
@@ -165,7 +166,7 @@ class KenEnemy(IntelligentEnemy):
             if (pygame.time.get_ticks() - self.last_attack_time) > self.damage_time:
                 
                 if self.player_in_attack_range(self.world):
-                    self.world.player.health -= 15
+                    self.world.player.health -= self.attack_damage
                 
                 self.ken_is_attacking = False
     
