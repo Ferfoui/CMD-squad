@@ -54,17 +54,19 @@ def timer_minute(time_milisec: int) -> str:
     hour = min // 60
     return f"{hour:02}:{min - hour * 60:02}:{sec - min * 60:02}"
 
-def spawn_player(inventory: inventory.Inventory = None):
+def spawn_player(inventory: inventory.Inventory = None, do_regenerate: bool = True):
     """Fais réapparaître le joueur et réinitialise le monde
 
     Args:
         inventory (Inventory, optional): inventaire du joueur. None par défaut
+        do_regenerate (bool, optional): si le monde doit être régénéré. True par défaut
     
     Returns:
         Player: joueur recréé
     """
     death_menu.reset_animation(game_settings.screen_width)
-    world.init_data("level0_data.json", assets, game_settings)
+    if do_regenerate:
+        world.restart_level(assets, game_settings)
     player = world.process_data(assets, inventory)
     world.set_debug_display(game_settings.do_draw_hitboxes)
     
@@ -93,6 +95,7 @@ overlay = menus.Overlay(assets)
 
 # Initialisation du monde et du joueur
 world = World()
+world.first_level(assets, game_settings)
 
 player = spawn_player()
 
@@ -168,6 +171,10 @@ while run:
         if not player.is_alive:
             if death_menu.draw(screen, True)['respawn']:
                 player = spawn_player(player_inventory)
+        
+        elif player.is_ready_to_go_to_next_level:
+            world.go_to_next_level(assets, game_settings)
+            player = spawn_player(player_inventory, False)
             
         if inventory_active:
             if talented_tree_choice :

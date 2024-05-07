@@ -1,0 +1,541 @@
+{
+    "attributes": {
+        "level_size": 150,
+        "level_height": 16,
+        "background_images": [
+            "sky_default"
+        ]
+    },
+    "tiles": [
+        {
+            "type": "player_spawn",
+            "x": 0,
+            "y": 13
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 0,
+            "y": 15
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 1,
+            "y": 15
+        },
+        {
+            "type": "ammo_box",
+            "x": 2,
+            "y": 14
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 2,
+            "y": 15
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 3,
+            "y": 15
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 4,
+            "y": 15
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 5,
+            "y": 15
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 6,
+            "y": 15
+        },
+        {
+            "type": "weapon_crate",
+            "x": 9,
+            "y": 12
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 9,
+            "y": 13
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 10,
+            "y": 13
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 14,
+            "y": 12
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 15,
+            "y": 12
+        },
+        {
+            "type": "ken_spawn",
+            "x": 16,
+            "y": 10
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 16,
+            "y": 12
+        },
+        {
+            "type": "ammo_box",
+            "x": 19,
+            "y": 14
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 19,
+            "y": 15
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 20,
+            "y": 15
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 21,
+            "y": 15
+        },
+        {
+            "type": "ken_spawn",
+            "x": 22,
+            "y": 13
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 22,
+            "y": 15
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 25,
+            "y": 13
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 26,
+            "y": 13
+        },
+        {
+            "type": "ken_spawn",
+            "x": 27,
+            "y": 11
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 27,
+            "y": 13
+        },
+        {
+            "type": "ammo_box",
+            "x": 31,
+            "y": 14
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 31,
+            "y": 15
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 32,
+            "y": 15
+        },
+        {
+            "type": "ammo_box",
+            "x": 33,
+            "y": 14
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 33,
+            "y": 15
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 34,
+            "y": 15
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 35,
+            "y": 15
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 36,
+            "y": 15
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 37,
+            "y": 15
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 38,
+            "y": 15
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 39,
+            "y": 15
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 40,
+            "y": 15
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 41,
+            "y": 15
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 42,
+            "y": 15
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 43,
+            "y": 15
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 44,
+            "y": 15
+        },
+        {
+            "type": "ken_spawn",
+            "x": 45,
+            "y": 13
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 45,
+            "y": 15
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 48,
+            "y": 14
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 51,
+            "y": 13
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 54,
+            "y": 12
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 57,
+            "y": 10
+        },
+        {
+            "type": "weapon_crate",
+            "x": 60,
+            "y": 13
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 60,
+            "y": 14
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 63,
+            "y": 13
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 66,
+            "y": 12
+        },
+        {
+            "type": "health_box",
+            "x": 69,
+            "y": 10
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 69,
+            "y": 11
+        },
+        {
+            "type": "ammo_box",
+            "x": 72,
+            "y": 9
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 72,
+            "y": 10
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 73,
+            "y": 10
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 74,
+            "y": 10
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 75,
+            "y": 10
+        },
+        {
+            "type": "ken_spawn",
+            "x": 76,
+            "y": 8
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 76,
+            "y": 10
+        },
+        {
+            "type": "ken_spawn",
+            "x": 77,
+            "y": 8
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 77,
+            "y": 10
+        },
+        {
+            "type": "ken_spawn",
+            "x": 78,
+            "y": 8
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 78,
+            "y": 10
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 81,
+            "y": 12
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 85,
+            "y": 12
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 89,
+            "y": 12
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 92,
+            "y": 11
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 95,
+            "y": 10
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 98,
+            "y": 9
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 101,
+            "y": 8
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 105,
+            "y": 8
+        },
+        {
+            "type": "ammo_box",
+            "x": 109,
+            "y": 7
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 109,
+            "y": 8
+        },
+        {
+            "type": "health_box",
+            "x": 110,
+            "y": 7
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 110,
+            "y": 8
+        },
+        {
+            "type": "health_box",
+            "x": 111,
+            "y": 7
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 111,
+            "y": 8
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 112,
+            "y": 8
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 113,
+            "y": 8
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 114,
+            "y": 8
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 115,
+            "y": 8
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 116,
+            "y": 8
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 117,
+            "y": 8
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 118,
+            "y": 8
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 119,
+            "y": 8
+        },
+        {
+            "type": "ken_spawn",
+            "x": 120,
+            "y": 6
+        },
+        {
+            "type": "sand_default_left_border",
+            "x": 120,
+            "y": 8
+        },
+        {
+            "type": "grass_default",
+            "x": 133,
+            "y": 15
+        },
+        {
+            "type": "grass_default",
+            "x": 134,
+            "y": 15
+        },
+        {
+            "type": "grass_default",
+            "x": 135,
+            "y": 15
+        },
+        {
+            "type": "grass_default",
+            "x": 136,
+            "y": 15
+        },
+        {
+            "type": "grass_default",
+            "x": 137,
+            "y": 15
+        },
+        {
+            "type": "grass_default",
+            "x": 138,
+            "y": 15
+        },
+        {
+            "type": "grass_default",
+            "x": 139,
+            "y": 15
+        },
+        {
+            "type": "grass_default",
+            "x": 140,
+            "y": 15
+        },
+        {
+            "type": "grass_default",
+            "x": 141,
+            "y": 15
+        },
+        {
+            "type": "grass_default",
+            "x": 142,
+            "y": 15
+        },
+        {
+            "type": "grass_default",
+            "x": 143,
+            "y": 15
+        },
+        {
+            "type": "grass_default",
+            "x": 144,
+            "y": 15
+        },
+        {
+            "type": "grass_default",
+            "x": 145,
+            "y": 15
+        },
+        {
+            "type": "grass_default",
+            "x": 146,
+            "y": 15
+        },
+        {
+            "type": "grass_default",
+            "x": 147,
+            "y": 15
+        },
+        {
+            "type": "grass_default",
+            "x": 148,
+            "y": 15
+        },
+        {
+            "type": "grass_default",
+            "x": 149,
+            "y": 15
+        }
+    ]
+}

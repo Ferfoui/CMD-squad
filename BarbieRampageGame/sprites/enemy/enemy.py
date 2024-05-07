@@ -194,6 +194,7 @@ class Enemy(Entity):
             new_rect = self.image.get_rect()
             new_rect.center = self.rect.center
             self.rect = new_rect
+            self.mask = pygame.mask.from_surface(self.image)
             
             if (pygame.time.get_ticks() - self.animation_update_time) > self.animation_cooldown:
                 self.animation_index += 1

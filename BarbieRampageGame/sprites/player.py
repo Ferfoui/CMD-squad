@@ -38,6 +38,12 @@ class Player(Entity):
         
         self.width = self.image.get_width()
         self.height = self.image.get_height()
+        
+        self.is_ready_to_go_to_next_level = False
+    
+    def finish_level(self):
+        """Méthode qui est appelée quand le joueur finit un niveau"""
+        self.is_ready_to_go_to_next_level = True
     
     def define_entity_rect(self, x: int, y: int, assets: utils.Assets, scale) -> pygame.Rect:
         """Méthode qui crée le rectangle et qui charge les animations du joueur

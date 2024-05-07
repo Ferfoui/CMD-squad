@@ -15,7 +15,14 @@ class Dummy(Enemy):
             scale (float): facteur de redimensionnement
             assets (utils.Assets): classe qui contient les assets du jeu
         """
-        super().__init__(x, y, tile_size, assets, ENEMIES_TEXTURES_LOCATION + "dummy.png", scale = scale)
+        super().__init__(x, y, tile_size, assets, ENEMIES_TEXTURES_LOCATION + "dummy/dummy.png", scale = scale)
+        self.dead_image = assets.get_scaled_image("dummy_dead", ENEMIES_TEXTURES_LOCATION + "dummy/dummy_dead.png", scale * self.size_factor)
+    
+    def update(self):
+        super().update()
+        
+        if not self.is_alive:
+            self.image = self.dead_image
 
 class IntelligentDummy(IntelligentEnemy):
     def __init__(self, x: int, y: int, tile_size: int, scale: float, assets: utils.Assets, speed: int):
@@ -29,7 +36,7 @@ class IntelligentDummy(IntelligentEnemy):
             assets (utils.Assets): classe qui contient les assets du jeu
             speed (int): vitesse de l'ennemi
         """
-        super().__init__(x, y, tile_size, assets, ENEMIES_TEXTURES_LOCATION + "dummy.png", speed = speed, scale = scale)
+        super().__init__(x, y, tile_size, assets, ENEMIES_TEXTURES_LOCATION + "dummy/dummy.png", speed = speed, scale = scale)
 
     def ai(self, world):
         """Méthode qui permet de déplacer l'ennemi vers le joueur
@@ -65,7 +72,7 @@ class KenEnemy(IntelligentEnemy):
         self.animation_cooldown = 50
         
         self.ATTACK_COOLDOWN = 1500
-        self.damage_time = 1000
+        self.damage_time = 1200
     
     def ai(self, world):
         """Méthode qui permet de déplacer Ken vers le joueur
