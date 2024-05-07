@@ -84,8 +84,9 @@ BLASTER_SOUND_LOCATION = path.join(SOUNDS_ROOT, "blaster.wav")
 
 SUPERSHY_MUSIC = path.join(SOUNDS_ROOT, "nj_supershy.wav" )
 BARBIE_GIRL_MUSIC = path.join(SOUNDS_ROOT, "barbie_girl.wav")
+DANCE_THE_NIGHT_MUSIC = path.join(SOUNDS_ROOT, "dance_the_night.mp3")
 
-GAME_MUSICS = [SUPERSHY_MUSIC, BARBIE_GIRL_MUSIC]
+GAME_MUSICS = [SUPERSHY_MUSIC, BARBIE_GIRL_MUSIC, DANCE_THE_NIGHT_MUSIC]
 
 ### Les données utilisées (les data)
 DATA_ROOT = path.join(RESOURCES_ROOT, "data/")
