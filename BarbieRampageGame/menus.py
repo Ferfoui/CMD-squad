@@ -37,6 +37,7 @@ class PauseMenu(gui.Menu):
         
         self.add_text("Appuyez sur I pour", assets.default_font, COLOR_WHITE_AZURE, settings.screen_width / 2, settings.screen_height // 8)
         self.add_text("ouvrir l'inventaire", assets.default_font, COLOR_WHITE_AZURE, settings.screen_width / 2, settings.screen_height // 8 + 23)
+        self.add_text("Appuyez sur TAB pour tirer", assets.default_font, COLOR_WHITE_AZURE, settings.screen_width / 2, settings.screen_height // 8+50)
         
         # Création d'un background à moitié transparent
         self.semi_transparent_background = pygame.Surface((settings.screen_width, settings.screen_height), pygame.SRCALPHA)
